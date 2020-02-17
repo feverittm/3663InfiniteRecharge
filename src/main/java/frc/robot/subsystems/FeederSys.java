@@ -28,7 +28,7 @@ enum FeedRate {
   SHOOT
 }
 
-public class SS_Feeder extends SubsystemBase {
+public class FeederSys extends SubsystemBase {
 
   private final double FEEDER_BELT_GEAR_RATIO_MULTIPLIER = 1;
 
@@ -37,8 +37,6 @@ public class SS_Feeder extends SubsystemBase {
   private final double KI = 0.0000005;
   private final double KD = 0;
 
-  private int FEEDER_POLY_RADIOUS = 1;
-  private int TICKS_PER_REVLUSHEN = 1;
   // this is sets the inches per Revelushion.
   private double INCHES_PER_REVOLUTION = 1;
 
@@ -73,8 +71,8 @@ public class SS_Feeder extends SubsystemBase {
   private NetworkTableEntry exitRangeEntry;
   private NetworkTableEntry entryRangeEntry;
 
-  public SS_Feeder() {
-    belt = new CANSparkMax(Constants.FEEDER_BELT_MOTOR, MotorType.kBrushless);
+  public FeederSys() {
+    belt = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
     belt.setIdleMode(IdleMode.kBrake);
     beltPID = belt.getPIDController();
     beltPID.setP(KP);
@@ -84,8 +82,8 @@ public class SS_Feeder extends SubsystemBase {
     feederBeltEncoder.setVelocityConversionFactor(FEEDER_BELT_GEAR_RATIO_MULTIPLIER); //set feeder gear ratio
 
     //Sensors for Feeder
-    entrySensor = new TimeOfFlightSensor(Constants.ENTRY_SENSOR);
-    exitSensor = new TimeOfFlightSensor(Constants.EXIT_SENSOR);
+    entrySensor = new TimeOfFlightSensor(Constants.ENTRY_SENSOR_CANID);
+    exitSensor = new TimeOfFlightSensor(Constants.EXIT_SENSOR_CANID);
     initTelemetry();
   }
 

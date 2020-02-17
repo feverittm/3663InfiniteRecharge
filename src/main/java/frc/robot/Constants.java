@@ -34,8 +34,8 @@ public class Constants {
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 25;
 
     // Ball feeder subsystem related constants
-    public static final int FEED_MOTOR_CANID = 6;
-    public static final int ENTRY_SENSOR_CANID = 10;
-    public static final int EXIT_SENSOR_CANID = 11;
+    public static final int FEED_MOTOR_CANID = 9;
+    public static final int ENTRY_SENSOR_CANID = 20;
+    public static final int EXIT_SENSOR_CANID = 20;
 }
 
