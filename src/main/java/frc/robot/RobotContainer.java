@@ -7,14 +7,13 @@
 
 package frc.robot;
 
-//import org.frcteam2910.common.math.Rotation2;
-import org.frcteam2910.common.robot.UpdateManager;
+//import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+//import edu.wpi.first.wpilibj2.command.CommandScheduler;
+//import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 
 
@@ -34,14 +33,10 @@ public class RobotContainer {
     // All updatable subsystems should be passed as parameters into the UpdateManager constructor
 //    private final UpdateManager updateManager = new UpdateManager(drivebase);
 
-    public RobotContainer() {
+    
+public RobotContainer() {
         
         driveController.getRightXAxis().setScale(.3);
-
- //       CommandScheduler.getInstance().setDefaultCommand(drivebase,
- //               new C_Drive(drivebase, () -> driveController.getLeftYAxis().get(true),
- //                       () -> driveController.getLeftXAxis().get(true),
- //                       () -> driveController.getRightXAxis().get(true)));
         
  //       updateManager.startLoop(5.0e-3);
 
