@@ -17,6 +17,7 @@ public class TimeOfFlightSensor {
 
     private TimeOfFlight sensor;
     private static double DEFAULT_SAMPLE_RATE = 24;
+    
     public TimeOfFlightSensor(int canId) {
         this.sensor = new TimeOfFlight(canId);
         sensor.setRangingMode(RangingMode.Short, DEFAULT_SAMPLE_RATE);

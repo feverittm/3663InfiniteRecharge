@@ -7,6 +7,11 @@
 
 package frc.robot.subsystems;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -19,12 +24,10 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.drivers.TimeOfFlightSensor;
 
-enum FeedRate {
+enum FeedMode {
   STOPPED,
-  INDEX_IN,
-  INDEX_OUT,
+  INTAKE,
   SHOOT
 }
 
@@ -37,147 +40,191 @@ public class FeederSys extends SubsystemBase {
   private final double KI = 0.0000005;
   private final double KD = 0;
 
-  // this is sets the inches per Revelushion.
-  private double INCHES_PER_REVOLUTION = 1;
-
   private final int FEED_RPM_STOPPED = 0;
   private final int FEED_RPM_SHOOT = 100; //how fast the feeder should be running when we are shooting
-  private final int FEED_RPM_INDEX_IN = 100; //how fast the feeder should be running when indexing the balls
-  private final int FEED_RPM_INDEX_OUT = 100;
-
+  private final int FEED_RPM_INTAKE = 100; //how fast the feeder should be running when indexing the balls
 
   public final int REV_PER_FULL_FEED = 1500; //amount of revolutions before the feeder fully indexes all balls
 
-  private final double BALL_PRESENT_THRESHOLD = 30;
+  private final double BALL_DETECT_THRESHOLD = 50;
 
   private CANEncoder feederBeltEncoder;
 
-  private CANSparkMax belt;
+  private CANSparkMax beltMotor;
   private CANPIDController beltPID;
 
-  private TimeOfFlightSensor entrySensor;
-  private TimeOfFlightSensor exitSensor;
+  private TimeOfFlight entrySensor;
+  private TimeOfFlight exitSensor;
 
-  private FeedRate curFeedRate;
-
-  private int targetFeedRpm; 
-  
+  private FeedModeBase currentMode;
+  private HashMap<FeedMode, FeedModeBase> modes = new HashMap<FeedMode, FeedModeBase>();  
 
   //network table entries for telemetry
-  private NetworkTableEntry feedRateEntry;
-  private NetworkTableEntry ballInEntranceEntry;
-  private NetworkTableEntry ballInExitEntry;
   private NetworkTableEntry feederRPMEntry;
   private NetworkTableEntry exitRangeEntry;
   private NetworkTableEntry entryRangeEntry;
 
-  public FeederSys() {
-    belt = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
-    belt.setIdleMode(IdleMode.kBrake);
-    beltPID = belt.getPIDController();
+
+  public FeederSys(CANSparkMax beltMotor, TimeOfFlight entrySensor, TimeOfFlight exitSensor) {
+
+    this. beltMotor = beltMotor;
+    beltMotor.setIdleMode(IdleMode.kBrake);
+
+    beltPID = beltMotor.getPIDController();
     beltPID.setP(KP);
     beltPID.setI(KI);
     beltPID.setD(KD);
-    feederBeltEncoder = belt.getEncoder();
+
+    feederBeltEncoder = beltMotor.getEncoder();
     feederBeltEncoder.setVelocityConversionFactor(FEEDER_BELT_GEAR_RATIO_MULTIPLIER); //set feeder gear ratio
 
     //Sensors for Feeder
-    entrySensor = new TimeOfFlightSensor(Constants.ENTRY_SENSOR_CANID);
-    exitSensor = new TimeOfFlightSensor(Constants.EXIT_SENSOR_CANID);
+    this.entrySensor = entrySensor;
+    this.exitSensor = exitSensor;
+
+    // Setup our feed modes and initialize the system into the stopped mode.
+    modes.put( FeedMode.STOPPED, new StoppedMode());
+    modes.put(FeedMode.INTAKE, new IntakeMode());
+    modes.put(FeedMode.SHOOT, new ShootMode());
+    currentMode = modes.get(FeedMode.STOPPED);
+
     initTelemetry();
   }
+
 
   private void initTelemetry() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter"); //use the same tab as the shooter for displaying data
 
-    feedRateEntry = shooterTab.add("Feed Rate", "unassigned")
-      .withPosition(3, 0)
-      .withSize(1, 1)
-      .getEntry();
       feederRPMEntry = shooterTab.add("Feeder RPM", 0)
-      .withPosition(3, 1)
-      .withSize(1, 1)
-      .getEntry();
-    ballInEntranceEntry = shooterTab.add("Ball in entrance", false)
-      .withWidget("Boolean Box")
-      .withPosition(4, 0)
-      .withSize(1, 1)
-      .getEntry();
-    ballInExitEntry = shooterTab.add("ball in exit", false)
-      .withWidget("Boolean Box")
-      .withPosition(4, 1)
-      .withSize(1, 1)
-      .getEntry();
-    entryRangeEntry = shooterTab.add("Entry range", 0)
       .withPosition(5, 0)
       .withSize(1, 1)
       .getEntry();
-    exitRangeEntry = shooterTab.add("Exit range", 0)
+
+    entryRangeEntry = shooterTab.add("Entry range", 0)
       .withPosition(5, 1)
+      .withSize(1, 1)
+      .getEntry();
+
+    exitRangeEntry = shooterTab.add("Exit range", 0)
+      .withPosition(5, 2)
       .withSize(1, 1)
       .getEntry();
   }
 
+
   @Override
   public void periodic() {
+
+    currentMode.run(this);
+
     updateTelemetry();
   }
 
+
   private void updateTelemetry() {
-    // feedRateEntry.setString(feedRate.toString());
-    feederRPMEntry.setNumber(belt.getEncoder().getVelocity());
-    ballInEntranceEntry.setBoolean(ballInExit());
-    ballInExitEntry.setBoolean(ballInEntry());
+    feederRPMEntry.setNumber(beltMotor.getEncoder().getVelocity());
     entryRangeEntry.setNumber(getEntryRange());
     exitRangeEntry.setNumber(getExitRange());
   }
 
 
   /**
-   * Set the RPM of the feeder belt based on the FeedRate enum
-   * @param rate the rate for the belt
+   * Set the current mode of the feeder system.
+   * @param mode New mode for feeder.
    */
-  public void setFeedRate(FeedRate rate) {
-    
-    switch(rate) {
-      case STOPPED:
-        targetFeedRpm = FEED_RPM_STOPPED;
-      case INDEX_IN:
-        targetFeedRpm = FEED_RPM_INDEX_IN;
-        break;
-      case INDEX_OUT:
-        targetFeedRpm = -FEED_RPM_INDEX_OUT;
-        break;
-      case SHOOT:
-        targetFeedRpm = FEED_RPM_SHOOT;
-        break;
-      
-    }
-    beltPID.setReference(targetFeedRpm, ControlType.kVelocity);
-  }
+  public void setFeedMode(FeedMode mode) {
 
-  public void resetBeltPosision() {
-    belt.getEncoder().setPosition(0);
-  }
-
-  public double getBeltDistance() {
-
-    return belt.getEncoder().getPosition() * INCHES_PER_REVOLUTION;
+    currentMode.end(this);
+    currentMode = modes.get(mode);
+    currentMode.init(this);
   }
 
   public double getEntryRange() {
-    return entrySensor.getDistance();
+    return entrySensor.getRange();
   }
 
   public double getExitRange() {
-    return exitSensor.getDistance();
+    return exitSensor.getRange();
   }
 
-  public boolean ballInEntry() {
-    return entrySensor.getDistance() <= BALL_PRESENT_THRESHOLD;
+
+  private abstract class FeedModeBase {
+    FeedMode id;
+
+    private FeedModeBase( FeedMode id ) {
+      this.id = id;
+    }
+
+    abstract void init( FeederSys feeder );
+    abstract void run( FeederSys feeder );
+    abstract void end( FeederSys feeder );
   }
 
-  public boolean ballInExit() {
-    return exitSensor.getDistance() <= BALL_PRESENT_THRESHOLD;
+  private class StoppedMode extends FeedModeBase
+  {
+    private StoppedMode(){
+      super(FeedMode.STOPPED);
+    }
+
+    @Override void init( FeederSys feeder ) {
+      feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+    }
+
+    @Override void run( FeederSys feeder ) {}
+
+    @Override void end( FeederSys feeder ) {}
+  }
+
+  private class IntakeMode extends FeedModeBase
+  {
+    private IntakeMode() {
+      super(FeedMode.INTAKE);
+    }
+
+   @Override void init( FeederSys feeder ) {
+
+   }
+
+    @Override void run( FeederSys feeder ) {
+
+      // If there is ball at the top of the feeder then stop the motor and return.
+      if (feeder.exitSensor.getRange() <= BALL_DETECT_THRESHOLD) {
+        feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+        return;
+      }
+
+      // If there is a ball in the intake end of the feeder then start the motor otherwise stop it.
+      if (feeder.exitSensor.getRange() <= BALL_DETECT_THRESHOLD) {
+        feeder.beltPID.setReference(FEED_RPM_INTAKE, ControlType.kVelocity);
+      }
+      else {
+        feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+      }
+    }
+
+    @Override void end( FeederSys feeder ) {
+      feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+    }
+  }
+
+
+  private class ShootMode extends FeedModeBase
+  {
+    private ShootMode(){
+      super(FeedMode.SHOOT);
+    }
+      @Override void init( FeederSys feeder ) {
+        feeder.beltPID.setReference(FEED_RPM_SHOOT, ControlType.kVelocity);
+      }
+  
+      @Override void run( FeederSys feeder ) {
+        if (feeder.exitSensor.getRange() > BALL_DETECT_THRESHOLD){
+          feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+        }
+      }
+  
+      @Override void end( FeederSys feeder ) {
+        feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+      }
   }
 }
