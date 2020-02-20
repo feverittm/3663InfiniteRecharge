@@ -31,10 +31,10 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
     private static final double ROTATION_VELOCITY_MULTIPLIER = 2.0;
 
     //SWERVE MODULE ANGLE ENCODER OFFSETS (in radians, obviously)
-    public static final double FRONT_LEFT_MODULE_OFFSET = Math.toRadians(67);
-    public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-12);
-    public static final double BACK_LEFT_MODULE_OFFSET = Math.toRadians(-97);
-    public static final double BACK_RIGHT_MODULE_OFFSET = Math.toRadians(-8);
+    public static final double FRONT_LEFT_MODULE_OFFSET = Math.toRadians(40);
+    public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-102);
+    public static final double BACK_LEFT_MODULE_OFFSET = Math.toRadians(-30);
+    public static final double BACK_RIGHT_MODULE_OFFSET = Math.toRadians(-23.5);
 
     private final Vector2 frontLeftModulePosition = new Vector2(-Constants.TRACKWIDTH / 2.0, Constants.WHEELBASE / 2.0);
     private final Vector2 frontRightModulePosition = new Vector2(-Constants.TRACKWIDTH / 2.0, -Constants.WHEELBASE / 2.0);
@@ -188,7 +188,6 @@ public void resetGyroAngle(Rotation2 angle) {
 
         Rotation2 angle;
         synchronized (sensorLock) {
-            System.out.println("angle: " + navX.getAngle());
             angle = navX.getAngle();
         }
 
@@ -197,7 +196,6 @@ public void resetGyroAngle(Rotation2 angle) {
         synchronized (kinematicsLock) {
             this.pose = pose;
         }
-        System.out.println(pose);
     }
 
     private void updateModules(HolonomicDriveSignal signal, double dt) {
