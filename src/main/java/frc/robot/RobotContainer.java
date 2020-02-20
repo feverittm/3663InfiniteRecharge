@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import java.sql.Time;
-
 import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -21,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.FeederSys;
+import frc.robot.subsystems.SS_Feeder;
 
 
 public class RobotContainer {
@@ -32,7 +30,7 @@ public class RobotContainer {
  
     
     // Subsystem Declarations
-    private FeederSys feederSys;
+    protected SS_Feeder feederSys;
 
     // Command declarations
 
@@ -59,7 +57,7 @@ public RobotContainer() {
         TimeOfFlight entrySensor = new TimeOfFlight( Constants.ENTRY_SENSOR_CANID);
         TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);
 
-        feederSys = new FeederSys(beltMotor, entrySensor, exitSensor);
+        this.feederSys = new SS_Feeder(beltMotor, entrySensor, exitSensor);
     }
     
     private void configureButtonBindings() {
