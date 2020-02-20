@@ -32,6 +32,7 @@ public class Constants {
 
     // Other drivebase related constants
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 25;
+    public static final byte NAVX_UPDATE_RATE = 127;
 
     // Ball feeder subsystem related constants
     public static final int FEED_MOTOR_CANID = 9;
