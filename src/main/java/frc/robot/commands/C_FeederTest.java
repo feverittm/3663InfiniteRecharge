@@ -30,17 +30,18 @@ public class C_FeederTest extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(controller.getAButton().get()){
-      feeder.setFeedMode(FeedMode.INTAKE);
-    }else if(controller.getBButton().get()){
-      feeder.setFeedMode(FeedMode.PRESHOOT);
-    }else if(controller.getXButton().get()){
+    // if(controller.getAButton().get()){
+    //   feeder.setFeedMode(FeedMode.INTAKE);
+    // }else if(controller.getBButton().get()){
+    //   feeder.setFeedMode(FeedMode.PRESHOOT);
+    // }else if(controller.getXButton().get()){
         
-    }else if(controller.getYButton().get()){
-      feeder.setFeedMode(FeedMode.SHOOT);
-    }else{
-      feeder.setFeedMode(FeedMode.STOPPED);
-    }
+    // }else if(controller.getYButton().get()){
+    //   feeder.setFeedMode(FeedMode.SHOOT);
+    // }else{
+    //   feeder.setFeedMode(FeedMode.STOPPED);
+    // }
+    feeder.getMotor().set(controller.getLeftYAxis().get());
   }
 
   // Called once the command ends or is interrupted.

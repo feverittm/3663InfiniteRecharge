@@ -89,7 +89,7 @@ public class SS_Feeder extends SubsystemBase {
 
     initTelemetry();
   }
-
+  public CANSparkMax getMotor(){ return beltMotor;} 
 
   private void initTelemetry() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter"); //use the same tab as the shooter for displaying data
@@ -117,11 +117,11 @@ public class SS_Feeder extends SubsystemBase {
    @Override public void periodic() {
 
     // Execute the current mode, if it completes then put system in Stopped mode.
-    if (currentMode.run(this)) {
-      setFeedMode(FeedMode.STOPPED);
-    }
+    // if (currentMode.run(this)) {
+    //   setFeedMode(FeedMode.STOPPED);
+    // }
 
-    updateTelemetry();
+    // updateTelemetry();
   }
 
 
