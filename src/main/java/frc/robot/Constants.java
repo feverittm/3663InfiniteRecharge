@@ -37,5 +37,21 @@ public class Constants {
     public static final int FEED_MOTOR_CANID = 9;
     public static final int ENTRY_SENSOR_CANID = 20;
     public static final int EXIT_SENSOR_CANID = 21;
+
+    //=====INTAKE ARM CONSTANTS=====//
+    public static final class IntakeConstants {
+        // motor
+        public static final int powerCellPickUpMotor = 10;      // CAN bus ID of pick-up motor
+        public static final double OUTTAKE_SPEED = -0.5;
+        public static final double INTAKE_SPEED = 0.5;
+        public static final int SWITCH_ID = 0;
+        // pneumatics
+        public static final int PCM_CAN_ID = 1;    // CAN bus ID of PCM
+        public static final int intakeArmShortExtend = 3;
+        public static final int intakeArmShortRetract = 2;
+        public static final int intakeArmLongExtend = 1;
+        public static final int intakeArmLongRetract = 0;
+        
+    }
 }
 

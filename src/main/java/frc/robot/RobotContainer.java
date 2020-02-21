@@ -18,10 +18,12 @@ import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.FeederSys;
+import frc.robot.subsystems.SS_Intake;
 
 
 public class RobotContainer {
@@ -33,6 +35,7 @@ public class RobotContainer {
     
     // Subsystem Declarations
     private FeederSys feederSys;
+    private SS_Intake ss_Intake;
 
     // Command declarations
 
@@ -49,7 +52,11 @@ public RobotContainer() {
         
  //       updateManager.startLoop(5.0e-3);
 
-        configureButtonBindings();
+    CommandScheduler.getInstance().setDefaultCommand(ss_Intake, CG_Rooma());
+    //driveController.getRightTriggerAxis()
+    //    .whenHeld(new InstantCommand(() -> new CG_Roomba(true, ss_Intake)));
+
+
     }
 
     private void initSubsystems() {
@@ -60,10 +67,11 @@ public RobotContainer() {
         TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);
 
         feederSys = new FeederSys(beltMotor, entrySensor, exitSensor);
+
+        ss_Intake = new SS_Intake();
     }
     
     private void configureButtonBindings() {
- //       driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
     }
 
     public Command getAutonomousCommand() {
