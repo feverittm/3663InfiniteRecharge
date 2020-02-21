@@ -54,9 +54,10 @@ public RobotContainer() {
 
         // Set the feeder subsystem
         CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
+        //drivers
         TimeOfFlight entrySensor = new TimeOfFlight( Constants.ENTRY_SENSOR_CANID);
         TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);
-
+        //subsystems
         this.feederSys = new SS_Feeder(beltMotor, entrySensor, exitSensor);
     }
     

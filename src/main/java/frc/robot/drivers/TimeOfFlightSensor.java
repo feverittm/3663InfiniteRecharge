@@ -36,7 +36,7 @@ public class TimeOfFlightSensor {
      * @return Target's distance from the sensor in centimeters
      */
     public double getDistance() {
-        return sensor.getRange() * 10;
+        return sensor.getRange() * 0.1;
     }
 
     /**
