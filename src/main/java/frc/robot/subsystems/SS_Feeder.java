@@ -20,15 +20,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-enum FeedMode {
-  STOPPED,
-  INTAKE,
-  PRESHOOT,
-  SHOOT
-}
-
 public class SS_Feeder extends SubsystemBase {
-
+  public enum FeedMode {
+    STOPPED,
+    INTAKE,
+    PRESHOOT,
+    SHOOT,
+    PREINTAKE
+  }
   private final double FEEDER_BELT_GEAR_RATIO_MULTIPLIER = 1;
 
   // Feeder PID constants
@@ -85,6 +84,7 @@ public class SS_Feeder extends SubsystemBase {
     modes.put(FeedMode.INTAKE, new IntakeMode());
     modes.put(FeedMode.PRESHOOT, new PreshootMode());
     modes.put(FeedMode.SHOOT, new ShootMode());
+    //modes.put(FeedMode.PREINTAKE, new PreIntakeMode());
     currentMode = modes.get(FeedMode.STOPPED);
 
     initTelemetry();
@@ -295,4 +295,5 @@ public class SS_Feeder extends SubsystemBase {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
     }
   }
+
 }
