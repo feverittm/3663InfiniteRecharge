@@ -19,6 +19,7 @@ public class C_FeederTest extends CommandBase {
   public C_FeederTest(SS_Feeder feeder, Controller controller) {
     this.feeder = feeder;
     this.controller = controller;
+    addRequirements(feeder);
   }
 
   // Called when the command is initially scheduled.
