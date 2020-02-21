@@ -28,8 +28,6 @@ import org.frcteam2910.common.robot.UpdateManager;
 
 public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatable{
 
-    private static final double ROTATION_VELOCITY_MULTIPLIER = 2.0;
-
     //SWERVE MODULE ANGLE ENCODER OFFSETS (in radians, obviously)
     public static final double FRONT_LEFT_MODULE_OFFSET = Math.toRadians(40);
     public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-102);
@@ -226,8 +224,6 @@ public void resetGyroAngle(Rotation2 angle) {
           module.setTargetVelocity(moduleOutputs[i]);
           module.updateState(dt);
       }
-
-//        var pose = getPose();
         poseXEntry.setDouble(pose.translation.x);
         poseYEntry.setDouble(pose.translation.y);
         poseAngleEntry.setDouble(pose.rotation.toDegrees());

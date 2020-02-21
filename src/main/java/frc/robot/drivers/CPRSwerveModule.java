@@ -152,7 +152,6 @@ public final class CPRSwerveModule extends SwerveModule {
      */
     @Override
 	public void setTargetAngle(double angle) {
-        //System.out.println(anglePIDController.getPositionError());
         angleMotor.set(anglePIDController.calculate(readAngle(), angle));
     }
 
