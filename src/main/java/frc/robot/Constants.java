@@ -11,6 +11,7 @@ public class Constants {
 
     // Controllers
     public static final int DRIVE_CONTROLLER_ID = 0;
+    public static final int TEST_CONTROLLER_ID = 2;
     
     // Drivebase subsystem CAN IDs
     public static final int FRONT_LEFT_DRIVE_MOTOR_CANID = 1;
