@@ -118,7 +118,8 @@ public class SS_Feeder extends SubsystemBase {
    /**
    * Perform background processing for feeder system.
    */
-   @Override public void periodic() {
+   @Override
+   public void periodic() {
 
     //Execute the current mode, if it completes then put system in Stopped mode.
     if (currentMode.run(this)) {
@@ -198,7 +199,8 @@ public class SS_Feeder extends SubsystemBase {
       super(FeedMode.STOPPED);
     }
 
-    @Override protected void init( SS_Feeder feeder ) {
+    @Override
+    protected void init( SS_Feeder feeder ) {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
     }
   }
@@ -214,7 +216,8 @@ public class SS_Feeder extends SubsystemBase {
       super(FeedMode.INTAKE);
     }
 
-    @Override protected boolean run( SS_Feeder feeder ) {
+    @Override
+    protected boolean run( SS_Feeder feeder ) {
 
       // If there is ball at the top of the feeder then stop the motor and exit complete this mode.
       if (feeder.ballInExit()) {
@@ -233,7 +236,8 @@ public class SS_Feeder extends SubsystemBase {
       return false;
     }
 
-    @Override protected void end( SS_Feeder feeder ) {
+    @Override
+    protected void end( SS_Feeder feeder ) {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
     }
   }
@@ -249,12 +253,14 @@ public class SS_Feeder extends SubsystemBase {
       super(FeedMode.PRESHOOT);
     }
 
-    @Override protected void init( SS_Feeder feeder ) {
+    @Override
+    protected void init( SS_Feeder feeder ) {
       feeder.beltEncoder.setPosition(0.0);
       feeder.beltPID.setReference(FEED_RPM_INTAKE, ControlType.kVelocity);
     }
 
-    @Override protected boolean run( SS_Feeder feeder ) {
+    @Override
+    protected boolean run( SS_Feeder feeder ) {
       
       // If we see a ball at the exit sensor then we have moved them to the top of the feeder and ready to shoot.
       if (feeder.ballInExit()) {
@@ -270,7 +276,8 @@ public class SS_Feeder extends SubsystemBase {
       return false;
     }
 
-    @Override protected void end( SS_Feeder feeder ) {
+    @Override
+    protected void end( SS_Feeder feeder ) {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
     }
   }
@@ -282,21 +289,41 @@ public class SS_Feeder extends SubsystemBase {
    */
   private class ShootMode extends FeedModeBase
   {
+    private boolean gapSeen;
+
     private ShootMode(){
       super(FeedMode.SHOOT);
     }
 
-    @Override protected void init( SS_Feeder feeder ) {
+    @Override
+    protected void init( SS_Feeder feeder ) {
+
+      gapSeen = false;
       feeder.beltPID.setReference(FEED_RPM_SHOOT, ControlType.kVelocity);
     }
 
-    @Override protected boolean run( SS_Feeder feeder ) {
-      return !feeder.ballInExit();
+    @Override
+    protected boolean run( SS_Feeder feeder ) {
+
+      boolean result = false;
+
+      if (gapSeen) {
+        if ( feeder.ballInExit()) {
+          result = true;
+        }
+      } else {
+        if (!feeder.ballInExit())
+        {
+          gapSeen = true;
+        }
+      }
+
+      return result;
     }
 
-    @Override protected void end( SS_Feeder feeder ) {
+    @Override
+    protected void end( SS_Feeder feeder ) {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
     }
   }
-
 }

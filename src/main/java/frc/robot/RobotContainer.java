@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.commands.C_Drive;
+import frc.robot.commands.C_FeederDefault;
 import frc.robot.test.C_FeederTest;
 import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.subsystems.SS_Drivebase;
@@ -63,14 +64,14 @@ public RobotContainer() {
     }
 
     private void initSubsystems() {
+
         // Set the feeder subsystem
         CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
-        //drivers
         TimeOfFlightSensor entrySensor = new TimeOfFlightSensor( Constants.ENTRY_SENSOR_CANID);
         TimeOfFlightSensor exitSensor = new TimeOfFlightSensor( Constants.EXIT_SENSOR_CANID);
 
-        //subsystems
         feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
+        feeder.setDefaultCommand( new C_FeederDefault(feeder));
     }
     
     private void configureButtonBindings() {
