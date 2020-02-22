@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.TimeOfFlightSensor;
 
@@ -133,6 +134,9 @@ public class SS_Feeder extends SubsystemBase {
     feederRPMEntry.setNumber(beltMotor.getEncoder().getVelocity());
     entryRangeEntry.setNumber(entrySensor.getDistance());
     exitRangeEntry.setNumber(exitSensor.getDistance());
+    if(ballInExit()){
+      SmartDashboard.putBoolean("EXIT THING", true);
+    }
   }
 
   /**
