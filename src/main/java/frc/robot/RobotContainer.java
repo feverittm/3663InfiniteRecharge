@@ -70,7 +70,7 @@ public RobotContainer() {
         TimeOfFlightSensor exitSensor = new TimeOfFlightSensor( Constants.EXIT_SENSOR_CANID);
 
         //subsystems
-        this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
+        feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
     }
     
     private void configureButtonBindings() {
