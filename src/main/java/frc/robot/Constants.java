@@ -13,8 +13,8 @@ package frc.robot;
 public class Constants {
 
     //Robot dimensions
-    public static final double TRACKWIDTH = 23.5;
-    public static final double WHEELBASE = 23.63;
+    public static final double TRACKWIDTH = 18;
+    public static final double WHEELBASE = 20;
 
     // Controllers
     public static final int DRIVE_CONTROLLER_ID = 0;
@@ -32,10 +32,22 @@ public class Constants {
 
     // Other drivebase related constants
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 25;
+    public static final byte NAVX_UPDATE_RATE = 127;
+
+    //Intake subsystem related constants
+    public static final int INTAKE_MOTOR_CANID = 9;
 
     // Ball feeder subsystem related constants
     public static final int FEED_MOTOR_CANID = 10;
     public static final int ENTRY_SENSOR_CANID = 20;
     public static final int EXIT_SENSOR_CANID = 21;
+
+    //Shooter subsystem related constants
+    public static final int SHOOTER_MOTOR_CANID = 11;
+
+    //Climber subsystem related constants
+    public static final int CLIMBER_EXTEND_MOTOR_CANID = 12;
+    public static final int CLIMBER_WINCH_MOTOR_CANID = 13;
+    public static final int CLIMBER_DRIVE_MOTOR_CANID = 14;
 }
 
