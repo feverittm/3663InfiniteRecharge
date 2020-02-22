@@ -69,7 +69,7 @@ public RobotContainer() {
 
         //subsystems
         feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
-    }
+
     
     private void configureButtonBindings() {
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));

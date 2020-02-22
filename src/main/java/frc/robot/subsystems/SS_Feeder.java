@@ -116,12 +116,12 @@ public class SS_Feeder extends SubsystemBase {
    */
    @Override public void periodic() {
 
-    // Execute the current mode, if it completes then put system in Stopped mode.
-    // if (currentMode.run(this)) {
-    //   setFeedMode(FeedMode.STOPPED);
-    // }
+    //Execute the current mode, if it completes then put system in Stopped mode.
+    if (currentMode.run(this)) {
+      setFeedMode(FeedMode.STOPPED);
+    }
 
-    // updateTelemetry();
+    updateTelemetry();
   }
 
 

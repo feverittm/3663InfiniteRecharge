@@ -15,10 +15,8 @@ import frc.robot.subsystems.SS_Feeder.FeedMode;
 
 public class C_FeederTest extends CommandBase {
   private SS_Feeder feeder;
-  private Controller controller;
-  public C_FeederTest(SS_Feeder feeder, Controller controller) {
+  public C_FeederTest(SS_Feeder feeder) {
     this.feeder = feeder;
-    this.controller = controller;
     addRequirements(feeder);
   }
 
@@ -30,8 +28,7 @@ public class C_FeederTest extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if(controller.getAButton().get()){
-    //   feeder.setFeedMode(FeedMode.INTAKE);
+    feeder.setFeedMode(FeedMode.INTAKE);
     // }else if(controller.getBButton().get()){
     //   feeder.setFeedMode(FeedMode.PRESHOOT);
     // }else if(controller.getXButton().get()){
@@ -41,7 +38,7 @@ public class C_FeederTest extends CommandBase {
     // }else{
     //   feeder.setFeedMode(FeedMode.STOPPED);
     // }
-    feeder.getMotor().set(controller.getLeftYAxis().get());
+    //feeder.getMotor().set(controller.getLeftYAxis().get());
   }
 
   // Called once the command ends or is interrupted.
