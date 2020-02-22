@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.commands.C_Drive;
+import frc.robot.commands.C_Track;
+import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 
@@ -28,7 +30,7 @@ public class RobotContainer {
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
 
     // Driver Declarations
- 
+    Vision vision = new Vision();
     
     // Subsystem Declarations
     protected SS_Feeder feeder;
@@ -71,5 +73,8 @@ public RobotContainer() {
     
     private void configureButtonBindings() {
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
+        driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
+            () -> driveController.getLeftYAxis().get(true),
+            () -> driveController.getLeftXAxis().get(true)), true);
     }
 }
