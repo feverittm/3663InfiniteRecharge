@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
+import frc.robot.commands.C_FeederTest;
 import frc.robot.subsystems.SS_Feeder;
 
 
@@ -62,6 +63,7 @@ public RobotContainer() {
     }
     
     private void configureButtonBindings() {
+        driveController.getAButton().whenPressed(new C_FeederTest(feederSys));
  //       driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
     }
 
