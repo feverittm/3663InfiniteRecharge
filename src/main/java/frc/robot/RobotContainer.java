@@ -56,7 +56,7 @@ public RobotContainer() {
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
         );
-        
+        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederTest(feeder));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
@@ -75,6 +75,5 @@ public RobotContainer() {
     
     private void configureButtonBindings() {
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
-        driveController.getAButton().whenPressed(new C_FeederTest(feeder));
     }
 }

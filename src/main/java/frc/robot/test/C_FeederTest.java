@@ -38,7 +38,7 @@ public class C_FeederTest extends CommandBase {
     // }else{
     //   feeder.setFeedMode(FeedMode.STOPPED);
     // }
-    //feeder.getMotor().set(controller.getLeftYAxis().get());
+    //feeder.getMotor().set(0.3);
   }
 
   // Called once the command ends or is interrupted.

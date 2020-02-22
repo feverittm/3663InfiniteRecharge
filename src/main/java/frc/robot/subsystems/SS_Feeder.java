@@ -44,7 +44,7 @@ public class SS_Feeder extends SubsystemBase {
   public final int REV_PER_FULL_FEED = 1500;
 
   // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
-  private final double BALL_DETECT_THRESHOLD = 50;
+  private final double BALL_DETECT_THRESHOLD = 15;
 
   // Subsystems internal data
   private CANSparkMax beltMotor;
@@ -79,6 +79,9 @@ public class SS_Feeder extends SubsystemBase {
     //Sensors for Feeder
     this.entrySensor = entrySensor;
     this.exitSensor = exitSensor;
+    //Setting Range of Intrest for Sensors
+    entrySensor.setRangeOfInterest(0, 0, 0, 15);
+    exitSensor.setRangeOfInterest(0, 0, 0, 15);
 
     // Setup our feed modes and initialize the system into the stopped mode.
     modes.put( FeedMode.STOPPED, new StoppedMode());

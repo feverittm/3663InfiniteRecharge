@@ -19,19 +19,19 @@ import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.subsystems.SS_Feeder;
 
 public class Robot extends TimedRobot {
-  private final RobotContainer container = new RobotContainer();
+  //private final RobotContainer container = new RobotContainer();
   
-  // private CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
-  // private TimeOfFlightSensor entrySensor = new TimeOfFlightSensor(Constants.ENTRY_SENSOR_CANID);
-  // private TimeOfFlightSensor exitSensor = new TimeOfFlightSensor(Constants.EXIT_SENSOR_CANID);
-  // private SS_Feeder feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
+  private CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
+  private TimeOfFlightSensor entrySensor = new TimeOfFlightSensor(Constants.ENTRY_SENSOR_CANID);
+  private TimeOfFlightSensor exitSensor = new TimeOfFlightSensor(Constants.EXIT_SENSOR_CANID);
+  private SS_Feeder feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
   @Override
   public void robotInit() {
   }
 
   @Override
   public void robotPeriodic() {
-    //CommandScheduler.getInstance().schedule(new C_FeederTest(feeder));
+    CommandScheduler.getInstance().schedule(new C_FeederTest(feeder));
     CommandScheduler.getInstance().run();
   }
 }
