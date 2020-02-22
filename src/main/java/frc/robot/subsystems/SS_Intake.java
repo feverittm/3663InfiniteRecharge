@@ -3,13 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.CANSparkMax.IdleMode;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.utils.IntakePosition;
 
 public class SS_Intake extends SubsystemBase {
@@ -20,29 +15,20 @@ public class SS_Intake extends SubsystemBase {
 
     private CANSparkMax pickupMotor;
 
-    private DigitalInput pneumaticLimitSwitch;
-
     private IntakePosition currentPosition;
     
     //=====CONSTRUCTOR=====//
-    public SS_Intake() { 
-        shortSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, IntakeConstants.intakeArmShortExtend, 
-            IntakeConstants.intakeArmShortRetract);
-        longSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, IntakeConstants.intakeArmLongExtend, 
-            IntakeConstants.intakeArmLongRetract);
+    public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickUpMotor) { 
+        this.shortSolenoid = shortSolenoid;
+        this.longSolenoid = longSolenoid;
 
-        pickupMotor = new CANSparkMax(IntakeConstants.powerCellPickUpMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
-
-        pneumaticLimitSwitch = new DigitalInput(IntakeConstants.SWITCH_ID);
+        this.pickupMotor = pickUpMotor;
 
         pickupMotor.setIdleMode(IdleMode.kBrake);
     }
 
     //=====SETS THE INTAKE ARM POSITION=====//
     public void setArmPosition(IntakePosition position){
-        //This gets the limit switch for the intake arm (if we have one).
-        SmartDashboard.putBoolean("getReachedSwitch", getReachedLimit());
-        
         //Depending on the button pressed, this command sets the intake arm position.
         currentPosition = position;
         switch(position){
@@ -82,9 +68,4 @@ public class SS_Intake extends SubsystemBase {
     public void setBrakeMode() {
         pickupMotor.setIdleMode(IdleMode.kBrake);
     }
-
-    //=====RETURNS IF THE LIMIT SWITCH HAS BEEN ACTIVATED=====//
-    public boolean getReachedLimit() {
-        return !pneumaticLimitSwitch.get();
-    } 
 }

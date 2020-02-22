@@ -16,13 +16,13 @@ public class C_TestIntakeArm extends CommandBase {
     private final Timer timer = new Timer();
     private final double DURATION = 10.0;
     private double currentTime;
-    private double defaultSpeed;
+    private double defaultSpeed = 0.5;
     private double speed;
     private Controller testController;
 
     //=====CONSTRUCTOR #1=====//
-    public C_TestIntakeArm(SS_Intake subsystem, IntakePosition position, double defaultSpeed, Controller testController) {
-        this.defaultSpeed = defaultSpeed;
+    public C_TestIntakeArm(SS_Intake subsystem, IntakePosition position, double speed, Controller testController) {
+        this.speed = speed;
         ss_Intake = subsystem;
         this.position = position;
         this.testController = testController;
@@ -51,23 +51,18 @@ public class C_TestIntakeArm extends CommandBase {
         SmartDashboard.putNumber("Time Between Transitions", currentTime);
 
         if(testController.getRightTriggerAxis().get() > 0.5) {
-            speed = defaultSpeed;
             ss_Intake.setArmPosition(IntakePosition.FULLY_EXTENDED);
-            ss_Intake.setPickupMotorSpeed(0.5);
+            ss_Intake.setPickupMotorSpeed(defaultSpeed);
         }
         SmartDashboard.putNumber("Current Motor Speed", speed);
 
         ss_Intake.setArmPosition(position);
+        ss_Intake.setPickupMotorSpeed(speed);
     }
 
     //=====FINISHES THE COMMAND=====//
     @Override
     public boolean isFinished() {
-        /*if(ss_Intake.getReachedLimit() || currentTime > DURATION) {
-            return true;
-        }
-        return false;*/
-
         if(currentTime > DURATION) {
             return true;
         }

@@ -44,7 +44,7 @@ public class C_SetArmPosition extends CommandBase {
         If the intake arm hits the limit switch, or the timer is past the duration,
         the command ends.
         */
-        if(m_intakeSubsystem.getReachedLimit() || currentTime > DURATION) {
+        if(currentTime > DURATION) {
             return true;
         }
         return false;
