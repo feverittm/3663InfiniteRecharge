@@ -19,6 +19,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drivers.TimeOfFlightSensor;
 
 public class SS_Feeder extends SubsystemBase {
   public enum FeedMode {
@@ -50,8 +51,8 @@ public class SS_Feeder extends SubsystemBase {
   private CANEncoder beltEncoder;
   private CANPIDController beltPID;
 
-  private TimeOfFlight entrySensor;
-  private TimeOfFlight exitSensor;
+  private TimeOfFlightSensor entrySensor;
+  private TimeOfFlightSensor exitSensor;
 
   private FeedModeBase currentMode;
   private HashMap<FeedMode, FeedModeBase> modes = new HashMap<FeedMode, FeedModeBase>();  
@@ -62,7 +63,7 @@ public class SS_Feeder extends SubsystemBase {
   private NetworkTableEntry entryRangeEntry;
 
 
-  public SS_Feeder(CANSparkMax beltMotor, TimeOfFlight entrySensor, TimeOfFlight exitSensor) {
+  public SS_Feeder(CANSparkMax beltMotor, TimeOfFlightSensor entrySensor, TimeOfFlightSensor exitSensor) {
 
     this.beltMotor = beltMotor;
     beltMotor.setIdleMode(IdleMode.kBrake);
@@ -127,8 +128,8 @@ public class SS_Feeder extends SubsystemBase {
 
   private void updateTelemetry() {
     feederRPMEntry.setNumber(beltMotor.getEncoder().getVelocity());
-    entryRangeEntry.setNumber(entrySensor.getRange());
-    exitRangeEntry.setNumber(exitSensor.getRange());
+    entryRangeEntry.setNumber(entrySensor.getDistance());
+    exitRangeEntry.setNumber(exitSensor.getDistance());
   }
 
   /**
@@ -157,7 +158,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the entry sensor, false otherwise.
    */
   public boolean ballInEntry() {
-    return entrySensor.getRange() <= BALL_DETECT_THRESHOLD;
+    return entrySensor.getDistance() <= BALL_DETECT_THRESHOLD;
   }
 
 
@@ -166,7 +167,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the exit sensor, false otherwise.
    */
   public boolean ballInExit() {
-    return exitSensor.getRange() <= BALL_DETECT_THRESHOLD;
+    return exitSensor.getDistance() <= BALL_DETECT_THRESHOLD;
   }
 
 
@@ -179,7 +180,6 @@ public class SS_Feeder extends SubsystemBase {
     private FeedModeBase( FeedMode id ) {
       this.id = id;
     }
-
     protected void init( SS_Feeder feeder ) {}
     protected boolean run( SS_Feeder feeder ) { return false; }
     protected void end( SS_Feeder feeder ) {}

@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.test;
 
 import org.frcteam2910.common.robot.input.Controller;
 
