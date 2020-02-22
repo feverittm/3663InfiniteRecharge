@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_Track;
+
 import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
+import frc.robot.subsystems.SS_Shooter;
 
 
 public class RobotContainer {    
@@ -31,9 +33,11 @@ public class RobotContainer {
 
     // Driver Declarations
     Vision vision = new Vision();
+
     
     // Subsystem Declarations
     protected SS_Feeder feeder;
+    protected SS_Shooter shooter;
     private final SS_Drivebase drivebase = new SS_Drivebase();
 
     // Command declarations
@@ -45,6 +49,7 @@ public class RobotContainer {
     
 public RobotContainer() {
 
+        initDrivers();
         initSubsystems();
         
         driveController.getRightXAxis().setScale(.3);
@@ -62,6 +67,10 @@ public RobotContainer() {
         configureButtonBindings();
     }
 
+    private void initDrivers() {
+        vision = new Vision();
+    }
+
     private void initSubsystems() {
         // Set the feeder subsystem
         CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
@@ -69,6 +78,9 @@ public RobotContainer() {
         TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);
 
         this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
+
+        shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, 
+            Constants.HOOD_SOLENOID_REVERSE_ID);
     }
     
     private void configureButtonBindings() {
