@@ -36,6 +36,10 @@ public class Constants {
 
     //Intake subsystem related constants
     public static final int INTAKE_MOTOR_CANID = 9;
+    public static final int INTAKE_LONG_SOLENOID_FORWARD_ID = 0;
+    public static final int INTAKE_LONG_SOLENOID_REVERSE_ID = 2;
+    public static final int INTAKE_SHORT_SOLENOID_FORWARD_ID = 1;
+    public static final int INTAKE_SHORT_SOLENOID_REVERSE_ID = 3;
 
     // Ball feeder subsystem related constants
     public static final int FEED_MOTOR_CANID = 10;
@@ -44,6 +48,8 @@ public class Constants {
 
     //Shooter subsystem related constants
     public static final int SHOOTER_MOTOR_CANID = 11;
+    public static final int HOOD_SOLENOID_FORWARD_ID = 5;
+    public static final int HOOD_SOLENOID_REVERSE_ID = 4; 
 
     //Climber subsystem related constants
     public static final int CLIMBER_EXTEND_MOTOR_CANID = 12;

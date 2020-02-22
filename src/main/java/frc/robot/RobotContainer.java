@@ -20,20 +20,25 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
-import frc.robot.test.C_FeederTest;
 import frc.robot.drivers.TimeOfFlightSensor;
+import frc.robot.commands.C_Track;
+
+import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
+import frc.robot.subsystems.SS_Shooter;
 
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
 
     // Driver Declarations
- 
+    Vision vision = new Vision();
+
     
     // Subsystem Declarations
     protected SS_Feeder feeder;
+    protected SS_Shooter shooter;
     private final SS_Drivebase drivebase = new SS_Drivebase();
 
     // Command declarations
@@ -45,6 +50,7 @@ public class RobotContainer {
     
 public RobotContainer() {
 
+        initDrivers();
         initSubsystems();
         
         driveController.getRightXAxis().setScale(.3);
@@ -61,6 +67,10 @@ public RobotContainer() {
         configureButtonBindings();
     }
 
+    private void initDrivers() {
+        vision = new Vision();
+    }
+
     private void initSubsystems() {
 
         // Set the feeder subsystem
@@ -68,11 +78,16 @@ public RobotContainer() {
         TimeOfFlightSensor entrySensor = new TimeOfFlightSensor( Constants.ENTRY_SENSOR_CANID);
         TimeOfFlightSensor exitSensor = new TimeOfFlightSensor( Constants.EXIT_SENSOR_CANID);
 
-        feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
-        feeder.setDefaultCommand( new C_FeederDefault(feeder));
+        this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
+        feeder.setDefaultCommand(new C_FeederDefault(feeder));
+        shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, 
+            Constants.HOOD_SOLENOID_REVERSE_ID);
     }
     
     private void configureButtonBindings() {
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
+        driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
+            () -> driveController.getLeftYAxis().get(true),
+            () -> driveController.getLeftXAxis().get(true)), true);
     }
 }
