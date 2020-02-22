@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
 /**
@@ -18,6 +11,7 @@ public class Constants {
 
     // Controllers
     public static final int DRIVE_CONTROLLER_ID = 0;
+    public static final int TEST_CONTROLLER_ID = 2;
     
     // Drivebase subsystem CAN IDs
     public static final int FRONT_LEFT_DRIVE_MOTOR_CANID = 1;
@@ -45,7 +39,7 @@ public class Constants {
     public static final int FEED_MOTOR_CANID = 10;
     public static final int ENTRY_SENSOR_CANID = 20;
     public static final int EXIT_SENSOR_CANID = 21;
-
+    
     //Shooter subsystem related constants
     public static final int SHOOTER_MOTOR_CANID = 11;
     public static final int HOOD_SOLENOID_FORWARD_ID = 5;
