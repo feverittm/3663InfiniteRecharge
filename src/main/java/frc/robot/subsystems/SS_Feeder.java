@@ -44,7 +44,8 @@ public class SS_Feeder extends SubsystemBase {
   public final int REV_PER_FULL_FEED = 1500;
 
   // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
-  private final double BALL_DETECT_THRESHOLD = 15;
+  private final double ENTRY_BALL_DETECT_THRESHOLD = 15;
+  private final double EXIT_BALL_DETECT_THRESHOLD = 10;
 
   // Subsystems internal data
   private CANSparkMax beltMotor;
@@ -93,7 +94,6 @@ public class SS_Feeder extends SubsystemBase {
 
     initTelemetry();
   }
-  public CANSparkMax getMotor(){ return beltMotor;} 
 
   private void initTelemetry() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter"); //use the same tab as the shooter for displaying data
@@ -162,7 +162,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the entry sensor, false otherwise.
    */
   public boolean ballInEntry() {
-    return entrySensor.getDistance() <= BALL_DETECT_THRESHOLD;
+    return entrySensor.getDistance() <= ENTRY_BALL_DETECT_THRESHOLD;
   }
 
 
@@ -171,7 +171,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the exit sensor, false otherwise.
    */
   public boolean ballInExit() {
-    return exitSensor.getDistance() <= BALL_DETECT_THRESHOLD;
+    return exitSensor.getDistance() <= EXIT_BALL_DETECT_THRESHOLD;
   }
 
 
@@ -325,5 +325,12 @@ public class SS_Feeder extends SubsystemBase {
     protected void end( SS_Feeder feeder ) {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
     }
+  }
+
+  //TESTSING PURPOSES ONLY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  public CANSparkMax getMotor(){ return beltMotor;} 
+  
+  public void setMotorSpeed(double speed){
+   beltMotor.set(speed); 
   }
 }

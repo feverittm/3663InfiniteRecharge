@@ -57,7 +57,7 @@ public RobotContainer() {
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
         );
-        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederTest(feeder));
+        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederTest(feeder, driveController));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
