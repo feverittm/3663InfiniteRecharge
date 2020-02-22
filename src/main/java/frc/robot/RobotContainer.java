@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
+import frc.robot.test.C_FeederTest;
+import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 
@@ -65,17 +67,15 @@ public RobotContainer() {
 
         // Set the feeder subsystem
         CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
-        TimeOfFlight entrySensor = new TimeOfFlight( Constants.ENTRY_SENSOR_CANID);
-        TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);
+        TimeOfFlightSensor entrySensor = new TimeOfFlightSensor( Constants.ENTRY_SENSOR_CANID);
+        TimeOfFlightSensor exitSensor = new TimeOfFlightSensor( Constants.EXIT_SENSOR_CANID);
 
         feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
         feeder.setDefaultCommand( new C_FeederDefault(feeder));
-
-    
-
     }
     
     private void configureButtonBindings() {
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
+        driveController.getAButton().whenPressed(new C_FeederTest(feeder));
     }
 }
