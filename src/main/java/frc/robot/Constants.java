@@ -13,8 +13,8 @@ package frc.robot;
 public class Constants {
 
     //Robot dimensions
-    public static final double TRACKWIDTH = 23.5;
-    public static final double WHEELBASE = 23.63;
+    public static final double TRACKWIDTH = 18;
+    public static final double WHEELBASE = 20;
 
     // Controllers
     public static final int DRIVE_CONTROLLER_ID = 0;
@@ -32,9 +32,17 @@ public class Constants {
 
     // Other drivebase related constants
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 25;
+    public static final byte NAVX_UPDATE_RATE = 127;
+
+    //Intake subsystem related constants
+    public static final int INTAKE_MOTOR_CANID = 9;
+    public static final int INTAKE_LONG_SOLENOID_FORWARD_ID = 0;
+    public static final int INTAKE_LONG_SOLENOID_REVERSE_ID = 2;
+    public static final int INTAKE_SHORT_SOLENOID_FORWARD_ID = 1;
+    public static final int INTAKE_SHORT_SOLENOID_REVERSE_ID = 3;
 
     // Ball feeder subsystem related constants
-    public static final int FEED_MOTOR_CANID = 9;
+    public static final int FEED_MOTOR_CANID = 10;
     public static final int ENTRY_SENSOR_CANID = 20;
     public static final int EXIT_SENSOR_CANID = 21;
 
@@ -53,5 +61,14 @@ public class Constants {
         public static final int intakeArmLongRetract = 0;
         
     }
+    //Shooter subsystem related constants
+    public static final int SHOOTER_MOTOR_CANID = 11;
+    public static final int HOOD_SOLENOID_FORWARD_ID = 5;
+    public static final int HOOD_SOLENOID_REVERSE_ID = 4; 
+
+    //Climber subsystem related constants
+    public static final int CLIMBER_EXTEND_MOTOR_CANID = 12;
+    public static final int CLIMBER_WINCH_MOTOR_CANID = 13;
+    public static final int CLIMBER_DRIVE_MOTOR_CANID = 14;
 }
 

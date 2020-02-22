@@ -11,7 +11,8 @@ import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-//import org.frcteam2910.common.robot.UpdateManager;
+import org.frcteam2910.common.math.Rotation2;
+import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
@@ -20,34 +21,30 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-<<<<<<< HEAD
-import frc.robot.subsystems.FeederSys;
-import frc.robot.subsystems.SS_Intake;
-=======
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants;
+import frc.robot.commands.C_Drive;
+import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
->>>>>>> 92cc563287dfa6a622822c5503c052a4eb842f4f
 
 
-public class RobotContainer {
-    
+public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
 
     // Driver Declarations
  
     
     // Subsystem Declarations
-<<<<<<< HEAD
-    private FeederSys feederSys;
-    private SS_Intake ss_Intake;
-=======
-    protected SS_Feeder feederSys;
->>>>>>> 92cc563287dfa6a622822c5503c052a4eb842f4f
+
+    protected SS_Feeder feeder;
+    private final SS_Drivebase drivebase = new SS_Drivebase();
 
     // Command declarations
 
 
-    // All updatable subsystems should be passed as parameters into the UpdateManager constructor
-//    private final UpdateManager updateManager = new UpdateManager(drivebase);
+    //All updatable subsystems should be passed as parameters into the UpdateManager constructor
+    private final UpdateManager updateManager = new UpdateManager(drivebase);
 
     
 public RobotContainer() {
@@ -55,10 +52,18 @@ public RobotContainer() {
         initSubsystems();
         
         driveController.getRightXAxis().setScale(.3);
-        
- //       updateManager.startLoop(5.0e-3);
+        driveController.getRightXAxis().setInverted(true);
 
-    CommandScheduler.getInstance().setDefaultCommand(ss_Intake, CG_Rooma());
+        
+        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
+                    () -> driveController.getLeftYAxis().get(true), 
+                    () -> driveController.getLeftXAxis().get(true), 
+                    () -> driveController.getRightXAxis().get(true))
+        );
+        
+        updateManager.startLoop(5.0e-3);
+
+    //CommandScheduler.getInstance().setDefaultCommand(ss_Intake, CG_Rooma());
     //driveController.getRightTriggerAxis()
     //    .whenHeld(new InstantCommand(() -> new CG_Roomba(true, ss_Intake)));
 
@@ -66,23 +71,13 @@ public RobotContainer() {
     }
 
     private void initSubsystems() {
-
         // Set the feeder subsystem
         CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
         TimeOfFlight entrySensor = new TimeOfFlight( Constants.ENTRY_SENSOR_CANID);
         TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);
-
-<<<<<<< HEAD
-        feederSys = new FeederSys(beltMotor, entrySensor, exitSensor);
-
-        ss_Intake = new SS_Intake();
-=======
-        this.feederSys = new SS_Feeder(beltMotor, entrySensor, exitSensor);
->>>>>>> 92cc563287dfa6a622822c5503c052a4eb842f4f
+        this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
     }
     
-    private void configureButtonBindings() {
-    }
 
     public Command getAutonomousCommand() {
         return null;
@@ -90,5 +85,9 @@ public RobotContainer() {
 
     public Command getTeleopCommand() {
         return null;
+    }
+    
+    private void configureButtonBindings() {
+        driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
     }
 }
