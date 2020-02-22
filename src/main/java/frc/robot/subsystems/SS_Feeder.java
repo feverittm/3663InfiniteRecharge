@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
-import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -329,7 +328,7 @@ public class SS_Feeder extends SubsystemBase {
 
   //TESTSING PURPOSES ONLY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   public CANSparkMax getMotor(){ return beltMotor;} 
-  
+
   public void setMotorSpeed(double speed){
    beltMotor.set(speed); 
   }

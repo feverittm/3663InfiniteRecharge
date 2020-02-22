@@ -16,7 +16,7 @@ import frc.robot.subsystems.SS_Feeder.FeedMode;
 public class C_FeederTest extends CommandBase {
   private SS_Feeder feeder;
   private Controller controller;
-  public C_FeederTest(SS_Feeder feeder, Controller controller) {
+  public C_FeederTest(SS_Feeder feeder, Controller controller){
     this.feeder = feeder;
     this.controller = controller;
     addRequirements(feeder);
@@ -31,7 +31,7 @@ public class C_FeederTest extends CommandBase {
   @Override
   public void execute() {
     feeder.setFeedMode(FeedMode.INTAKE);
-    
+
     if(controller.getBButton().get()){
       feeder.setMotorSpeed(0.3);
     }

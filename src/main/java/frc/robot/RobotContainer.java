@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
