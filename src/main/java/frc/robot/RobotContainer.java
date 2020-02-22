@@ -21,17 +21,25 @@ import frc.robot.subsystems.SS_Feeder;
 //import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.utils.IntakePosition;
+import frc.robot.commands.C_Track;
+
+import frc.robot.drivers.Vision;
+import frc.robot.subsystems.SS_Drivebase;
+import frc.robot.subsystems.SS_Feeder;
+import frc.robot.subsystems.SS_Shooter;
 
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
 
     // Driver Declarations
- 
+    Vision vision = new Vision();
+
     
     // Subsystem Declarations
 
     protected SS_Feeder feeder;
+    protected SS_Shooter shooter;
     private final SS_Drivebase drivebase = new SS_Drivebase();
     //private SS_Feeder feederSys;
     private SS_Intake ss_Intake;
@@ -45,6 +53,7 @@ public class RobotContainer {
     
 public RobotContainer() {
 
+        initDrivers();
         initSubsystems();
         
         driveController.getRightXAxis().setScale(.3);
@@ -64,6 +73,10 @@ public RobotContainer() {
     //    .whenHeld(new InstantCommand(() -> new CG_Roomba(true, ss_Intake)));
 
         configureButtonBindings();
+    }
+
+    private void initDrivers() {
+        vision = new Vision();
     }
 
     private void initSubsystems() {
@@ -86,9 +99,16 @@ public RobotContainer() {
 
     public Command getTeleopCommand() {
         return null;
+        this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
+
+        shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, 
+            Constants.HOOD_SOLENOID_REVERSE_ID);
     }
     
     private void configureButtonBindings() {
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
+        driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
+            () -> driveController.getLeftYAxis().get(true),
+            () -> driveController.getLeftXAxis().get(true)), true);
     }
 }
