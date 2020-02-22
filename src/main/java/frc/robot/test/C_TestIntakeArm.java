@@ -29,10 +29,18 @@ public class C_TestIntakeArm extends CommandBase {
         addRequirements(subsystem);
     }
 
-    //=====CONSTRUCTOR #2=====//
+    //=====CONSTRUCTOR #2 (FOR CHOOSING THE POSITION OF THE INTAKE ARM)=====//
     public C_TestIntakeArm(SS_Intake subsystem, IntakePosition position, Controller testController) {
         ss_Intake = subsystem;
         this.position = position;
+        this.testController = testController;
+        addRequirements(subsystem);
+    }
+
+    //=====CONSTRUCTOR #3 (FOR SETTING THE SPEED OF THE INTAKE ARM MOTOR)=====//
+    public C_TestIntakeArm(SS_Intake subsystem, double speed, Controller testController) {
+        ss_Intake = subsystem;
+        this.speed = speed;
         this.testController = testController;
         addRequirements(subsystem);
     }
@@ -42,6 +50,17 @@ public class C_TestIntakeArm extends CommandBase {
     public void initialize() {
         timer.reset();
         timer.start();
+
+        if(testController.getRightTriggerAxis().get() > 0.5) {
+            ss_Intake.setArmPosition(IntakePosition.FULLY_EXTENDED);
+            speed = defaultSpeed;
+        }
+        else {
+            ss_Intake.setArmPosition(IntakePosition.FULLY_RETRACTED);
+            speed = 0;
+        }
+        ss_Intake.setArmPosition(position);
+        ss_Intake.setPickupMotorSpeed(speed);
     }
 
     //=====EXECUTES THE COMMAND=====//
@@ -49,21 +68,13 @@ public class C_TestIntakeArm extends CommandBase {
     public void execute() {
         currentTime = timer.get();
         SmartDashboard.putNumber("Time Between Transitions", currentTime);
-
-        if(testController.getRightTriggerAxis().get() > 0.5) {
-            ss_Intake.setArmPosition(IntakePosition.FULLY_EXTENDED);
-            ss_Intake.setPickupMotorSpeed(defaultSpeed);
-        }
         SmartDashboard.putNumber("Current Motor Speed", speed);
-
-        ss_Intake.setArmPosition(position);
-        ss_Intake.setPickupMotorSpeed(speed);
     }
 
     //=====FINISHES THE COMMAND=====//
     @Override
     public boolean isFinished() {
-        if(currentTime > DURATION) {
+        if(currentTime > DURATION && speed == 0) {
             return true;
         }
         return false;

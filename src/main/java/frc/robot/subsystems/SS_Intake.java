@@ -4,26 +4,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import frc.robot.Constants;
 import frc.robot.utils.IntakePosition;
 
 public class SS_Intake extends SubsystemBase {
 
     //=====INSTANCE VARIABLES=====//
-    private DoubleSolenoid shortSolenoid;
-    private DoubleSolenoid longSolenoid;
-
-    private CANSparkMax pickupMotor;
+    private DoubleSolenoid shortSolenoid = new DoubleSolenoid(Constants.INTAKE_SHORT_SOLENOID_FORWARD_ID,
+            Constants.INTAKE_SHORT_SOLENOID_REVERSE_ID);
+    private DoubleSolenoid longSolenoid = new DoubleSolenoid(Constants.INTAKE_LONG_SOLENOID_FORWARD_ID,
+            Constants.INTAKE_LONG_SOLENOID_REVERSE_ID);
+    private CANSparkMax pickupMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CANID, MotorType.kBrushless);
 
     private IntakePosition currentPosition;
     
     //=====CONSTRUCTOR=====//
-    public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickUpMotor) { 
-        this.shortSolenoid = shortSolenoid;
-        this.longSolenoid = longSolenoid;
-
-        this.pickupMotor = pickUpMotor;
-
+    public SS_Intake() { 
         pickupMotor.setIdleMode(IdleMode.kBrake);
     }
 
@@ -62,10 +61,5 @@ public class SS_Intake extends SubsystemBase {
     //=====SETS THE SPEED OF THE PICKUP MOTOR=====//
     public void setPickupMotorSpeed(double pickUpSpeed){
     	pickupMotor.set(pickUpSpeed);
-    }
-
-    //=====SETS THE BREAK MODE OF THE SPARKS=====//
-    public void setBrakeMode() {
-        pickupMotor.setIdleMode(IdleMode.kBrake);
     }
 }

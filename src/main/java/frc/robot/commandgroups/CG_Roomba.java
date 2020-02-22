@@ -1,7 +1,6 @@
 package frc.robot.commandgroups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.C_SetArmPosition;
 import frc.robot.commands.C_SetIntakeSpeed;
 import frc.robot.subsystems.SS_Intake;
@@ -23,7 +22,7 @@ public class CG_Roomba extends ParallelCommandGroup {
         if(extended) {
             addCommands(
                 new C_SetArmPosition(ss_Intake, IntakePosition.FULLY_EXTENDED),
-                new C_SetIntakeSpeed(ss_Intake, IntakeConstants.INTAKE_SPEED)
+                new C_SetIntakeSpeed(ss_Intake, .5)
             );
         } else {
             addCommands(

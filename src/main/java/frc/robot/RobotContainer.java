@@ -8,7 +8,6 @@
 package frc.robot;
 
 //import com.playingwithfusion.TimeOfFlight;
-import com.revrobotics.CANSparkMax;
 //import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.frcteam2910.common.math.Rotation2;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_SetArmPosition;
 import frc.robot.subsystems.SS_Drivebase;
@@ -30,8 +28,6 @@ import frc.robot.subsystems.SS_Feeder;
 //import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.utils.IntakePosition;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import com.revrobotics.CANSparkMaxLowLevel;
 
 
 public class RobotContainer {    
@@ -70,11 +66,11 @@ public RobotContainer() {
         
         updateManager.startLoop(5.0e-3);
 
-    CommandScheduler.getInstance().setDefaultCommand(ss_Intake, new C_SetArmPosition(ss_Intake, IntakePosition.FULLY_RETRACTED));
+        CommandScheduler.getInstance().setDefaultCommand(ss_Intake, new C_SetArmPosition(ss_Intake, IntakePosition.FULLY_RETRACTED));
     //driveController.getRightTriggerAxis()
     //    .whenHeld(new InstantCommand(() -> new CG_Roomba(true, ss_Intake)));
 
-
+        configureButtonBindings();
     }
 
     private void initSubsystems() {
@@ -84,14 +80,8 @@ public RobotContainer() {
         TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);*/
 
         //feederSys = new SS_Feeder(beltMotor, entrySensor, exitSensor);
-
-        DoubleSolenoid shortSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, IntakeConstants.intakeArmShortExtend, 
-            IntakeConstants.intakeArmShortRetract);
-        DoubleSolenoid longSolenoid = new DoubleSolenoid(IntakeConstants.PCM_CAN_ID, IntakeConstants.intakeArmLongExtend, 
-            IntakeConstants.intakeArmLongRetract);
-        CANSparkMax pickupMotor = new CANSparkMax(IntakeConstants.powerCellPickUpMotor, CANSparkMaxLowLevel.MotorType.kBrushless);
         
-        ss_Intake = new SS_Intake(shortSolenoid, longSolenoid, pickupMotor);
+        ss_Intake = new SS_Intake();
     }
     
     /*private void configureButtonBindings() {
