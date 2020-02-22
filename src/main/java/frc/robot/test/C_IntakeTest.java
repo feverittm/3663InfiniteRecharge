@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.utils.IntakePosition;
 
-public class C_TestIntakeArm extends CommandBase {
+public class C_IntakeTest extends CommandBase {
 
     //=====INSTANCE VARIABLES=====//
     private IntakePosition position;
@@ -21,7 +21,7 @@ public class C_TestIntakeArm extends CommandBase {
     private Controller testController;
 
     //=====CONSTRUCTOR #1=====//
-    public C_TestIntakeArm(SS_Intake subsystem, IntakePosition position, double speed, Controller testController) {
+    public C_IntakeTest(SS_Intake subsystem, IntakePosition position, double speed, Controller testController) {
         this.speed = speed;
         ss_Intake = subsystem;
         this.position = position;
@@ -30,7 +30,7 @@ public class C_TestIntakeArm extends CommandBase {
     }
 
     //=====CONSTRUCTOR #2 (FOR CHOOSING THE POSITION OF THE INTAKE ARM)=====//
-    public C_TestIntakeArm(SS_Intake subsystem, IntakePosition position, Controller testController) {
+    public C_IntakeTest(SS_Intake subsystem, IntakePosition position, Controller testController) {
         ss_Intake = subsystem;
         this.position = position;
         this.testController = testController;
@@ -38,7 +38,7 @@ public class C_TestIntakeArm extends CommandBase {
     }
 
     //=====CONSTRUCTOR #3 (FOR SETTING THE SPEED OF THE INTAKE ARM MOTOR)=====//
-    public C_TestIntakeArm(SS_Intake subsystem, double speed, Controller testController) {
+    public C_IntakeTest(SS_Intake subsystem, double speed, Controller testController) {
         ss_Intake = subsystem;
         this.speed = speed;
         this.testController = testController;
@@ -53,11 +53,11 @@ public class C_TestIntakeArm extends CommandBase {
 
         if(testController.getRightTriggerAxis().get() > 0.5) {
             ss_Intake.setArmPosition(IntakePosition.FULLY_EXTENDED);
-            speed = defaultSpeed;
+            ss_Intake.setPickupMotorSpeed(defaultSpeed);
         }
         else {
             ss_Intake.setArmPosition(IntakePosition.FULLY_RETRACTED);
-            speed = 0;
+            ss_Intake.setPickupMotorSpeed(0);
         }
         ss_Intake.setArmPosition(position);
         ss_Intake.setPickupMotorSpeed(speed);
