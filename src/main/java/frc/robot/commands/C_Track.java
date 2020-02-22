@@ -7,12 +7,10 @@
 
 package frc.robot.commands;
 
-import org.frcteam2910.common.control.PidConstants;
 import org.frcteam2910.common.math.Vector2;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
@@ -26,7 +24,6 @@ public class C_Track extends CommandBase {
   private final double p = 0.0009;
   private final double i = 0.001;
   
-  private final double X_TRANSLASHION_OFFSET = 0.5f;
 
   private DoubleSupplier forward;
   private DoubleSupplier strafe;
@@ -58,7 +55,7 @@ public class C_Track extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-        drivebase.drive(new Vector2(forward.getAsDouble(), strafe.getAsDouble()), -rotationPID.calculate(vision.getXOffset()), false);
+        drivebase.drive(new Vector2(forward.getAsDouble(), strafe.getAsDouble()), -rotationPID.calculate(vision.getXOffset() + rotationOffset()), false);
   }
 
   // Called once the command ends or is interrupted.
