@@ -34,7 +34,7 @@ public class RobotContainer {
     // Subsystem Declarations
     protected SS_Feeder feeder;
     protected SS_Shooter shooter;
-    protected SS_Intake ss_Intake;
+    protected SS_Intake intake;
     private final SS_Drivebase drivebase = new SS_Drivebase();
 
     // Command declarations
@@ -52,7 +52,6 @@ public RobotContainer() {
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
 
-        
         CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
                     () -> driveController.getLeftXAxis().get(true), 
@@ -62,7 +61,7 @@ public RobotContainer() {
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
-        CommandScheduler.getInstance().setDefaultCommand(ss_Intake, new C_IntakeTest(ss_Intake, testcontroller));
+        CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, testcontroller));
     }
 
     private void initDrivers() {
@@ -70,23 +69,20 @@ public RobotContainer() {
     }
 
     private void initSubsystems() {
-        // Set the feeder subsystem
+        // Feeder subsystem
         CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
-        TimeOfFlight entrySensor = new TimeOfFlight( Constants.ENTRY_SENSOR_CANID);
-        TimeOfFlight exitSensor = new TimeOfFlight( Constants.EXIT_SENSOR_CANID);
-
-        // Set the intake arm subsystem
-        DoubleSolenoid shortSolenoid = new DoubleSolenoid(Constants.INTAKE_SHORT_SOLENOID_FORWARD_ID, 
-            Constants.INTAKE_SHORT_SOLENOID_REVERSE_ID);
-        DoubleSolenoid longSolenoid = new DoubleSolenoid(Constants.INTAKE_LONG_SOLENOID_FORWARD_ID,
-            Constants.INTAKE_LONG_SOLENOID_REVERSE_ID);
-        CANSparkMax pickupMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CANID, MotorType.kBrushless);
-
+        TimeOfFlight entrySensor = new TimeOfFlight(Constants.ENTRY_SENSOR_CANID);
+        TimeOfFlight exitSensor = new TimeOfFlight(Constants.EXIT_SENSOR_CANID);
         this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
 
-        shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, 
-            Constants.HOOD_SOLENOID_REVERSE_ID);
-        ss_Intake = new SS_Intake(shortSolenoid, longSolenoid, pickupMotor);
+        // Intake subsystem
+        DoubleSolenoid shortSolenoid = new DoubleSolenoid(Constants.INTAKE_SHORT_SOLENOID_FORWARD_ID, Constants.INTAKE_SHORT_SOLENOID_REVERSE_ID);
+        DoubleSolenoid longSolenoid = new DoubleSolenoid(Constants.INTAKE_LONG_SOLENOID_FORWARD_ID, Constants.INTAKE_LONG_SOLENOID_REVERSE_ID);
+        CANSparkMax pickupMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CANID, MotorType.kBrushless);
+        intake = new SS_Intake(shortSolenoid, longSolenoid, pickupMotor);
+
+       // Shooter subsystem
+        shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, Constants.HOOD_SOLENOID_REVERSE_ID);
     }
     
     private void configureButtonBindings() {
