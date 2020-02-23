@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -37,15 +38,15 @@ public class SS_Feeder extends SubsystemBase {
   private final double KD = 0;
 
   private final int FEED_RPM_STOPPED = 0;
-  private final int FEED_RPM_SHOOT = 100; //how fast the feeder should be running when we are shooting
-  private final int FEED_RPM_INTAKE = 100; //how fast the feeder should be running when indexing the balls
+  private final int FEED_RPM_SHOOT = 4500; //how fast the feeder should be running when we are shooting
+  private final int FEED_RPM_INTAKE = 4500; //how fast the feeder should be running when indexing the balls
 
   // The number of revolutions of the belt motor required to cycle a ball all the way from the feeders entry to the exit.
   public final int REV_PER_FULL_FEED = 1500;
 
   // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
-  private final double ENTRY_BALL_DETECT_THRESHOLD = 15;
-  private final double EXIT_BALL_DETECT_THRESHOLD = 10;
+  private final double ENTRY_BALL_DETECT_THRESHOLD = 12;
+  private final double EXIT_BALL_DETECT_THRESHOLD = 12;
 
   // Subsystems internal data
   private CANSparkMax beltMotor;
@@ -68,6 +69,7 @@ public class SS_Feeder extends SubsystemBase {
 
     this.beltMotor = beltMotor;
     beltMotor.setIdleMode(IdleMode.kBrake);
+    beltMotor.setInverted(true);
 
     beltPID = beltMotor.getPIDController();
     beltPID.setP(KP);
@@ -225,15 +227,18 @@ public class SS_Feeder extends SubsystemBase {
       // If there is ball at the top of the feeder then stop the motor and exit complete this mode.
       if (feeder.ballInExit()) {
         feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+        //feeder.setMotorSpeed(0);;
         return true;
       }
 
       // If there is a ball in the intake end of the feeder then start the motor otherwise stop it.
       if (feeder.ballInEntry()) {
         feeder.beltPID.setReference(FEED_RPM_INTAKE, ControlType.kVelocity);
+        //feeder.setMotorSpeed(0.3);
       }
       else {
         feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+        //feeder.setMotorSpeed(0);
       }
 
       return false;
@@ -307,7 +312,6 @@ public class SS_Feeder extends SubsystemBase {
 
     @Override
     protected boolean run( SS_Feeder feeder ) {
-
       boolean result = false;
 
       if (gapSeen) {

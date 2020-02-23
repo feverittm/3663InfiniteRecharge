@@ -13,13 +13,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Feeder.FeedMode;
 
-public class C_FeederTest extends CommandBase {
+public class C_Shoot extends CommandBase {
+  /**
+   * Creates a new C_Shoot.
+   */
   private SS_Feeder feeder;
   private Controller controller;
-  public C_FeederTest(SS_Feeder feeder){
+  public C_Shoot(SS_Feeder feeder, Controller controller) {
     this.feeder = feeder;
     this.controller = controller;
     addRequirements(feeder);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -30,27 +34,17 @@ public class C_FeederTest extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    feeder.setFeedMode(FeedMode.INTAKE);
-
-    // }else if(controller.getBButton().get()){
-    //   feeder.setFeedMode(FeedMode.PRESHOOT);
-    // }else if(controller.getXButton().get()){
-        
-    // }else if(controller.getYButton().get()){
-    //   feeder.setFeedMode(FeedMode.SHOOT);
-    // }else{
-    //   feeder.setFeedMode(FeedMode.STOPPED);
-    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    feeder.setFeedMode(FeedMode.SHOOT);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return feeder.isIdle();
+    return controller.getAButton().get();
   }
 }

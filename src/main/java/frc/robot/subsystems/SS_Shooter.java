@@ -46,6 +46,7 @@ public class SS_Shooter extends SubsystemBase {
   private final double KD = 0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
+  private final double CORRECT_RPM_THRESHOLD = 20;
   private final double CONFIDENCE_TIME = 1; //time we want to be in the confidence band before shooting
 
   private Vision vision;
@@ -109,6 +110,8 @@ public class SS_Shooter extends SubsystemBase {
       .withPosition(1, 1)
       .withSize(1, 1)
       .getEntry();
+
+    vision.updateTelemetry();
   }
 
   @Override
@@ -213,6 +216,10 @@ public class SS_Shooter extends SubsystemBase {
     return (int)Math.min(100, confidenceTimePercent);
   }
 
+  public boolean atCorrectRPM(){
+
+    return (Math.abs(encoder.getVelocity()) - targetRPM <= CORRECT_RPM_THRESHOLD);
+  }
   /**
    * Returns the non-fixed correction multiplier
    * @return the correction multiplier
@@ -279,4 +286,5 @@ public class SS_Shooter extends SubsystemBase {
     //calculate the new distance between the known distances linearly
     return (int)((distance - KNOWN_RPM[index - 1][DISTANCE_COLUMN]) / distanceRange * RPMRange) + KNOWN_RPM[index - 1][RPM_COLUMN];
   }
+
 }

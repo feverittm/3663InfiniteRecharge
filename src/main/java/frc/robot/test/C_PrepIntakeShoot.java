@@ -1,17 +1,22 @@
-package frc.robot.commands;
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
-import org.frcteam2910.common.robot.input.Controller;
+package frc.robot.test;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Feeder.FeedMode;
 
-public class C_FeederDefault extends CommandBase {
-
+public class C_PrepIntakeShoot extends CommandBase {
+  /**
+   * Creates a new C_PrepIntakeShoot.
+   */
   private SS_Feeder feeder;
-  //private Controller controller;
-  public C_FeederDefault(SS_Feeder feeder) {
-    //this.controller = controller;
+  public C_PrepIntakeShoot(SS_Feeder feeder) {
     this.feeder = feeder;
     addRequirements(feeder);
   }
@@ -19,24 +24,12 @@ public class C_FeederDefault extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    feeder.setFeedMode(FeedMode.INTAKE);    
+    feeder.setFeedMode(FeedMode.PRESHOOT);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if(contoller.getAButton().get()){
-    //   feeder.setMotorSpeed(0.3);
-    // }
-    // if(feeder.ballInExit()){
-    //   feeder.setMotorSpeed(0);
-
-    // }
-    // if(feeder.ballInEntry()){
-    //   feeder.setMotorSpeed(0.3);
-    // }else{
-    //   feeder.setMotorSpeed(0);
-    // }
   }
 
   // Called once the command ends or is interrupted.

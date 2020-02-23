@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
+import frc.robot.commands.C_FeederDefault;
 import frc.robot.test.C_FeederTest;
+import frc.robot.test.C_TestShoot;
 import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.subsystems.SS_Feeder;
 
@@ -31,7 +33,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    //CommandScheduler.getInstance().schedule(new C_FeederTest(feeder));
+    //CommandScheduler.getInstance().schedule(new C_TestShoot(shooter, feeder));
     CommandScheduler.getInstance().run();
   }
 }

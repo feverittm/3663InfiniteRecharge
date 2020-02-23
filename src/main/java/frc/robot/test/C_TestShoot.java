@@ -7,40 +7,35 @@
 
 package frc.robot.test;
 
-import org.frcteam2910.common.robot.input.Controller;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
+import frc.robot.subsystems.SS_Shooter;
 import frc.robot.subsystems.SS_Feeder.FeedMode;
 
-public class C_FeederTest extends CommandBase {
+public class C_TestShoot extends CommandBase {
+  /**
+   * Creates a new C_TestShoot.
+   */
+  private SS_Shooter shooter;
   private SS_Feeder feeder;
-  private Controller controller;
-  public C_FeederTest(SS_Feeder feeder){
+  public C_TestShoot(SS_Shooter shooter, SS_Feeder feeder) {
+    // Use addRequirements() here to declare subsystem dependencies.
     this.feeder = feeder;
-    this.controller = controller;
-    addRequirements(feeder);
+    this.shooter = shooter;
+    addRequirements(shooter, feeder);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.testSetTargetRPM(200);
+    shooter.setSpinning(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    feeder.setFeedMode(FeedMode.INTAKE);
-
-    // }else if(controller.getBButton().get()){
-    //   feeder.setFeedMode(FeedMode.PRESHOOT);
-    // }else if(controller.getXButton().get()){
-        
-    // }else if(controller.getYButton().get()){
-    //   feeder.setFeedMode(FeedMode.SHOOT);
-    // }else{
-    //   feeder.setFeedMode(FeedMode.STOPPED);
-    // }
+    feeder.setFeedMode(FeedMode.SHOOT);
   }
 
   // Called once the command ends or is interrupted.
