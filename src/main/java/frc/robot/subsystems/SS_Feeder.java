@@ -31,7 +31,7 @@ public class SS_Feeder extends SubsystemBase {
   private final int FEED_RPM_STOPPED = 0;
   private final int FEED_RPM_SHOOT = 3500; //how fast the feeder should be running when we are shooting
   private final int FEED_RPM_PREP_SHOOT = 5500;
-  private final int FEED_RPM_INTAKE = 4500; //how fast the feeder should be running when indexing the balls
+  private final int FEED_RPM_INTAKE = 2250; //how fast the feeder should be running when indexing the balls
 
   // The number of revolutions of the belt motor required to cycle a ball all the way from the feeders entry to the exit.
   public final int REV_PER_FULL_FEED = 1500;
@@ -77,7 +77,7 @@ public class SS_Feeder extends SubsystemBase {
     this.exitSensor = exitSensor;
     //Setting Range of Intrest for Sensors
     entrySensor.setRangeOfInterest(0, 0, 0, 15);
-    exitSensor.setRangeOfInterest(0, 0, 0, 15);
+    exitSensor.setRangeOfInterest(0, 15, 15, 15);
 
     // Setup our feed modes and initialize the system into the stopped mode.
     modes.put( FeedMode.STOPPED, new StoppedMode());
@@ -132,7 +132,7 @@ public class SS_Feeder extends SubsystemBase {
     feederRPMEntry.setNumber(beltMotor.getEncoder().getVelocity());
     entryRangeEntry.setNumber(entrySensor.getDistance());
     exitRangeEntry.setNumber(exitSensor.getDistance());
-    exitValid.setBoolean(valid);
+    exitValid.setBoolean(ballInExit());
   }
 
   /**

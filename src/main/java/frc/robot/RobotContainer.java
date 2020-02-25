@@ -99,6 +99,6 @@ public RobotContainer() {
             
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
-        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
+        //driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
     }
 }
