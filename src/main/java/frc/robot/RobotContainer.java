@@ -95,7 +95,7 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
         driveController.getBButton().whenPressed(new C_FeederDefault(feeder));
-        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController));
+        driveController.getLeftBumperButton().whenHeld(new CG_ShootBalls(feeder, shooter, driveController));
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
     }
 }

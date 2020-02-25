@@ -27,7 +27,7 @@ public class CG_ShootBalls extends SequentialCommandGroup {
    */
   public CG_ShootBalls(SS_Feeder feeder, SS_Shooter shooter, Controller controller) {
     addCommands(
-      new ParallelCommandGroup(new C_PrepIntakeShoot(feeder)),
+      new ParallelCommandGroup(new C_PrepShoot(shooter), new C_PrepIntakeShoot(feeder)),
       new C_Shoot(feeder, controller)
     );
   }

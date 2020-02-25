@@ -24,7 +24,7 @@ public class C_PrepIntakeShoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    feeder.setFeedMode(FeedMode.PRESHOOT);
+   feeder.setFeedMode(FeedMode.PRESHOOT);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

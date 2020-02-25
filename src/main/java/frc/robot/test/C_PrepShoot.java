@@ -26,7 +26,7 @@ public class C_PrepShoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.testSetTargetRPM(2800);
+    shooter.testSetTargetRPM(1000);
     shooter.setSpinning(true);
     //shooter.updateFromVision(true).setSpinning(true);
     //shooter.setHoodFar(true);

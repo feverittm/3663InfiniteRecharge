@@ -33,12 +33,12 @@ public class SS_Feeder extends SubsystemBase {
   private final double FEEDER_BELT_GEAR_RATIO_MULTIPLIER = 1;
 
   // Feeder PID constants
-  private final double KP = 0.0001;
-  private final double KI = 0.0000005;
-  private final double KD = 0;
+  private final double KP = 0.0001;//0.007
+  private final double KI = 0.0000011;//0.00000001
+  private final double KD = 0;//00000001
 
   private final int FEED_RPM_STOPPED = 0;
-  private final int FEED_RPM_SHOOT = 4500; //how fast the feeder should be running when we are shooting
+  private final int FEED_RPM_SHOOT = 3500; //how fast the feeder should be running when we are shooting
   private final int FEED_RPM_INTAKE = 4500; //how fast the feeder should be running when indexing the balls
 
   // The number of revolutions of the belt motor required to cycle a ball all the way from the feeders entry to the exit.
@@ -46,7 +46,7 @@ public class SS_Feeder extends SubsystemBase {
 
   // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
   private final double ENTRY_BALL_DETECT_THRESHOLD = 12;
-  private final double EXIT_BALL_DETECT_THRESHOLD = 12;
+  private final double EXIT_BALL_DETECT_THRESHOLD = 17;
 
   // Subsystems internal data
   private CANSparkMax beltMotor;
@@ -63,8 +63,9 @@ public class SS_Feeder extends SubsystemBase {
   private NetworkTableEntry feederRPMEntry;
   private NetworkTableEntry exitRangeEntry;
   private NetworkTableEntry entryRangeEntry;
+  private NetworkTableEntry exitValid;
 
-
+  private boolean valid = false;
   public SS_Feeder(CANSparkMax beltMotor, TimeOfFlightSensor entrySensor, TimeOfFlightSensor exitSensor) {
 
     this.beltMotor = beltMotor;
@@ -114,6 +115,10 @@ public class SS_Feeder extends SubsystemBase {
       .withPosition(5, 2)
       .withSize(1, 1)
       .getEntry();
+    exitValid = shooterTab.add("Exit Valid", false)
+      .withPosition(5, 3)
+      .withSize(1, 1)
+      .getEntry();
   }
 
 
@@ -136,9 +141,7 @@ public class SS_Feeder extends SubsystemBase {
     feederRPMEntry.setNumber(beltMotor.getEncoder().getVelocity());
     entryRangeEntry.setNumber(entrySensor.getDistance());
     exitRangeEntry.setNumber(exitSensor.getDistance());
-    if(ballInExit()){
-      SmartDashboard.putBoolean("EXIT THING", true);
-    }
+    exitValid.setBoolean(valid);
   }
 
   /**
@@ -234,7 +237,7 @@ public class SS_Feeder extends SubsystemBase {
       // If there is a ball in the intake end of the feeder then start the motor otherwise stop it.
       if (feeder.ballInEntry()) {
         feeder.beltPID.setReference(FEED_RPM_INTAKE, ControlType.kVelocity);
-        //feeder.setMotorSpeed(0.3);
+        //feeder.setMotorSpeed(1);
       }
       else {
         feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
@@ -269,9 +272,9 @@ public class SS_Feeder extends SubsystemBase {
 
     @Override
     protected boolean run( SS_Feeder feeder ) {
-      
       // If we see a ball at the exit sensor then we have moved them to the top of the feeder and ready to shoot.
       if (feeder.ballInExit()) {
+        valid = true;
         return true;
       }
 
@@ -283,7 +286,6 @@ public class SS_Feeder extends SubsystemBase {
 
       return false;
     }
-
     @Override
     protected void end( SS_Feeder feeder ) {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
