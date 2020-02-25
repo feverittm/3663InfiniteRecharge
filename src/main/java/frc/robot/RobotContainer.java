@@ -21,11 +21,14 @@ import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
+import frc.robot.test.C_Intake;
 import frc.robot.test.C_IntakeTest;
+import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
     private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
+    private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
 
     // Driver Declarations
     Vision vision = new Vision();
@@ -37,8 +40,7 @@ public class RobotContainer {
     protected SS_Intake intake;
     private final SS_Drivebase drivebase = new SS_Drivebase();
 
-    // Command declarations
-
+    // Command declarations 
 
     //All updatable subsystems should be passed as parameters into the UpdateManager constructor
     private final UpdateManager updateManager = new UpdateManager(drivebase);
@@ -61,7 +63,7 @@ public RobotContainer() {
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
-        CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, testcontroller));
+        //CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, testcontroller));
     }
 
     private void initDrivers() {
@@ -90,5 +92,7 @@ public RobotContainer() {
         driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
+
+        rightTriggerButton.getTriggerButton().whileHeld(new C_Intake(intake, driveController));
     }
 }
