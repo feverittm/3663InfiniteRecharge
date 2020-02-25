@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
@@ -15,6 +8,7 @@ import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
@@ -27,13 +21,19 @@ import frc.robot.commands.C_Track;
 import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
+import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
+<<<<<<< HEAD
 import frc.robot.test.C_RPMTuneTest;
 import frc.robot.commands.C_StopShooter;
 
+=======
+import frc.robot.test.C_IntakeTest;
+>>>>>>> master
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
+    private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
 
     // Driver Declarations
     Vision vision = new Vision();
@@ -42,6 +42,7 @@ public class RobotContainer {
     // Subsystem Declarations
     protected SS_Feeder feeder;
     protected SS_Shooter shooter;
+    protected SS_Intake ss_Intake;
     private final SS_Drivebase drivebase = new SS_Drivebase();
 
     // Command declarations
@@ -69,6 +70,7 @@ public RobotContainer() {
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
+        CommandScheduler.getInstance().setDefaultCommand(ss_Intake, new C_IntakeTest(ss_Intake, testcontroller));
     }
 
     private void initCommands(){
@@ -84,9 +86,17 @@ public RobotContainer() {
         TimeOfFlightSensor entrySensor = new TimeOfFlightSensor( Constants.ENTRY_SENSOR_CANID);
         TimeOfFlightSensor exitSensor = new TimeOfFlightSensor( Constants.EXIT_SENSOR_CANID);
 
+        // Set the intake arm subsystem
+        DoubleSolenoid shortSolenoid = new DoubleSolenoid(Constants.INTAKE_SHORT_SOLENOID_FORWARD_ID, 
+            Constants.INTAKE_SHORT_SOLENOID_REVERSE_ID);
+        DoubleSolenoid longSolenoid = new DoubleSolenoid(Constants.INTAKE_LONG_SOLENOID_FORWARD_ID,
+            Constants.INTAKE_LONG_SOLENOID_REVERSE_ID);
+        CANSparkMax pickupMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CANID, MotorType.kBrushless);
+
         this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
         shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, 
             Constants.HOOD_SOLENOID_REVERSE_ID);
+        ss_Intake = new SS_Intake(shortSolenoid, longSolenoid, pickupMotor);
     }
     
     private void configureButtonBindings() {
