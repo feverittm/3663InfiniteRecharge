@@ -35,6 +35,6 @@ public class C_FeederDefault extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return feeder.isIdle();
+    return false;
   }
 }
