@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import org.frcteam2910.common.robot.input.Controller;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
@@ -25,18 +24,6 @@ public class C_FeederDefault extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // if(contoller.getAButton().get()){
-    //   feeder.setMotorSpeed(0.3);
-    // }
-    // if(feeder.ballInExit()){
-    //   feeder.setMotorSpeed(0);
-
-    // }
-    // if(feeder.ballInEntry()){
-    //   feeder.setMotorSpeed(0.3);
-    // }else{
-    //   feeder.setMotorSpeed(0);
-    // }
   }
 
   // Called once the command ends or is interrupted.

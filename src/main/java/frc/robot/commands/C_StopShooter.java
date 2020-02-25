@@ -5,42 +5,32 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.test;
-
-import org.frcteam2910.common.robot.input.Controller;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.SS_Feeder;
-import frc.robot.subsystems.SS_Feeder.FeedMode;
+import frc.robot.subsystems.SS_Shooter;
 
-public class C_FeederTest extends CommandBase {
-  private SS_Feeder feeder;
-  private Controller controller;
-  public C_FeederTest(SS_Feeder feeder){
-    this.feeder = feeder;
-    this.controller = controller;
-    addRequirements(feeder);
+public class C_StopShooter extends CommandBase {
+  /**
+   * Creates a new C_StopShooter.
+   */
+  private SS_Shooter shooter;
+  public C_StopShooter(SS_Shooter shooter) {
+    this.shooter = shooter;
+    addRequirements(shooter);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.setSpinning(false);
+    shooter.setHoodFar(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    feeder.setFeedMode(FeedMode.INTAKE);
-
-    // }else if(controller.getBButton().get()){
-    //   feeder.setFeedMode(FeedMode.PRESHOOT);
-    // }else if(controller.getXButton().get()){
-        
-    // }else if(controller.getYButton().get()){
-    //   feeder.setFeedMode(FeedMode.SHOOT);
-    // }else{
-    //   feeder.setFeedMode(FeedMode.STOPPED);
-    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -51,6 +41,6 @@ public class C_FeederTest extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return feeder.isIdle();
+    return true;
   }
 }

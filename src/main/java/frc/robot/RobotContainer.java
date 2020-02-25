@@ -28,8 +28,8 @@ import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.test.C_StopShooter;
-import frc.robot.test.C_TestShoot;
+import frc.robot.test.C_RPMTuneTest;
+import frc.robot.commands.C_StopShooter;
 
 
 public class RobotContainer {    
@@ -65,13 +65,13 @@ public RobotContainer() {
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
         );
+        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
     }
 
     private void initCommands(){
-        //CommandScheduler.getInstance().schedule(new C_TestShoot(shooter, feeder));
     }
     private void initDrivers() {
         vision = new Vision();
@@ -94,8 +94,9 @@ public RobotContainer() {
         driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
-        driveController.getBButton().whenPressed(new C_FeederDefault(feeder));
-        driveController.getLeftBumperButton().whenHeld(new CG_ShootBalls(feeder, shooter, driveController));
+            
+        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
+        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
     }
 }

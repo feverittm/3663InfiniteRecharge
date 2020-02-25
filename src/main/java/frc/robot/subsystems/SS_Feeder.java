@@ -28,7 +28,7 @@ public class SS_Feeder extends SubsystemBase {
     INTAKE,
     PRESHOOT,
     SHOOT,
-    PREINTAKE
+    INTAKE_PREP
   }
   private final double FEEDER_BELT_GEAR_RATIO_MULTIPLIER = 1;
 
@@ -39,7 +39,9 @@ public class SS_Feeder extends SubsystemBase {
 
   private final int FEED_RPM_STOPPED = 0;
   private final int FEED_RPM_SHOOT = 3500; //how fast the feeder should be running when we are shooting
+  private final int FEED_RPM_PREP_SHOOT = 4500;
   private final int FEED_RPM_INTAKE = 4500; //how fast the feeder should be running when indexing the balls
+  private final int FEED_RPM_PREP_INTAKE = -3500;
 
   // The number of revolutions of the belt motor required to cycle a ball all the way from the feeders entry to the exit.
   public final int REV_PER_FULL_FEED = 1500;
@@ -89,6 +91,7 @@ public class SS_Feeder extends SubsystemBase {
 
     // Setup our feed modes and initialize the system into the stopped mode.
     modes.put( FeedMode.STOPPED, new StoppedMode());
+    modes.put(FeedMode.INTAKE_PREP, new IntakePrep());
     modes.put(FeedMode.INTAKE, new IntakeMode());
     modes.put(FeedMode.PRESHOOT, new PreshootMode());
     modes.put(FeedMode.SHOOT, new ShootMode());
@@ -213,7 +216,21 @@ public class SS_Feeder extends SubsystemBase {
     }
   }
 
+  private class IntakePrep extends FeedModeBase{
+    private IntakePrep(){
+      super(FeedMode.INTAKE_PREP);
+    }
 
+    @Override
+    protected void init(SS_Feeder feeder){
+      feeder.beltPID.setReference(FEED_RPM_PREP_INTAKE, ControlType.kVelocity);
+    }
+
+    @Override
+    protected boolean run(SS_Feeder feeder){
+      return false;
+    }
+  }
   /**
    * Implements Intake mode, advances belts as long as there is a ball in the entry and ends once a ball
    * reaches the exit end of the feeder.
@@ -267,7 +284,7 @@ public class SS_Feeder extends SubsystemBase {
     @Override
     protected void init( SS_Feeder feeder ) {
       feeder.beltEncoder.setPosition(0.0);
-      feeder.beltPID.setReference(FEED_RPM_INTAKE, ControlType.kVelocity);
+      feeder.beltPID.setReference(FEED_RPM_PREP_SHOOT, ControlType.kVelocity);
     }
 
     @Override
@@ -334,12 +351,5 @@ public class SS_Feeder extends SubsystemBase {
     protected void end( SS_Feeder feeder ) {
       feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
     }
-  }
-
-  //TESTSING PURPOSES ONLY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  public CANSparkMax getMotor(){ return beltMotor;} 
-
-  public void setMotorSpeed(double speed){
-   beltMotor.set(speed); 
   }
 }

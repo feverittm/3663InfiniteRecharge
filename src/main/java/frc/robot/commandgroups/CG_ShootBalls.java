@@ -11,16 +11,12 @@ import org.frcteam2910.common.robot.input.Controller;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.C_PrepIntakeShoot;
+import frc.robot.commands.C_PrepShoot;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.test.C_PrepIntakeShoot;
-import frc.robot.test.C_PrepShoot;
-import frc.robot.test.C_RPMTuneTest;
-import frc.robot.test.C_Shoot;
+import frc.robot.commands.C_Shoot;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class CG_ShootBalls extends SequentialCommandGroup {
   /**
    * Creates a new C_ShootBalls.
