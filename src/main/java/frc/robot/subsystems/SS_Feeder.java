@@ -30,7 +30,7 @@ public class SS_Feeder extends SubsystemBase {
 
   private final int FEED_RPM_STOPPED = 0;
   private final int FEED_RPM_SHOOT = 3500; //how fast the feeder should be running when we are shooting
-  private final int FEED_RPM_PREP_SHOOT = 4500;
+  private final int FEED_RPM_PREP_SHOOT = 5500;
   private final int FEED_RPM_INTAKE = 4500; //how fast the feeder should be running when indexing the balls
 
   // The number of revolutions of the belt motor required to cycle a ball all the way from the feeders entry to the exit.
@@ -38,7 +38,7 @@ public class SS_Feeder extends SubsystemBase {
 
   // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
   private final double ENTRY_BALL_DETECT_THRESHOLD = 12;
-  private final double EXIT_BALL_DETECT_THRESHOLD = 17;
+  private final double EXIT_BALL_DETECT_THRESHOLD = 20;
 
   // Subsystems internal data
   private CANSparkMax beltMotor;
