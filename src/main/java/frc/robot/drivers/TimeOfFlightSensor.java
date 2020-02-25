@@ -16,6 +16,9 @@ public class TimeOfFlightSensor {
         sensor.setRangingMode(RangingMode.Short, DEFAULT_SAMPLE_RATE);
     }
 
+    public void setRangeOfInterest(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY){
+        sensor.setRangeOfInterest(topLeftX, topLeftY, bottomRightX, bottomRightY);
+    }
     /**
      * 
      * @return Target's distance from the sensor in millimeters
@@ -29,7 +32,7 @@ public class TimeOfFlightSensor {
      * @return Target's distance from the sensor in centimeters
      */
     public double getDistance() {
-        return sensor.getRange() * 10;
+        return sensor.getRange() * 0.1;
     }
 
     /**
