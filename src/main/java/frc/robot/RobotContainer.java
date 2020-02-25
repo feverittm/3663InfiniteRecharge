@@ -15,6 +15,7 @@ import frc.robot.Constants;
 import frc.robot.commandgroups.CG_ShootBalls;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
+import frc.robot.commands.C_StopShooter;
 import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.commands.C_Track;
 
@@ -23,13 +24,8 @@ import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
-<<<<<<< HEAD
-import frc.robot.test.C_RPMTuneTest;
-import frc.robot.commands.C_StopShooter;
-
-=======
 import frc.robot.test.C_IntakeTest;
->>>>>>> master
+import frc.robot.test.C_RPMTuneTest;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
