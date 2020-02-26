@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -27,15 +29,33 @@ public class SS_Intake extends SubsystemBase {
     private DoubleSolenoid longSolenoid;
     private CANSparkMax pickupMotor;
 
+    private CANPIDController pid;
+
     private IntakePosition currentPosition;
+
+    private final int INTAKE_ROTATIONS = 500;
+
+    private final double KP = 0.0001;
+    private final double KI = 0.000001;
+    private final double KD = 0;
+
+    private final int RETRACT_VELOCITY = 200;
     
     //=====CONSTRUCTOR=====//
     public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
         this.shortSolenoid = shortSolenoid;
         this.longSolenoid = longSolenoid;
         this.pickupMotor = pickupMotor;
-        
+
+        setArmPosition(IntakePosition.FULLY_RETRACTED);
         pickupMotor.setIdleMode(IdleMode.kBrake);
+
+        pid = pickupMotor.getPIDController();
+        pid.setOutputRange(-1, 1);
+
+        pid.setP(KP);
+        pid.setI(KI);
+        pid.setD(KD);
     }
 
     //=====SETS THE INTAKE ARM POSITION=====//
@@ -65,13 +85,20 @@ public class SS_Intake extends SubsystemBase {
         }
     }
 
+    public void setIntakeMode() {
+        // Have intake wheel spinning while retracted (Add this later)
+        //pid.setReference(pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS, ControlType.kPosition);
+        setArmPosition(IntakePosition.LONG_RETRACT);
+        setPickupMotorSpeed(0);
+    }
+
     //=====RETURNS THE POSITION OF THE INTAKE ARM=====//
     public IntakePosition getIntakePosition() {
         return currentPosition;
     }
 
-    //=====SETS THE SPEED OF THE PICKUP MOTOR=====//
+    //=====SETS THE SPEED OF THE PICKUP MOTOR IN RPMS=====//
     public void setPickupMotorSpeed(double pickUpSpeed){
-    	pickupMotor.set(pickUpSpeed);
+        pid.setReference(pickUpSpeed, ControlType.kVelocity);
     }
 }
