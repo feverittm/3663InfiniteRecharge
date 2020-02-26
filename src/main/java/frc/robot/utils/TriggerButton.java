@@ -7,29 +7,28 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 /**
  * A class for reading triggers as buttons
  */
-public class TriggerButton {
+public class TriggerButton extends Button {
 
-    private final double THRESHOLD = 0.2;
-    private Button triggerButton;
-    private Axis trigger;
+    private static final double PRESSED_THRESHOLD = 0.2;
 
+    /**
+     * @param trigger The axis of the trigger
+     */
     public TriggerButton(Axis trigger) {
-        this.trigger = trigger;
-
-        BooleanSupplier isPressed = new BooleanSupplier() {
-            @Override
-            public boolean getAsBoolean() {
-                return Math.abs(trigger.get()) > THRESHOLD;
-            }
-        };
-
-        triggerButton = new Button(isPressed);
+        super(createSupplier(trigger));
     }
 
     /**
-     * return a button that reads true when the trigger is pressed beyond a certain threshold
+     * This creates and returns a boolean supplier for the trigger button
+     * @param trigger the axis of the trigger
+     * @return A boolean supplier that reads true when the trigger is past a certain threshold
      */
-    public Button getTriggerButton() {
-        return triggerButton;
+    private static BooleanSupplier createSupplier(Axis trigger) {
+        return new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() {
+                return Math.abs(trigger.get()) > PRESSED_THRESHOLD;
+            }
+        };
     }
 }

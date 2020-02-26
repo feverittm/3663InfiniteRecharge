@@ -93,6 +93,6 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
-        rightTriggerButton.getTriggerButton().whileHeld(new C_Intake(intake, driveController));
+        rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
     }
 }
