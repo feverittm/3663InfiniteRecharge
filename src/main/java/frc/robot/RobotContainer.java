@@ -57,11 +57,11 @@ public RobotContainer() {
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
 
-        /*CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
+        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
-        );*/
+        );
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder));
         updateManager.startLoop(5.0e-3);
 

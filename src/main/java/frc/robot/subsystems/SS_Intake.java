@@ -60,9 +60,9 @@ public class SS_Intake extends SubsystemBase {
         pid.setD(KD);
     }
 
+    //===== CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES =====//
     @Override
     public void periodic() {
-        // Checks to see if the arm is retracting and if the pick up motor has spun the correct amount of times
         if(isRetracting && targetRotations >= pickupMotor.getEncoder().getPosition()) {
             isRetracting = false;
             setPickupMotorSpeed(0);
@@ -96,6 +96,7 @@ public class SS_Intake extends SubsystemBase {
         }
     }
 
+    //===== RECTACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
     public void setIntakeMode() {
         isRetracting = true;
         targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
