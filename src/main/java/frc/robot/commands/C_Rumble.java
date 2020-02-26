@@ -35,8 +35,8 @@ public class C_Rumble extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    joystick.setRumble(RumbleType.kLeftRumble, 0.3);
-    joystick.setRumble(RumbleType.kRightRumble, 0.3);
+    joystick.setRumble(RumbleType.kLeftRumble, 0.5);
+    joystick.setRumble(RumbleType.kRightRumble, 0.5);
   }
 
   // Called once the command ends or is interrupted.

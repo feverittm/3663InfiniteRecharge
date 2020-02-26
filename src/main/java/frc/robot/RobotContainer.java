@@ -66,7 +66,7 @@ public RobotContainer() {
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
         );
-        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder));
+        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
@@ -104,9 +104,7 @@ public RobotContainer() {
             () -> driveController.getLeftXAxis().get(true)), true);
 
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
-            
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
-        driveController.getXButton().whileHeld(new C_Rumble(rumbleJoystick, 2));
     }
 }

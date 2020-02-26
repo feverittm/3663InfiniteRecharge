@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Feeder.FeedMode;
@@ -8,10 +9,13 @@ import frc.robot.subsystems.SS_Feeder.FeedMode;
 public class C_FeederDefault extends CommandBase {
 
   private SS_Feeder feeder;
-  //private Controller controller;
-  public C_FeederDefault(SS_Feeder feeder) {
-    //this.controller = controller;
+  private Joystick rumbleJoystick;
+  private boolean hasRumbled = false;
+
+  private final double secondsToRumble = 1.5;
+  public C_FeederDefault(SS_Feeder feeder, Joystick rumbleJoystick) {
     this.feeder = feeder;
+    this.rumbleJoystick = rumbleJoystick;
     addRequirements(feeder);
   }
 
@@ -24,6 +28,13 @@ public class C_FeederDefault extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(feeder.ballInExit() && !hasRumbled){
+      new C_Rumble(rumbleJoystick, secondsToRumble).schedule();
+      hasRumbled = true;
+    }
+    if(!feeder.ballInExit()){
+      hasRumbled = false;
+    }
   }
 
   // Called once the command ends or is interrupted.
