@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
+import frc.robot.test.*;
 import frc.robot.commandgroups.CG_ShootBalls;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
@@ -24,7 +25,6 @@ import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.test.C_IntakeTest;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
@@ -91,6 +91,7 @@ public RobotContainer() {
     }
     
     private void configureButtonBindings() {
+        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
         driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
