@@ -24,13 +24,13 @@ import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.test.C_Intake;
+import frc.robot.commands.C_Intake;
 import frc.robot.test.C_IntakeTest;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
-    private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
+    //private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
 
     // Driver Declarations
@@ -57,16 +57,16 @@ public RobotContainer() {
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
 
-        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
+        /*CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
-        );
+        );*/
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
-        //CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, testcontroller));
+        CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, driveController));
     }
 
     private void initCommands(){

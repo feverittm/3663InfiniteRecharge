@@ -15,12 +15,12 @@ public class C_IntakeTest extends CommandBase {
     private final SS_Intake ss_Intake;
     private final Timer timer = new Timer();
     private double currentTime;
-    private Controller testController;
+    private Controller controller;
 
     //=====CONSTRUCTOR #1=====//
-    public C_IntakeTest(SS_Intake subsystem, Controller testController) {
+    public C_IntakeTest(SS_Intake subsystem, Controller controller) {
         ss_Intake = subsystem;
-        this.testController = testController;
+        this.controller = controller;
         addRequirements(subsystem);
     }
 
@@ -38,27 +38,27 @@ public class C_IntakeTest extends CommandBase {
         SmartDashboard.putNumber("Time Between Transitions", currentTime);
         //SmartDashboard.putNumber("Current Motor Speed", speed);
 
-        if(testController.getDPadButton(Direction.UP).get()) {
+        if(controller.getDPadButton(Direction.UP).get()) {
             ss_Intake.setArmPosition(IntakePosition.FULLY_EXTENDED);
             ss_Intake.setPickupMotorSpeed(0);
         }
         
-        if(testController.getDPadButton(Direction.DOWN).get()) {
+        if(controller.getDPadButton(Direction.DOWN).get()) {
             ss_Intake.setArmPosition(IntakePosition.FULLY_RETRACTED);
             ss_Intake.setPickupMotorSpeed(0);
         }
 
-        if(testController.getDPadButton(Direction.LEFT).get()) {
+        if(controller.getDPadButton(Direction.LEFT).get()) {
             ss_Intake.setArmPosition(IntakePosition.LONG_RETRACT);
             ss_Intake.setPickupMotorSpeed(0);
         }
 
-        if(testController.getDPadButton(Direction.RIGHT).get()) {
+        if(controller.getDPadButton(Direction.RIGHT).get()) {
             ss_Intake.setArmPosition(IntakePosition.SHORT_RETRACT);
             ss_Intake.setPickupMotorSpeed(0);
         }
         
-        ss_Intake.setPickupMotorSpeed((testController.getRightTriggerAxis().get() - testController.getLeftTriggerAxis().get())/2);
+        ss_Intake.setPickupMotorSpeed((controller.getRightTriggerAxis().get() - controller.getLeftTriggerAxis().get())/2);
     }
 
     //=====FINISHES THE COMMAND=====//
