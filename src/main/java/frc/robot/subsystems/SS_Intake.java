@@ -86,8 +86,10 @@ public class SS_Intake extends SubsystemBase {
     }
 
     public void setIntakeMode() {
-        pid.setReference(pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS, ControlType.kPosition);
+        // Have intake wheel spinning while retracted (Add this later)
+        //pid.setReference(pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS, ControlType.kPosition);
         setArmPosition(IntakePosition.LONG_RETRACT);
+        setPickupMotorSpeed(0);
     }
 
     //=====RETURNS THE POSITION OF THE INTAKE ARM=====//
