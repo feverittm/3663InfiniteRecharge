@@ -25,7 +25,6 @@ import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
 import frc.robot.test.C_IntakeTest;
-import frc.robot.test.C_RPMTuneTest;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
@@ -99,6 +98,5 @@ public RobotContainer() {
             
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
-        //driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
     }
 }

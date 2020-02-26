@@ -34,7 +34,8 @@ public class SS_Feeder extends SubsystemBase {
   private final int FEED_RPM_INTAKE = 2250; //how fast the feeder should be running when indexing the balls
 
   // The number of revolutions of the belt motor required to cycle a ball all the way from the feeders entry to the exit.
-  public final int REV_PER_FULL_FEED = 1500;
+  public final int REV_PER_FULL_FEED = 67;
+  //private final int REV_FOR_ONE_BALL = 13;
 
   // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
   private final double ENTRY_BALL_DETECT_THRESHOLD = 12;
@@ -56,8 +57,8 @@ public class SS_Feeder extends SubsystemBase {
   private NetworkTableEntry exitRangeEntry;
   private NetworkTableEntry entryRangeEntry;
   private NetworkTableEntry exitValid;
+  private NetworkTableEntry feederEncoderPos;
 
-  private boolean valid = false;
   public SS_Feeder(CANSparkMax beltMotor, TimeOfFlightSensor entrySensor, TimeOfFlightSensor exitSensor) {
 
     this.beltMotor = beltMotor;
@@ -110,6 +111,10 @@ public class SS_Feeder extends SubsystemBase {
       .withPosition(5, 3)
       .withSize(1, 1)
       .getEntry();
+    feederEncoderPos = shooterTab.add("FeederEncode", 0)
+      .withPosition(5, 4)
+      .withSize(1, 1)
+      .getEntry();
   }
 
 
@@ -123,7 +128,7 @@ public class SS_Feeder extends SubsystemBase {
     if (currentMode.run(this)) {
       setFeedMode(FeedMode.STOPPED);
     }
-
+    
     updateTelemetry();
   }
 
@@ -133,6 +138,7 @@ public class SS_Feeder extends SubsystemBase {
     entryRangeEntry.setNumber(entrySensor.getDistance());
     exitRangeEntry.setNumber(exitSensor.getDistance());
     exitValid.setBoolean(ballInExit());
+    feederEncoderPos.setNumber(beltEncoder.getPosition());
   }
 
   /**
@@ -253,14 +259,15 @@ public class SS_Feeder extends SubsystemBase {
     @Override
     protected void init( SS_Feeder feeder ) {
       feeder.beltEncoder.setPosition(0.0);
-      feeder.beltPID.setReference(FEED_RPM_PREP_SHOOT, ControlType.kVelocity);
+      if(!ballInExit()){
+        feeder.beltPID.setReference(FEED_RPM_PREP_SHOOT, ControlType.kVelocity);
+      }
     }
 
     @Override
     protected boolean run( SS_Feeder feeder ) {
       // If we see a ball at the exit sensor then we have moved them to the top of the feeder and ready to shoot.
       if (feeder.ballInExit()) {
-        valid = true;
         return true;
       }
 
@@ -295,6 +302,7 @@ public class SS_Feeder extends SubsystemBase {
     protected void init( SS_Feeder feeder ) {
 
       gapSeen = false;
+      beltEncoder.setPosition(0.0);
       feeder.beltPID.setReference(FEED_RPM_SHOOT, ControlType.kVelocity);
     }
 
@@ -314,6 +322,11 @@ public class SS_Feeder extends SubsystemBase {
       }
 
       return result;
+      // if (beltEncoder.getPosition() >= REV_FOR_ONE_BALL || !ballInExit()){
+      //   return true;
+      // }else{
+      //   return false;
+      // }
     }
 
     @Override
