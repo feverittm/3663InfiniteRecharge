@@ -33,6 +33,8 @@ public class SS_Intake extends SubsystemBase {
 
     private IntakePosition currentPosition;
 
+    private boolean isRetracting = false;
+    private int targetRotations = 0;
     private final int INTAKE_ROTATIONS = 500;
 
     private final double KP = 0.0001;
@@ -56,6 +58,15 @@ public class SS_Intake extends SubsystemBase {
         pid.setP(KP);
         pid.setI(KI);
         pid.setD(KD);
+    }
+
+    @Override
+    public void periodic() {
+        // Checks to see if the arm is retracting and if the pick up motor has spun the correct amount of times
+        if(isRetracting && targetRotations >= pickupMotor.getEncoder().getPosition()) {
+            isRetracting = false;
+            setPickupMotorSpeed(0);
+        }
     }
 
     //=====SETS THE INTAKE ARM POSITION=====//
@@ -86,10 +97,11 @@ public class SS_Intake extends SubsystemBase {
     }
 
     public void setIntakeMode() {
-        // Have intake wheel spinning while retracted (Add this later)
-        //pid.setReference(pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS, ControlType.kPosition);
+        isRetracting = true;
+        targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
+        
+        setPickupMotorSpeed(RETRACT_VELOCITY);
         setArmPosition(IntakePosition.LONG_RETRACT);
-        setPickupMotorSpeed(0);
     }
 
     //=====RETURNS THE POSITION OF THE INTAKE ARM=====//
