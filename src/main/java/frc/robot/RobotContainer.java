@@ -9,6 +9,7 @@ import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
@@ -16,6 +17,7 @@ import frc.robot.test.*;
 import frc.robot.commandgroups.CG_ShootBalls;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
+import frc.robot.commands.C_Rumble;
 import frc.robot.commands.C_StopShooter;
 import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.commands.C_Track;
@@ -29,7 +31,7 @@ import frc.robot.subsystems.SS_Shooter;
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
     private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
-
+    private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
     // Driver Declarations
     Vision vision = new Vision();
 
@@ -97,7 +99,8 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
             
-        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController),false);
+        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
+        driveController.getXButton().whileHeld(new C_Rumble(rumbleJoystick, 2));
     }
 }
