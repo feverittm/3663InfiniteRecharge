@@ -8,6 +8,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SS_Intake extends SubsystemBase {
     /**
@@ -35,13 +36,13 @@ public class SS_Intake extends SubsystemBase {
 
     private boolean isRetracting = false;
     private int targetRotations = 0;
-    private final int INTAKE_ROTATIONS = 500;
+    private final int INTAKE_ROTATIONS = 50;
 
     private final double KP = 0.0001;
     private final double KI = 0.000001;
     private final double KD = 0;
 
-    private final int RETRACT_VELOCITY = 200;
+    private final int RETRACT_VELOCITY = 2000;
     
     //=====CONSTRUCTOR=====//
     public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
@@ -63,9 +64,17 @@ public class SS_Intake extends SubsystemBase {
     //===== CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES =====//
     @Override
     public void periodic() {
-        if(isRetracting && targetRotations >= pickupMotor.getEncoder().getPosition()) {
-            isRetracting = false;
-            setPickupMotorSpeed(0);
+        SmartDashboard.putNumber("Intake target", targetRotations);
+        SmartDashboard.putNumber("Current Rotations", pickupMotor.getEncoder().getPosition());
+        SmartDashboard.putBoolean("Is Retracting", isRetracting);
+        if(isRetracting) {
+            if(pickupMotor.getEncoder().getPosition() >= targetRotations){
+                isRetracting = false;
+                setPickupMotorSpeed(0);
+            }
+            else {
+                setPickupMotorSpeed(RETRACT_VELOCITY);
+            }
         }
     }
 
