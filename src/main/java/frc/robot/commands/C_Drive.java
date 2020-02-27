@@ -9,7 +9,7 @@ import frc.robot.subsystems.SS_Drivebase;
 
 public class C_Drive extends CommandBase {
   private SS_Drivebase drivebase;
-  private double defaultDeadbandRange = .16;
+  private final double DEFAULT_DEADBAND = .2;
 
   private DoubleSupplier forward;
   private DoubleSupplier strafe;
@@ -26,7 +26,8 @@ public class C_Drive extends CommandBase {
 
   @Override
   public void execute() {
-    drivebase.drive(new Vector2(deadband(forward.getAsDouble(), 0.1), deadband(strafe.getAsDouble(),0.1)), deadband(rotation.getAsDouble(), 0.1),  true);
+    drivebase.drive(new Vector2(deadband(forward.getAsDouble(), DEFAULT_DEADBAND), 
+      deadband(strafe.getAsDouble(), DEFAULT_DEADBAND)), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND),  true);
   }
 
   @Override

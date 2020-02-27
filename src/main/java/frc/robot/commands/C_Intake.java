@@ -37,7 +37,7 @@ public class C_Intake extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    intake.setIntakeMode();
+    intake.retractIntake();
   }
 
   @Override

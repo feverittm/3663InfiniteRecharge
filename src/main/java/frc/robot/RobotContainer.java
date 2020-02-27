@@ -9,9 +9,11 @@ import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
+import frc.robot.test.*;
 import frc.robot.commandgroups.CG_ShootBalls;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
@@ -25,14 +27,13 @@ import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
 import frc.robot.commands.C_Intake;
-import frc.robot.test.C_IntakeTest;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
-    //private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
+    private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
+    private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
-
     // Driver Declarations
     Vision vision = new Vision();
 
@@ -57,16 +58,15 @@ public RobotContainer() {
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
 
-        /*CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
+        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
-        );*/
-        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder));
+        );
+        CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
-        //CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, driveController));
     }
 
     private void initCommands(){
@@ -93,6 +93,7 @@ public RobotContainer() {
     }
     
     private void configureButtonBindings() {
+        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
         driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
@@ -101,8 +102,8 @@ public RobotContainer() {
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
         driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
-        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController),false);
+        
+        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
-        //driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
     }
 }
