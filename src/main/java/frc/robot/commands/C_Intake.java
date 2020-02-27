@@ -9,7 +9,7 @@ import frc.robot.subsystems.SS_Intake.IntakePosition;
 public class C_Intake extends CommandBase {
   private SS_Intake intake;
   private Controller controller;
-  private int MAX_RPM = 2000;
+  private int MAX_RPM = 3000;
 
   public C_Intake(SS_Intake intake, Controller controller) {
     this.intake = intake;

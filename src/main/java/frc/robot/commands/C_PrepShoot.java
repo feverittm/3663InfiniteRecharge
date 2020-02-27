@@ -30,6 +30,6 @@ public class C_PrepShoot extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return shooter.atCorrectRPM();
+    return true;
   }
 }
