@@ -36,7 +36,7 @@ public class SS_Intake extends SubsystemBase {
 
     private boolean isRetracting = false;
     private int targetRotations = 0;
-    private final int INTAKE_ROTATIONS = 50;
+    private final int INTAKE_ROTATIONS = 30;
 
     private final double KP = 0.0001;
     private final double KI = 0.000001;
