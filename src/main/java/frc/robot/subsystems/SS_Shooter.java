@@ -27,12 +27,9 @@ public class SS_Shooter extends SubsystemBase {
   //Known RPMs for different distances. Column one: feet, Column two: RPM. 0 feet is parked directly infront of the power port
   private final int[][] KNOWN_RPM = new int[][] {
     {0, 2000},
-    {10, 3100},
-    {15, 3200},
-    {20, 3500},
-    {25, 4000},
-    {30, 4500},
-    {35, 5500}
+    {10, 3400},
+    {15, 3700},
+    {20, 4150}
   };
   private final int DISTANCE_COLUMN = 0; //column index for distance values
   private final int RPM_COLUMN = 1; //column index for RPM values
@@ -41,9 +38,10 @@ public class SS_Shooter extends SubsystemBase {
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
 
   //Wheel PID constants (These values are tuned correctly for the software robot)
-  private final double KP = 0.0005;
-  private final double KI = 0.000001;
-  private final double KD = 0;
+  private final double KF = 0.0002; // final
+  private final double KP = 0.0012; //0.0012;
+  private final double KI = 1e-08;
+  private final double KD = 0.0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
   private final double CORRECT_RPM_THRESHOLD = 20;
@@ -80,6 +78,7 @@ public class SS_Shooter extends SubsystemBase {
     PID.setOutputRange(0, 1);
 
     //set Wheel PID constants
+    PID.setFF(KF);
     PID.setP(KP);
     PID.setI(KI);
     PID.setD(KD);
@@ -126,7 +125,8 @@ public class SS_Shooter extends SubsystemBase {
       if(updateFromVision) {
         double distance = vision.getDistance();
         if(distance > 0) {
-          setRPM(calculateRPM(distance));
+          targetRPM = calculateRPM(distance);
+          setRPM(targetRPM);
         }
       } else {
         setRPM(targetRPM);
