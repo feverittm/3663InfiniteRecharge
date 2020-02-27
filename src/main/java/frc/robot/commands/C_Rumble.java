@@ -19,9 +19,11 @@ public class C_Rumble extends CommandBase {
   private Joystick joystick;
   private Timer timer;
   private double seconds;
-  public C_Rumble(Joystick joystick, double seconds) {
+  private double rumbleIntensity;
+  public C_Rumble(Joystick joystick, double seconds, double rumbleIntensity){
     this.joystick = joystick;
     this.seconds = seconds;
+    this.rumbleIntensity = rumbleIntensity;
     timer = new Timer();
   }
 
@@ -35,8 +37,8 @@ public class C_Rumble extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    joystick.setRumble(RumbleType.kLeftRumble, 0.5);
-    joystick.setRumble(RumbleType.kRightRumble, 0.5);
+    joystick.setRumble(RumbleType.kLeftRumble, rumbleIntensity);
+    joystick.setRumble(RumbleType.kRightRumble, rumbleIntensity);
   }
 
   // Called once the command ends or is interrupted.

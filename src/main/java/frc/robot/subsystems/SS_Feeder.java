@@ -86,7 +86,7 @@ public class SS_Feeder extends SubsystemBase {
     modes.put(FeedMode.PRESHOOT, new PreshootMode());
     modes.put(FeedMode.SHOOT, new ShootMode());
     currentMode = modes.get(FeedMode.STOPPED);
-
+    
     initTelemetry();
   }
 
