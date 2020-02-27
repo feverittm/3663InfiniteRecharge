@@ -57,6 +57,7 @@ public class SS_Shooter extends SubsystemBase {
   private Timer confidenceTimer;
 
   private int targetRPM = 0; //the target RPM when not updating from vision
+  private boolean targetHoodFarPosition = false;
   private boolean wheelSpinning = false;
   private boolean updateFromVision = false;
 
@@ -116,6 +117,7 @@ public class SS_Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     updateShooter();
+    updateHood();
     updateTelemetry();
   }
 
@@ -134,6 +136,10 @@ public class SS_Shooter extends SubsystemBase {
     } else {
       setRPM(0);
     }
+  }
+
+  private void updateHood() {
+    adjustHoodFar(targetHoodFarPosition);
   }
 
   //push telemetry to Shuffleboard
@@ -174,11 +180,7 @@ public class SS_Shooter extends SubsystemBase {
    * @param far if true, set hood to position for far shooting, otherwise set it to the near position
    */
   public void setHoodFar(boolean far) {
-    if(far) {
-      hood.set(Value.kForward);
-    } else {
-      hood.set(Value.kReverse);
-    }
+    targetHoodPosition = far;
   }
 
   /**
@@ -216,8 +218,7 @@ public class SS_Shooter extends SubsystemBase {
     return (int)Math.min(100, confidenceTimePercent);
   }
 
-  public boolean atCorrectRPM(){
-
+  public boolean atCorrectRPM() {
     return (Math.abs(encoder.getVelocity()) - targetRPM <= CORRECT_RPM_THRESHOLD);
   }
   /**
@@ -230,6 +231,14 @@ public class SS_Shooter extends SubsystemBase {
 
   public boolean isSpinning() {
     return wheelSpinning;
+  }
+
+  private void adjustHoodFar(boolean far) {
+    if(far) {
+      hood.set(Value.kForward);
+    } else {
+      hood.set(Value.kReverse);
+    }
   }
 
   /**
