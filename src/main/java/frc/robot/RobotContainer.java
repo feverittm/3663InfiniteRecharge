@@ -25,7 +25,6 @@ import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
 import frc.robot.commands.C_Intake;
-import frc.robot.test.C_IntakeTest;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
@@ -66,7 +65,6 @@ public RobotContainer() {
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
-        //CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, driveController));
     }
 
     private void initCommands(){

@@ -98,7 +98,7 @@ public class SS_Intake extends SubsystemBase {
     }
 
     //===== RECTACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
-    public void setIntakeMode() {
+    public void retractIntake() {
         isRetracting = true;
         targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
         

@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Intake.IntakePosition;
 
+//this can be added to RobotContainer to run this intake test
+//CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, driveController));
+
 public class C_IntakeTest extends CommandBase {
 
     //=====INSTANCE VARIABLES=====//
