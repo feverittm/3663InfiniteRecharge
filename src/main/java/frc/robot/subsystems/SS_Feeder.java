@@ -38,7 +38,7 @@ public class SS_Feeder extends SubsystemBase {
   //private final int REV_FOR_ONE_BALL = 13;
 
   // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
-  private final double ENTRY_BALL_DETECT_THRESHOLD = 25;
+  private final double ENTRY_BALL_DETECT_THRESHOLD = 20;
   private final double EXIT_BALL_DETECT_THRESHOLD = 20;
 
   // Subsystems internal data
