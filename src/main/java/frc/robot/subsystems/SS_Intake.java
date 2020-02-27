@@ -64,17 +64,9 @@ public class SS_Intake extends SubsystemBase {
     //===== CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES =====//
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Intake target", targetRotations);
-        SmartDashboard.putNumber("Current Rotations", pickupMotor.getEncoder().getPosition());
-        SmartDashboard.putBoolean("Is Retracting", isRetracting);
-        if(isRetracting) {
-            if(pickupMotor.getEncoder().getPosition() >= targetRotations){
-                isRetracting = false;
-                setPickupMotorSpeed(0);
-            }
-            else {
-                setPickupMotorSpeed(RETRACT_VELOCITY);
-            }
+        if(isRetracting && pickupMotor.getEncoder().getPosition() >= targetRotations) {
+            isRetracting = false;
+            setPickupMotorSpeed(0);
         }
     }
 
