@@ -38,9 +38,10 @@ public class SS_Shooter extends SubsystemBase {
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
 
   //Wheel PID constants (These values are tuned correctly for the software robot)
-  private final double KP = 0.005;
-  private final double KI = 0.000002;
-  private final double KD = 0.03;
+  private final double KF = 0.0002; // final
+  private final double KP = 0.0012; //0.0012;
+  private final double KI = 1e-08;
+  private final double KD = 0.0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
   private final double CORRECT_RPM_THRESHOLD = 20;
@@ -77,6 +78,7 @@ public class SS_Shooter extends SubsystemBase {
     PID.setOutputRange(0, 1);
 
     //set Wheel PID constants
+    PID.setFF(KF);
     PID.setP(KP);
     PID.setI(KI);
     PID.setD(KD);
@@ -123,7 +125,8 @@ public class SS_Shooter extends SubsystemBase {
       if(updateFromVision) {
         double distance = vision.getDistance();
         if(distance > 0) {
-          setRPM(calculateRPM(distance));
+          targetRPM = calculateRPM(distance);
+          setRPM(targetRPM);
         }
       } else {
         setRPM(targetRPM);
