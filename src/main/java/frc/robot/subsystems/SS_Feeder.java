@@ -9,10 +9,10 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.drivers.TimeOfFlightSensor;
 
 public class SS_Feeder extends SubsystemBase {
   public enum FeedMode {
@@ -37,29 +37,24 @@ public class SS_Feeder extends SubsystemBase {
   public final int REV_PER_FULL_FEED = 67;
   //private final int REV_FOR_ONE_BALL = 13;
 
-  // The threshold distance that indicates the presence of a ball at one of the sensors in millimeters.
-  private final double ENTRY_BALL_DETECT_THRESHOLD = 20;
-  private final double EXIT_BALL_DETECT_THRESHOLD = 20;
-
   // Subsystems internal data
   private CANSparkMax beltMotor;
   private CANEncoder beltEncoder;
   private CANPIDController beltPID;
 
-  private TimeOfFlightSensor entrySensor;
-  private TimeOfFlightSensor exitSensor;
+  private DigitalInput entrySensor;
+  private DigitalInput exitSensor;
 
   private FeedModeBase currentMode;
   private HashMap<FeedMode, FeedModeBase> modes = new HashMap<FeedMode, FeedModeBase>();  
 
   //network table entries for telemetry
   private NetworkTableEntry feederRPMEntry;
-  private NetworkTableEntry exitRangeEntry;
-  private NetworkTableEntry entryRangeEntry;
   private NetworkTableEntry exitValid;
+  private NetworkTableEntry entryValid;
   private NetworkTableEntry feederEncoderPos;
 
-  public SS_Feeder(CANSparkMax beltMotor, TimeOfFlightSensor entrySensor, TimeOfFlightSensor exitSensor) {
+  public SS_Feeder(CANSparkMax beltMotor, DigitalInput entrySensor, DigitalInput exitSensor) {
 
     this.beltMotor = beltMotor;
     beltMotor.setIdleMode(IdleMode.kBrake);
@@ -76,9 +71,6 @@ public class SS_Feeder extends SubsystemBase {
     //Sensors for Feeder
     this.entrySensor = entrySensor;
     this.exitSensor = exitSensor;
-    //Setting Range of Intrest for Sensors
-    entrySensor.setRangeOfInterest(0, 0, 0, 15);
-    exitSensor.setRangeOfInterest(0, 15, 15, 15);
 
     // Setup our feed modes and initialize the system into the stopped mode.
     modes.put( FeedMode.STOPPED, new StoppedMode());
@@ -97,14 +89,8 @@ public class SS_Feeder extends SubsystemBase {
       .withPosition(5, 0)
       .withSize(1, 1)
       .getEntry();
-
-    entryRangeEntry = shooterTab.add("Entry range", 0)
-      .withPosition(5, 1)
-      .withSize(1, 1)
-      .getEntry();
-
-    exitRangeEntry = shooterTab.add("Exit range", 0)
-      .withPosition(5, 2)
+    entrySensor = shooterTab.add("Entry Valid, false")
+      .withPosition(5,2)
       .withSize(1, 1)
       .getEntry();
     exitValid = shooterTab.add("Exit Valid", false)
@@ -135,9 +121,8 @@ public class SS_Feeder extends SubsystemBase {
 
   private void updateTelemetry() {
     feederRPMEntry.setNumber(beltMotor.getEncoder().getVelocity());
-    entryRangeEntry.setNumber(entrySensor.getDistance());
-    exitRangeEntry.setNumber(exitSensor.getDistance());
     exitValid.setBoolean(ballInExit());
+    entryValid.setBoolean(ballInEntry());
     feederEncoderPos.setNumber(beltEncoder.getPosition());
   }
 
@@ -167,7 +152,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the entry sensor, false otherwise.
    */
   public boolean ballInEntry() {
-    return entrySensor.getDistance() <= ENTRY_BALL_DETECT_THRESHOLD;
+    return entrySensor.get();
   }
 
 
@@ -176,7 +161,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the exit sensor, false otherwise.
    */
   public boolean ballInExit() {
-    return exitSensor.getDistance() <= EXIT_BALL_DETECT_THRESHOLD;
+    return exitSensor.get();
   }
 
 
