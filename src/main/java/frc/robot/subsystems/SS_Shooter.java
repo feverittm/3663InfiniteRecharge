@@ -46,6 +46,7 @@ public class SS_Shooter extends SubsystemBase {
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
   private final double CORRECT_RPM_THRESHOLD = 20;
   private final double CONFIDENCE_TIME = 1; //time we want to be in the confidence band before shooting
+  private final double HOOD_DOWN_TIMER_THRESHOLD = 2;
 
   private Vision vision;
 
@@ -55,6 +56,7 @@ public class SS_Shooter extends SubsystemBase {
   private DoubleSolenoid hood;
 
   private Timer confidenceTimer;
+  private Timer hoodTimer;
 
   private int targetRPM = 0; //the target RPM when not updating from vision
   private boolean targetHoodFarPosition = false;
@@ -139,7 +141,12 @@ public class SS_Shooter extends SubsystemBase {
   }
 
   private void updateHood() {
-    adjustHoodFar(targetHoodFarPosition);
+    if(!targetHoodFarPosition && hoodTimer.get() >= HOOD_DOWN_TIMER_THRESHOLD) {
+      adjustHoodFar(false);
+      hoodTimer.stop();
+    } else if (targetHoodFarPosition) {
+      adjustHoodFar(true);
+    }
   }
 
   //push telemetry to Shuffleboard
@@ -180,7 +187,11 @@ public class SS_Shooter extends SubsystemBase {
    * @param far if true, set hood to position for far shooting, otherwise set it to the near position
    */
   public void setHoodFar(boolean far) {
-    targetHoodPosition = far;
+    targetHoodFarPosition = far;
+    if(far) {
+      hoodTimer.start();
+      hoodTimer.reset();
+    }
   }
 
   /**
