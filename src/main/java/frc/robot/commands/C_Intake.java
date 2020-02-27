@@ -9,7 +9,9 @@ import frc.robot.subsystems.SS_Intake.IntakePosition;
 public class C_Intake extends CommandBase {
   private SS_Intake intake;
   private Controller controller;
-  private int MAX_RPM = 2000;
+  private int MAX_INTAKE_RPM = 2000;
+  private int MAX_OUT_TAKE_RPM = 2000;
+
 
   public C_Intake(SS_Intake intake, Controller controller) {
     this.intake = intake;
@@ -24,7 +26,13 @@ public class C_Intake extends CommandBase {
 
   @Override
   public void execute() {
-    intake.setPickupMotorSpeed(controller.getRightTriggerAxis().get() * MAX_RPM);
+    
+    if(controller.getXButton().get()){
+      intake.setPickupMotorSpeed(-MAX_OUT_TAKE_RPM);
+    }else{
+      intake.setPickupMotorSpeed(controller.getRightTriggerAxis().get() * MAX_INTAKE_RPM);
+    }
+    
   }
 
   @Override
