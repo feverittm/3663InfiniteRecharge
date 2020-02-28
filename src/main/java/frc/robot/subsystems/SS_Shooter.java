@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANPIDController;
@@ -20,7 +13,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.drivers.Vision;
-
 
 public class SS_Shooter extends SubsystemBase {
 
@@ -243,6 +235,7 @@ public class SS_Shooter extends SubsystemBase {
   public boolean atCorrectRPM() {
     return (Math.abs(encoder.getVelocity()) - targetRPM <= CORRECT_RPM_THRESHOLD);
   }
+
   /**
    * Returns the non-fixed correction multiplier
    * @return the correction multiplier
@@ -317,5 +310,4 @@ public class SS_Shooter extends SubsystemBase {
     //calculate the new distance between the known distances linearly
     return (int)((distance - KNOWN_RPM[index - 1][DISTANCE_COLUMN]) / distanceRange * RPMRange) + KNOWN_RPM[index - 1][RPM_COLUMN];
   }
-
 }
