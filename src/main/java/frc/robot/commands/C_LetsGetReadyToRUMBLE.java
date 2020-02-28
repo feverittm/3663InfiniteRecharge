@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class C_Rumble extends CommandBase {
+public class C_LetsGetReadyToRUMBLE extends CommandBase {
   /**
    * Creates a new C_Rumble.
    */
@@ -20,7 +20,7 @@ public class C_Rumble extends CommandBase {
   private Timer timer;
   private double seconds;
   private double rumbleIntensity;
-  public C_Rumble(Joystick joystick, double seconds, double rumbleIntensity){
+  public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double rumbleIntensity){
     this.joystick = joystick;
     this.seconds = seconds;
     this.rumbleIntensity = rumbleIntensity;
