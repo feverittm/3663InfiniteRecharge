@@ -12,9 +12,9 @@ import org.frcteam2910.common.robot.input.Controller;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.C_LetsGetReadyToRUMBLE;
 import frc.robot.commands.C_PrepIntakeShoot;
 import frc.robot.commands.C_PrepShoot;
-import frc.robot.commands.C_Rumble;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Shooter;
 import frc.robot.commands.C_Shoot;
@@ -26,7 +26,7 @@ public class CG_ShootBalls extends SequentialCommandGroup {
   public CG_ShootBalls(SS_Feeder feeder, SS_Shooter shooter, Controller controller, Joystick rumbleJoystick) {
     addCommands(
       new ParallelCommandGroup(new C_PrepShoot(shooter), new C_PrepIntakeShoot(feeder))
-      ,new ParallelCommandGroup(new C_Rumble(rumbleJoystick, 0.05, 0.3), new C_Shoot(feeder, controller))
+      ,new ParallelCommandGroup(new C_LetsGetReadyToRUMBLE(rumbleJoystick, 0.0, 0.3), new C_Shoot(feeder, controller))
     );
   }
 }

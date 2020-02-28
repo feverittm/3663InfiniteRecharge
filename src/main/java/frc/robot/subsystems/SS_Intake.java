@@ -8,6 +8,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SS_Intake extends SubsystemBase {
     /**
@@ -33,13 +34,15 @@ public class SS_Intake extends SubsystemBase {
 
     private IntakePosition currentPosition;
 
-    private final int INTAKE_ROTATIONS = 500;
+    private boolean isRetracting = false;
+    private int targetRotations = 0;
+    private final int INTAKE_ROTATIONS = 10;
 
     private final double KP = 0.0001;
     private final double KI = 0.000001;
     private final double KD = 0;
 
-    private final int RETRACT_VELOCITY = 200;
+    private final int RETRACT_VELOCITY = 2000;
     
     //=====CONSTRUCTOR=====//
     public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
@@ -56,6 +59,15 @@ public class SS_Intake extends SubsystemBase {
         pid.setP(KP);
         pid.setI(KI);
         pid.setD(KD);
+    }
+
+    //===== CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES =====//
+    @Override
+    public void periodic() {
+        if(isRetracting && pickupMotor.getEncoder().getPosition() >= targetRotations) {
+            isRetracting = false;
+            setPickupMotorSpeed(0);
+        }
     }
 
     //=====SETS THE INTAKE ARM POSITION=====//
@@ -85,11 +97,13 @@ public class SS_Intake extends SubsystemBase {
         }
     }
 
-    public void setIntakeMode() {
-        // Have intake wheel spinning while retracted (Add this later)
-        //pid.setReference(pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS, ControlType.kPosition);
+    //===== RECTACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
+    public void retractIntake() {
+        isRetracting = true;
+        targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
+        
+        setPickupMotorSpeed(RETRACT_VELOCITY);
         setArmPosition(IntakePosition.LONG_RETRACT);
-        setPickupMotorSpeed(0);
     }
 
     //=====RETURNS THE POSITION OF THE INTAKE ARM=====//
