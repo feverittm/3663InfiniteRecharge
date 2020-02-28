@@ -38,9 +38,9 @@ public class SS_Shooter extends SubsystemBase {
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
 
   //Wheel PID constants (These values are tuned correctly for the software robot)
-  private final double KF = 0.0002; // final
-  private final double KP = 0.0012; //0.0012;
-  private final double KI = 1e-08;
+  private final double KF = 0.000; //0.0002// final
+  private final double KP = 0.0005; //0.0012;
+  private final double KI = 0.000000415; //1e-019;
   private final double KD = 0.0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
