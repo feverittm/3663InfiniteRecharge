@@ -85,11 +85,11 @@ public class SS_Feeder extends SubsystemBase {
   private void initTelemetry() {
     ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter"); //use the same tab as the shooter for displaying data
 
-      feederRPMEntry = shooterTab.add("Feeder RPM", 0)
+    feederRPMEntry = shooterTab.add("Feeder RPM", 0)
       .withPosition(5, 0)
       .withSize(1, 1)
       .getEntry();
-    entrySensor = shooterTab.add("Entry Valid, false")
+    entryValid = shooterTab.add("Entry Valid", false)
       .withPosition(5,2)
       .withSize(1, 1)
       .getEntry();
