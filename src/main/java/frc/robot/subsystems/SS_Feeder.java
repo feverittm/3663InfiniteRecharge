@@ -42,6 +42,7 @@ public class SS_Feeder extends SubsystemBase {
   private CANEncoder beltEncoder;
   private CANPIDController beltPID;
 
+  //DIO Sensors
   private DigitalInput entrySensor;
   private DigitalInput exitSensor;
 
