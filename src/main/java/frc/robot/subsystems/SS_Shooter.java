@@ -186,8 +186,14 @@ public class SS_Shooter extends SubsystemBase {
    * set the position of the hood
    * @param far if true, set hood to position for far shooting, otherwise set it to the near position
    */
-  public void setHoodFar(boolean far) {
+  public void setHoodFar(boolean far, boolean useTimer) {
     targetHoodFarPosition = far;
+
+    if(!useTimer) {
+      adjustHoodFar(far);
+      return;
+    }
+
     if(far) {
       hoodTimer.start();
       hoodTimer.reset();
