@@ -22,6 +22,7 @@ import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.commands.C_Track;
 
 import frc.robot.drivers.Vision;
+import frc.robot.subsystems.SS_Climber;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
@@ -43,6 +44,7 @@ public class RobotContainer {
     protected SS_Shooter shooter;
     protected SS_Intake intake;
     private final SS_Drivebase drivebase = new SS_Drivebase();
+    protected SS_Climber climber;
 
     // Command declarations 
 
@@ -90,6 +92,12 @@ public RobotContainer() {
 
        // Shooter subsystem
         shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, Constants.HOOD_SOLENOID_REVERSE_ID);
+
+        // Climber subsystem
+        CANSparkMax gondolaMotor = new CANSparkMax(Constants.CLIMBER_EXTEND_MOTOR_CANID, MotorType.kBrushless);
+        CANSparkMax winchMotor = new CANSparkMax(Constants.CLIMBER_WINCH_MOTOR_CANID, MotorType.kBrushless);
+        CANSparkMax hookMotor = new CANSparkMax(Constants.CLIMBER_DRIVE_MOTOR_CANID, MotorType.kBrushless);
+        climber = new SS_Climber(gondolaMotor, winchMotor, hookMotor);
     }
     
     private void configureButtonBindings() {
