@@ -35,6 +35,7 @@ public class Constants {
     public static final int INTAKE_LONG_SOLENOID_REVERSE_ID = 2;
     public static final int INTAKE_SHORT_SOLENOID_FORWARD_ID = 1;
     public static final int INTAKE_SHORT_SOLENOID_REVERSE_ID = 3;
+    public static final int INTAKE_SENSOR = 3;
 
     // Ball feeder subsystem related constants
     public static final int FEED_MOTOR_CANID = 10;

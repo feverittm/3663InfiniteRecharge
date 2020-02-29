@@ -112,8 +112,9 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
-        rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
-        driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
+        DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
+        rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
+        //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
         
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
