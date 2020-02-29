@@ -26,7 +26,7 @@ public class CG_ShootBalls extends SequentialCommandGroup {
   public CG_ShootBalls(SS_Feeder feeder, SS_Shooter shooter, Controller controller, Joystick rumbleJoystick) {
     addCommands(
       new ParallelCommandGroup(new C_PrepShoot(shooter), new C_PrepIntakeShoot(feeder))
-      ,new ParallelCommandGroup(new C_LetsGetReadyToRUMBLE(rumbleJoystick, 0.0, 0.3), new C_Shoot(feeder, controller))
+      ,new ParallelCommandGroup(new C_LetsGetReadyToRUMBLE(rumbleJoystick, 0.01, 0.3), new C_Shoot(feeder, controller))
     );
   }
 }

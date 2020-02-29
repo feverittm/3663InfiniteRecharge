@@ -19,6 +19,7 @@ public class C_Climb extends CommandBase {
   public C_Climb(SS_Climber climber, Controller operatorController) {
     this.operatorController = operatorController;
     this.climber = climber;
+    addRequirements(climber);
   }
 
   @Override
