@@ -12,27 +12,32 @@ import org.frcteam2910.common.robot.input.DPadButton.Direction;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
+import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
 import frc.robot.subsystems.SS_Feeder.FeedMode;
+import frc.robot.subsystems.SS_Intake.IntakePosition;
 
 public class C_RPMTuneTest extends CommandBase {
 
   Controller controller;
   SS_Feeder feeder;
   SS_Shooter shooter;
+  SS_Intake intake;
   int currentRPM = 1000;
   boolean pressed;
 
-  public C_RPMTuneTest(Controller controller, SS_Shooter shooter, SS_Feeder feeder) {
+  public C_RPMTuneTest(Controller controller, SS_Shooter shooter, SS_Feeder feeder, SS_Intake intake) {
     this.controller = controller;
     this.feeder = feeder;
+    this.intake = intake;
     this.shooter = shooter;
     addRequirements(shooter, feeder);
   }
 
   @Override
   public void initialize() {
-    shooter.setSpinning(true).updateFromVision(false).setHoodFar(true);
+    shooter.setSpinning(true).updateFromVision(false).setHoodFar(false);
+    intake.setArmPosition(IntakePosition.POSITION_2);
   }
 
   @Override
@@ -40,11 +45,16 @@ public class C_RPMTuneTest extends CommandBase {
     if(feeder.isIdle()) {
       feeder.setFeedMode(FeedMode.SHOOT);
     }
+    if(controller.getDPadButton(Direction.RIGHT).get()) {
+      currentRPM += 10;
+    } else if (controller.getDPadButton(Direction.LEFT).get()) {
+      currentRPM -= 10;
+    }
     if(controller.getDPadButton(Direction.UP).get() && !pressed) {
-      currentRPM += 50;
+      currentRPM += 10;
       pressed = true;
     } else if(controller.getDPadButton(Direction.DOWN).get() && !pressed) {
-      currentRPM -= 50;
+      currentRPM -= 10;
       pressed = true;
     } else if(!controller.getDPadButton(Direction.UP).get() && !controller.getDPadButton(Direction.DOWN).get()){
       pressed = false;

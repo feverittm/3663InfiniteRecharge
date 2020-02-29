@@ -109,8 +109,6 @@ public class SS_Shooter extends SubsystemBase {
       .withPosition(1, 1)
       .withSize(1, 1)
       .getEntry();
-
-    vision.updateTelemetry();
   }
 
   @Override
@@ -142,6 +140,8 @@ public class SS_Shooter extends SubsystemBase {
     currentRPMEntry.setNumber(encoder.getVelocity());
     shootingConfidenceEntry.setNumber(getShotConfidence());
     wheelSpinningEntry.setBoolean(wheelSpinning);
+
+    vision.updateTelemetry();
   }
 
   /**

@@ -126,7 +126,6 @@ public class Vision {
     double distance = 0;
     double angleOftarget = getYOffset();
     distance = (TARGET_HEIGHT - CAMERA_HEIGHT) / Math.tan(Math.toRadians(CAMERA_ANGLE + angleOftarget));
-    SmartDashboard.putNumber("calculated distance", distance / 12);
     return distance / 12; //change distance to feet
   }
 
