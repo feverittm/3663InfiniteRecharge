@@ -44,7 +44,7 @@ public class SS_Intake extends SubsystemBase {
 
     private final int RETRACT_VELOCITY = 2000;
 
-    private int lastVelocity = 0;
+    //private int lastVelocity = 0;
     private final int INTAKE_VELOCITY = 3000;
     private final int OUTTAKE_VELOCITY = -3000;
     
@@ -123,11 +123,11 @@ public class SS_Intake extends SubsystemBase {
     //=====SETS THE DIRECTION OF THE INTAKE MOTOR USING setPickUpMotorSpeed()=====//
     public void startPickUpMotor(int direction) {
         if(direction > 0) {
-            lastVelocity = INTAKE_VELOCITY;
+            //lastVelocity = INTAKE_VELOCITY;
             setPickUpMotorSpeed(INTAKE_VELOCITY);
         }
         else if(direction < 0) {
-            lastVelocity = OUTTAKE_VELOCITY;
+            //lastVelocity = OUTTAKE_VELOCITY;
             setPickUpMotorSpeed(OUTTAKE_VELOCITY);
         }
         else if(direction == 0) {
