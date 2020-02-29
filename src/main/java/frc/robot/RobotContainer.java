@@ -20,6 +20,7 @@ import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
 import frc.robot.commands.C_StopShooter;
+import frc.robot.drivers.DriverCameras;
 import frc.robot.commands.C_Track;
 
 import frc.robot.drivers.Vision;
@@ -39,6 +40,7 @@ public class RobotContainer {
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
     // Driver Declarations
     Vision vision = new Vision();
+    DriverCameras cameras = new DriverCameras();
 
     
     // Subsystem Declarations
