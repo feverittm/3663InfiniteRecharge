@@ -31,7 +31,7 @@ public class C_SetArmPosition extends CommandBase {
         //Sets the position of the intake arm.
         currentTime = timer.get();
         SmartDashboard.putNumber("Time Between Transitions", currentTime);
-        ss_Intake.setArmPosition(IntakePosition.FULLY_RETRACTED);
+        ss_Intake.setArmPosition(IntakePosition.POSITION_0);
     }
 
     //=====FINISHES THE COMMAND=====//
