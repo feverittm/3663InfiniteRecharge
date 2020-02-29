@@ -8,6 +8,7 @@ import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -110,8 +111,9 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
-        rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
-        driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
+        DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
+        rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
+        //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
         
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
