@@ -153,7 +153,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the entry sensor, false otherwise.
    */
   public boolean ballInEntry() {
-    return entrySensor.get();
+    return !entrySensor.get();
   }
 
 
@@ -162,7 +162,7 @@ public class SS_Feeder extends SubsystemBase {
    * @return True if a ball is present at the exit sensor, false otherwise.
    */
   public boolean ballInExit() {
-    return exitSensor.get();
+    return !exitSensor.get();
   }
 
 
