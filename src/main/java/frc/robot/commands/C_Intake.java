@@ -14,12 +14,14 @@ public class C_Intake extends CommandBase {
   private SS_Intake intake;
   private TriggerButton leftTriggerButton;
   private DigitalInput intakeSensor;
-  private boolean hasRegistered = false;
+  private boolean isRetracting = false;
+  private Timer timer;
 
   public C_Intake(SS_Intake intake, Controller controller, DigitalInput intakeSensor) {
     this.intake = intake;
     this.intakeSensor = intakeSensor;
     leftTriggerButton = new TriggerButton(controller.getLeftTriggerAxis());
+    timer = new Timer();
     addRequirements(intake);
   }
 
@@ -37,16 +39,15 @@ public class C_Intake extends CommandBase {
       intake.startPickUpMotor(IntakeDirection.IN);
     }
 
-    if(!intakeSensor.get() && !hasRegistered) {
-      Timer timer = new Timer();
+    if(!intakeSensor.get() && !isRetracting) {
       timer.start();
-      hasRegistered = true;
+      isRetracting = true;
       intake.setArmPosition(IntakePosition.POSITION_1);
 
       if(timer.get() > 0.5) {
         intake.setArmPosition(IntakePosition.POSITION_2);
         timer.stop();
-        hasRegistered = false;
+        isRetracting = false;
       }
     }
   }
