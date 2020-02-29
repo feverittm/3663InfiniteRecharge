@@ -7,7 +7,7 @@ import org.frcteam2910.common.robot.input.Controller;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Climber;
 
-public class C_Climber extends CommandBase {
+public class C_Climb extends CommandBase {
 
   
   private Controller operatorController;
@@ -16,7 +16,7 @@ public class C_Climber extends CommandBase {
   private double winchStickY;
   private double climberStickY;
 
-  public C_Climber(SS_Climber climber, Controller operatorController) {
+  public C_Climb(SS_Climber climber, Controller operatorController) {
     this.operatorController = operatorController;
     this.climber = climber;
   }

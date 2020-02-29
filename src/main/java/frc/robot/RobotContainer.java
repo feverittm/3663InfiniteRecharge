@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_ShootBalls;
-import frc.robot.commands.C_Climber;
+import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
 import frc.robot.commands.C_StopShooter;
@@ -68,7 +68,7 @@ public RobotContainer() {
                     () -> driveController.getRightXAxis().get(true))
         );
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
-        CommandScheduler.getInstance().setDefaultCommand(climber, new C_Climber(climber, operatorController));
+        CommandScheduler.getInstance().setDefaultCommand(climber, new C_Climb(climber, operatorController));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
