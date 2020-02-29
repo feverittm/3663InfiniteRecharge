@@ -13,16 +13,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 public class SS_Intake extends SubsystemBase {
     /**
      * Intake arm extend positions
-     * @param FULLY_RETRACTED checks to see if both the long and short solenoids are retracted
-     * @param LONG_RETRACT checks to see if ONLY the long solenoid is retracted
-     * @param SHORT_RETRACT checks to see if ONLY the short solenoid is retracted
-     * @param FULLY_EXTENDED checks to see if both the long and short solenoids are extended
+     * @param POSITION_0 checks to see if both the long and short solenoids are retracted
+     * @param POSITION_1 checks to see if ONLY the long solenoid is retracted
+     * @param POSITION_2 checks to see if ONLY the short solenoid is retracted
+     * @param POSITION_3 checks to see if both the long and short solenoids are extended
      */
     public enum IntakePosition{
-        FULLY_RETRACTED, //POSITION 0 (for putting the intake arm within the frame perimeter)
-        LONG_RETRACT, //POSITION 1 (for inserting power cells into the magazine)
-        SHORT_RETRACT, //POSITION 2 (for storing power cells in the intake arm)
-        FULLY_EXTENDED //POSITION 3 (for intaking power cells)
+        POSITION_0, // This position retracts both the long and short solenoids for putting the intake arm within the frame perimeter.
+        POSITION_1, // This position ONLY retracts the long solenoid for inserting power cells into the magazine.
+        POSITION_2, // This position ONLY retracts the short solenoid for holding power cells in the intake arm.
+        POSITION_3 // This position extends both the long and short solenoids for intaking power cells.
     }
 
     //=====INSTANCE VARIABLES=====//
@@ -43,6 +43,10 @@ public class SS_Intake extends SubsystemBase {
     private final double KD = 0;
 
     private final int RETRACT_VELOCITY = 2000;
+
+    private int lastVelocity = 0;
+    private final int INTAKE_VELOCITY = 3000;
+    private final int OUTTAKE_VELOCITY = -3000;
     
     //=====CONSTRUCTOR=====//
     public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
@@ -50,8 +54,8 @@ public class SS_Intake extends SubsystemBase {
         this.longSolenoid = longSolenoid;
         this.pickupMotor = pickupMotor;
 
-        setArmPosition(IntakePosition.FULLY_RETRACTED);
-        pickupMotor.setIdleMode(IdleMode.kBrake);
+        setArmPosition(IntakePosition.POSITION_0);
+        pickupMotor.setIdleMode(IdleMode.kCoast);
 
         pid = pickupMotor.getPIDController();
         pid.setOutputRange(-1, 1);
@@ -61,12 +65,12 @@ public class SS_Intake extends SubsystemBase {
         pid.setD(KD);
     }
 
-    //===== CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES =====//
+    //=====CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES=====//
     @Override
     public void periodic() {
         if(isRetracting && pickupMotor.getEncoder().getPosition() >= targetRotations) {
             isRetracting = false;
-            setPickupMotorSpeed(0);
+            startPickUpMotor(0);
         }
     }
 
@@ -75,35 +79,35 @@ public class SS_Intake extends SubsystemBase {
         //Depending on the button pressed, this command sets the intake arm position.
         currentPosition = position;
         switch(position){
-            case FULLY_RETRACTED:
+            case POSITION_0:
                 shortSolenoid.set(DoubleSolenoid.Value.kReverse);
                 longSolenoid.set(DoubleSolenoid.Value.kReverse);
                 break;
-
-            case SHORT_RETRACT:
-                shortSolenoid.set(DoubleSolenoid.Value.kReverse);
-                longSolenoid.set(DoubleSolenoid.Value.kForward);
-                break;
             
-            case LONG_RETRACT:
+            case POSITION_1:
                 shortSolenoid.set(DoubleSolenoid.Value.kForward);
                 longSolenoid.set(DoubleSolenoid.Value.kReverse);
                 break;
 
-            case FULLY_EXTENDED:
+            case POSITION_2:
+                shortSolenoid.set(DoubleSolenoid.Value.kReverse);
+                longSolenoid.set(DoubleSolenoid.Value.kForward);
+                break;
+
+            case POSITION_3:
                 shortSolenoid.set(DoubleSolenoid.Value.kForward);
                 longSolenoid.set(DoubleSolenoid.Value.kForward);   
                 break;
         }
     }
 
-    //===== RECTACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
+    //=====RETRACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
     public void retractIntake() {
         isRetracting = true;
         targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
         
-        setPickupMotorSpeed(RETRACT_VELOCITY);
-        setArmPosition(IntakePosition.LONG_RETRACT);
+        startPickUpMotor(RETRACT_VELOCITY);
+        setArmPosition(IntakePosition.POSITION_1);
     }
 
     //=====RETURNS THE POSITION OF THE INTAKE ARM=====//
@@ -112,7 +116,27 @@ public class SS_Intake extends SubsystemBase {
     }
 
     //=====SETS THE SPEED OF THE PICKUP MOTOR IN RPMS=====//
-    public void setPickupMotorSpeed(double pickUpSpeed){
+    private void startPickUpMotor(int pickUpSpeed){
         pid.setReference(pickUpSpeed, ControlType.kVelocity);
+    }
+
+    //=====SETS THE DIRECTION OF THE INTAKE MOTOR USING setPickUpMotorSpeed()=====//
+    public void setPickUpMotorDirection(int direction) {
+        if(direction > 0) {
+            lastVelocity = INTAKE_VELOCITY;
+            startPickUpMotor(INTAKE_VELOCITY);
+        }
+        else if(direction < 0) {
+            lastVelocity = OUTTAKE_VELOCITY;
+            startPickUpMotor(OUTTAKE_VELOCITY);
+        }
+        else if(direction == 0) {
+            startPickUpMotor(0);
+        }
+    }
+
+    //=====TURNS OFF INTAKE MOTOR=====//
+    public void turnOffMotor() {
+        setPickUpMotorDirection(0);
     }
 }
