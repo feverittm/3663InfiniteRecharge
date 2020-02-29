@@ -25,6 +25,12 @@ public class SS_Intake extends SubsystemBase {
         POSITION_3 // This position extends both the long and short solenoids for intaking power cells.
     }
 
+    public enum IntakeDirection {
+        STOP,
+        IN,
+        OUT
+    }
+
     //=====INSTANCE VARIABLES=====//
     private DoubleSolenoid shortSolenoid;
     private DoubleSolenoid longSolenoid;
@@ -121,22 +127,21 @@ public class SS_Intake extends SubsystemBase {
     }
 
     //=====STARTS THE INTAKE MOTOR BY SETTTING THE DIRECTION OF THE INTAKE MOTOR USING setPickUpMotorSpeed()=====//
-    public void startPickUpMotor(int direction) {
-        if(direction > 0) {
-            //lastVelocity = INTAKE_VELOCITY;
-            setPickUpMotorSpeed(INTAKE_VELOCITY);
-        }
-        else if(direction < 0) {
-            //lastVelocity = OUTTAKE_VELOCITY;
-            setPickUpMotorSpeed(OUTTAKE_VELOCITY);
-        }
-        else if(direction == 0) {
-            setPickUpMotorSpeed(0);
-        }
-    }
+    public void startPickUpMotor(IntakeDirection direction) {
 
-    //=====TURNS OFF INTAKE MOTOR=====//
-    public void turnOffMotor() {
-        setPickUpMotorSpeed(0);
+        switch (direction)
+        {
+            case STOP:
+                setPickUpMotorSpeed(0);
+                break;
+
+            case IN:
+                setPickUpMotorSpeed(INTAKE_VELOCITY);
+                break;
+
+            case OUT:
+                setPickUpMotorSpeed(OUTTAKE_VELOCITY);
+                break;
+        }
     }
 }
