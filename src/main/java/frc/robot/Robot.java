@@ -9,7 +9,7 @@ public class Robot extends TimedRobot {
   //private final RobotContainer container = new RobotContainer();
   @Override
   public void robotInit() {
-    DriverCameras cameras = new DriverCameras();
+    new DriverCameras();
   }
 
   @Override
