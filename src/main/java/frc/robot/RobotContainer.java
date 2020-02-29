@@ -106,7 +106,8 @@ public RobotContainer() {
     }
     
     private void configureButtonBindings() {
-        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
+        testcontroller.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter, feeder));
+
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
         driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
