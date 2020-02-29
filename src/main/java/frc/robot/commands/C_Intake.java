@@ -41,7 +41,8 @@ public class C_Intake extends CommandBase {
       intake.startPickUpMotor(IntakeDirection.IN);
     }
 
-    if(controller.getXButton().get() /*!intakeSensor.get() && !isRetracting*/) {
+    if(controller.getXButton().get() && !isRetracting /*!intakeSensor.get() && !isRetracting*/) {
+      timer.reset();
       timer.start();
       isRetracting = true;
       intake.setArmPosition(IntakePosition.POSITION_1);
