@@ -10,14 +10,14 @@ import frc.robot.subsystems.SS_Climber;
 public class C_Climber extends CommandBase {
 
   
-  private Controller operaterController;
+  private Controller operatorController;
   private SS_Climber climber;
 
   private double winchStickY;
   private double climberStickY;
 
-  public C_Climber(SS_Climber climber, Controller operaterController) {
-    this.operaterController = operaterController;
+  public C_Climber(SS_Climber climber, Controller operatorController) {
+    this.operatorController = operatorController;
     this.climber = climber;
   }
 
@@ -27,8 +27,8 @@ public class C_Climber extends CommandBase {
 
   @Override
   public void execute() {
-    winchStickY = operaterController.getLeftYAxis().get();
-    climberStickY = operaterController.getRightYAxis().get();
+    winchStickY = operatorController.getLeftYAxis().get();
+    climberStickY = operatorController.getRightYAxis().get();
 
 
     climber.setWinch(Math.pow(winchStickY,2) * Math.signum(winchStickY));
