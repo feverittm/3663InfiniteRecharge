@@ -120,7 +120,7 @@ public class SS_Intake extends SubsystemBase {
         pid.setReference(pickUpSpeed, ControlType.kVelocity);
     }
 
-    //=====SETS THE DIRECTION OF THE INTAKE MOTOR USING setPickUpMotorSpeed()=====//
+    //=====STARTS THE INTAKE MOTOR BY SETTTING THE DIRECTION OF THE INTAKE MOTOR USING setPickUpMotorSpeed()=====//
     public void startPickUpMotor(int direction) {
         if(direction > 0) {
             //lastVelocity = INTAKE_VELOCITY;
