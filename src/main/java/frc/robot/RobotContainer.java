@@ -8,6 +8,7 @@ import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,7 +21,6 @@ import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
 import frc.robot.commands.C_StopShooter;
 import frc.robot.drivers.DriverCameras;
-import frc.robot.drivers.TimeOfFlightSensor;
 import frc.robot.commands.C_Track;
 
 import frc.robot.drivers.Vision;
@@ -85,8 +85,8 @@ public RobotContainer() {
     private void initSubsystems() {
         // Feeder subsystem
         CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
-        TimeOfFlightSensor entrySensor = new TimeOfFlightSensor(Constants.ENTRY_SENSOR_CANID);
-        TimeOfFlightSensor exitSensor = new TimeOfFlightSensor(Constants.EXIT_SENSOR_CANID);
+        DigitalInput entrySensor = new DigitalInput(Constants.ENTRY_SENSOR_DIO_ID);
+        DigitalInput exitSensor = new DigitalInput(Constants.EXIT_SENSOR_DIO_ID);
         this.feeder = new SS_Feeder(beltMotor, entrySensor, exitSensor);
 
         // Intake subsystem
@@ -113,8 +113,9 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
-        rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
-        driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
+        DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
+        rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
+        //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
         
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
