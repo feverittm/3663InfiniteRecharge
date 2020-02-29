@@ -26,12 +26,12 @@ import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.test.C_Intake;
+import frc.robot.commands.C_Intake;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
-    private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
+    //private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
     private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
     // Driver Declarations
@@ -67,7 +67,6 @@ public RobotContainer() {
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
-        //CommandScheduler.getInstance().setDefaultCommand(intake, new C_IntakeTest(intake, testcontroller));
     }
 
     private void initCommands(){
@@ -101,6 +100,9 @@ public RobotContainer() {
             () -> driveController.getLeftXAxis().get(true)), true);
 
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
+        driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
+            
+        
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
     }
