@@ -2,16 +2,14 @@ package frc.robot.utils;
 
 public class ProjectileArkSimulation {
 
-    private double D;
-    private double mass;
-    private double Vx;
-    private double Vy;
-    private double angleOfHood;
-    private double hightOfTarget;
-    private double time;
+    public final double g = 8.9;
+    public final double cd = 0.8;
 
-    public ProjectileArkSimulation(double mass, double Vx, double Vy){
+    public ProjectileArkSimulation(){
         
     }
 
+    public double thadaWithOutDrag(double distance, double volicety){
+        return 0.5*Math.atan((distance*g)/Math.pow(volicety,2));
+    }
 }
