@@ -28,10 +28,10 @@ public class C_Intake extends CommandBase {
   @Override
   public void execute() {
     if(leftTriggerButton.get()){
-      intake.setPickUpMotorDirection(leftDirection);
+      intake.startPickUpMotor(leftDirection);
     }
     else {
-      intake.setPickUpMotorDirection(rightDirection);
+      intake.startPickUpMotor(rightDirection);
     }
   }
 

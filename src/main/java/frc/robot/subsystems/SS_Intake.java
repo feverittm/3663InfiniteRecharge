@@ -70,7 +70,7 @@ public class SS_Intake extends SubsystemBase {
     public void periodic() {
         if(isRetracting && pickupMotor.getEncoder().getPosition() >= targetRotations) {
             isRetracting = false;
-            startPickUpMotor(0);
+            setPickUpMotorSpeed(0);
         }
     }
 
@@ -106,7 +106,7 @@ public class SS_Intake extends SubsystemBase {
         isRetracting = true;
         targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
         
-        startPickUpMotor(RETRACT_VELOCITY);
+        setPickUpMotorSpeed(RETRACT_VELOCITY);
         setArmPosition(IntakePosition.POSITION_1);
     }
 
@@ -116,27 +116,27 @@ public class SS_Intake extends SubsystemBase {
     }
 
     //=====SETS THE SPEED OF THE PICKUP MOTOR IN RPMS=====//
-    private void startPickUpMotor(int pickUpSpeed){
+    private void setPickUpMotorSpeed(int pickUpSpeed){
         pid.setReference(pickUpSpeed, ControlType.kVelocity);
     }
 
     //=====SETS THE DIRECTION OF THE INTAKE MOTOR USING setPickUpMotorSpeed()=====//
-    public void setPickUpMotorDirection(int direction) {
+    public void startPickUpMotor(int direction) {
         if(direction > 0) {
             lastVelocity = INTAKE_VELOCITY;
-            startPickUpMotor(INTAKE_VELOCITY);
+            setPickUpMotorSpeed(INTAKE_VELOCITY);
         }
         else if(direction < 0) {
             lastVelocity = OUTTAKE_VELOCITY;
-            startPickUpMotor(OUTTAKE_VELOCITY);
+            setPickUpMotorSpeed(OUTTAKE_VELOCITY);
         }
         else if(direction == 0) {
-            startPickUpMotor(0);
+            setPickUpMotorSpeed(0);
         }
     }
 
     //=====TURNS OFF INTAKE MOTOR=====//
     public void turnOffMotor() {
-        setPickUpMotorDirection(0);
+        setPickUpMotorSpeed(0);
     }
 }
