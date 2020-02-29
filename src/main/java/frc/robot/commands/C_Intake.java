@@ -11,8 +11,8 @@ public class C_Intake extends CommandBase {
   private SS_Intake intake;
   private TriggerButton leftTriggerButton;
 
-  private int leftDirection = -1;
-  private int rightDirection = 1;
+  private int outDirection = -1;
+  private int inDirection = 1;
 
   public C_Intake(SS_Intake intake, Controller controller) {
     this.intake = intake;
@@ -28,10 +28,10 @@ public class C_Intake extends CommandBase {
   @Override
   public void execute() {
     if(leftTriggerButton.get()){
-      intake.startPickUpMotor(leftDirection);
+      intake.startPickUpMotor(outDirection);
     }
     else {
-      intake.startPickUpMotor(rightDirection);
+      intake.startPickUpMotor(inDirection);
     }
   }
 
