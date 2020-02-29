@@ -42,26 +42,26 @@ public class C_IntakeTest extends CommandBase {
         //SmartDashboard.putNumber("Current Motor Speed", speed);
 
         if(controller.getDPadButton(Direction.UP).get()) {
-            ss_Intake.setArmPosition(IntakePosition.FULLY_EXTENDED);
-            ss_Intake.setPickupMotorSpeed(0);
+            ss_Intake.setArmPosition(IntakePosition.POSITION_3);
+            //ss_Intake.setPickupMotorSpeed(0);
         }
         
         if(controller.getDPadButton(Direction.DOWN).get()) {
-            ss_Intake.setArmPosition(IntakePosition.FULLY_RETRACTED);
-            ss_Intake.setPickupMotorSpeed(0);
+            ss_Intake.setArmPosition(IntakePosition.POSITION_0);
+            //ss_Intake.setPickupMotorSpeed(0);
         }
 
         if(controller.getDPadButton(Direction.LEFT).get()) {
-            ss_Intake.setArmPosition(IntakePosition.LONG_RETRACT);
-            ss_Intake.setPickupMotorSpeed(0);
+            ss_Intake.setArmPosition(IntakePosition.POSITION_1);
+            //ss_Intake.setPickupMotorSpeed(0);
         }
 
         if(controller.getDPadButton(Direction.RIGHT).get()) {
-            ss_Intake.setArmPosition(IntakePosition.SHORT_RETRACT);
-            ss_Intake.setPickupMotorSpeed(0);
+            ss_Intake.setArmPosition(IntakePosition.POSITION_2);
+            //ss_Intake.setPickupMotorSpeed(0);
         }
         
-        ss_Intake.setPickupMotorSpeed((controller.getRightTriggerAxis().get() - controller.getLeftTriggerAxis().get())/2);
+        //ss_Intake.setPickupMotorSpeed((controller.getRightTriggerAxis().get() - controller.getLeftTriggerAxis().get())/2);
     }
 
     //=====FINISHES THE COMMAND=====//
@@ -73,6 +73,6 @@ public class C_IntakeTest extends CommandBase {
     //=====ENDS THE COMMAND/INTERRUPTS IT=====//
     @Override
     public void end(boolean interrupted) {
-        ss_Intake.setPickupMotorSpeed(0.0);
+        //ss_Intake.setPickupMotorSpeed(0.0);
     }
 }
