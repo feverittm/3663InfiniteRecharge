@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_ShootBalls;
+import frc.robot.commands.C_Climber;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
 import frc.robot.commands.C_StopShooter;
@@ -32,7 +33,8 @@ import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
     private final Controller driveController = new XboxController(Constants.DRIVE_CONTROLLER_ID);
-    //private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
+    private final Controller operatorController = new XboxController(Constants.OPERATOR_CONTROLLER_ID);
+    private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
     private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
     // Driver Declarations
@@ -66,6 +68,7 @@ public RobotContainer() {
                     () -> driveController.getRightXAxis().get(true))
         );
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
+        CommandScheduler.getInstance().setDefaultCommand(climber, new C_Climber(climber, operatorController));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();

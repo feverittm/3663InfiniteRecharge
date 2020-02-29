@@ -1,6 +1,6 @@
 
 
-package frc.robot.test;
+package frc.robot.commands;
 
 import org.frcteam2910.common.robot.input.Controller;
 
