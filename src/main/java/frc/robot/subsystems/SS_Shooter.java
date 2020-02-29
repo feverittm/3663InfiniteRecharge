@@ -35,6 +35,8 @@ public class SS_Shooter extends SubsystemBase {
   };
   private final int DISTANCE_COLUMN = 0; //column index for distance values
   private final int RPM_COLUMN = 1; //column index for RPM values
+  
+  private final int LOB_SHOT_SPEED = 2000; //TODO
 
   //the correction multiplier in the code that is fixed (the other one, correctionMultiplier, can be changed during a match)
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
@@ -164,6 +166,15 @@ public class SS_Shooter extends SubsystemBase {
   }
 
   /**
+   * Sets the speed of the shooter to the correct speed for a lob shot
+   */
+  public SS_Shooter setLobSpeed() {
+    targetRPM = LOB_SHOT_SPEED;
+    updateFromVision = false;
+    return this;
+  }
+
+  /**
    * have the shooter automatically update the target distance from vision, otherwise it will use the target distance
    */
   public SS_Shooter updateFromVision(boolean useVision) {
@@ -175,12 +186,14 @@ public class SS_Shooter extends SubsystemBase {
    * set the position of the hood
    * @param far if true, set hood to position for far shooting, otherwise set it to the near position
    */
-  public void setHoodFar(boolean far) {
+  public SS_Shooter setHoodFar(boolean far) {
     if(far) {
       hood.set(Value.kForward);
     } else {
       hood.set(Value.kReverse);
     }
+
+    return this;
   }
 
   /**

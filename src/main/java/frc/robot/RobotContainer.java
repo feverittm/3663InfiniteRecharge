@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.test.*;
+import frc.robot.commandgroups.CG_LobShot;
 import frc.robot.commandgroups.CG_ShootBalls;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
@@ -120,5 +121,9 @@ public RobotContainer() {
         
         driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
+
+        //lob shot command bindings
+        driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
+        driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter));
     }
 }
