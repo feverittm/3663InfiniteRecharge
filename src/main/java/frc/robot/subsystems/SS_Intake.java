@@ -25,10 +25,16 @@ public class SS_Intake extends SubsystemBase {
         POSITION_3 // This position extends both the long and short solenoids for intaking power cells.
     }
 
+    /**
+     * Intake motor directions
+     * @param STOP turns off the intake motor
+     * @param IN changes the direction of the intake motor to intake power cells
+     * @param OUT changes the direction of the intake motor to spit out power cells
+     */
     public enum IntakeDirection {
-        STOP,
-        IN,
-        OUT
+        STOP, // This turns off the intake motor, stopping it from spinning        
+        IN, // This changes the direction of the motor to intake power cells
+        OUT // This changes the direction of the motor to spit out power cells
     }
 
     //=====INSTANCE VARIABLES=====//
@@ -128,9 +134,7 @@ public class SS_Intake extends SubsystemBase {
 
     //=====STARTS THE INTAKE MOTOR BY SETTTING THE DIRECTION OF THE INTAKE MOTOR USING setPickUpMotorSpeed()=====//
     public void startPickUpMotor(IntakeDirection direction) {
-
-        switch (direction)
-        {
+        switch(direction) {
             case STOP:
                 setPickUpMotorSpeed(0);
                 break;

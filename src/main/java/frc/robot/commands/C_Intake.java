@@ -4,15 +4,13 @@ import org.frcteam2910.common.robot.input.Controller;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Intake;
+import frc.robot.subsystems.SS_Intake.IntakeDirection;
 import frc.robot.subsystems.SS_Intake.IntakePosition;
 import frc.robot.utils.TriggerButton;
 
 public class C_Intake extends CommandBase {
   private SS_Intake intake;
   private TriggerButton leftTriggerButton;
-
-  private int outDirection = -1;
-  private int inDirection = 1;
 
   public C_Intake(SS_Intake intake, Controller controller) {
     this.intake = intake;
@@ -28,10 +26,10 @@ public class C_Intake extends CommandBase {
   @Override
   public void execute() {
     if(leftTriggerButton.get()){
-      intake.startPickUpMotor(outDirection);
+      intake.startPickUpMotor(IntakeDirection.OUT);
     }
     else {
-      intake.startPickUpMotor(inDirection);
+      intake.startPickUpMotor(IntakeDirection.IN);
     }
   }
 
