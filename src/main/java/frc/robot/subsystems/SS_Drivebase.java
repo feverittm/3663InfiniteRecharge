@@ -148,12 +148,35 @@ public void drive(Vector2 translationalVelocity, double rotationalVelocity, bool
     }
 }
 
+public void drive(HolonomicDriveSignal driveSignal) {
+    synchronized(stateLock) {
+        this.driveSignal = driveSignal;
+    }
+}
+
 public void resetGyroAngle(Rotation2 angle) {
     synchronized (sensorLock) {
         navX.setAdjustmentAngle(
                 navX.getUnadjustedAngle().rotateBy(angle.inverse())
         );
     }
+}
+
+public void resetPose() {
+    synchronized(kinematicsLock) {
+        pose = new RigidTransform2(Vector2.ZERO, Rotation2.ZERO);
+    }
+}
+
+public void resetPoseTranslation() {
+    synchronized(kinematicsLock) {
+        RigidTransform2 previousPose = pose;
+        odometry.resetPose(new RigidTransform2(Vector2.ZERO, previousPose.rotation));
+    }
+}
+
+public CPRSwerveModule[] getModules() {
+    return modules;
 }
 
 @Override
@@ -174,7 +197,7 @@ public void resetGyroAngle(Rotation2 angle) {
             var module = modules[i];
             module.updateSensors();
 
-            moduleVelocities[i] = Vector2.fromAngle(Rotation2.fromRadians(module.getCurrentAngle())).scale(module.getCurrentVelocity());
+            moduleVelocities[i] = Vector2.fromAngle(Rotation2.fromRadians(module.readAngle())).scale(module.getCurrentVelocity());
         }
 
         Rotation2 angle;
@@ -190,47 +213,43 @@ public void resetGyroAngle(Rotation2 angle) {
     }
 
     private void updateModules(HolonomicDriveSignal signal, double dt) {
-      RigidTransform2 pose = getPose();
-      ChassisVelocity velocity;
+        RigidTransform2 pose = getPose();
+        ChassisVelocity velocity;
       
-      if (signal == null) {
-          velocity = new ChassisVelocity(Vector2.ZERO, 0.0);
-      } else if (signal.isFieldOriented()) {
+        if (signal == null) {
+            velocity = new ChassisVelocity(Vector2.ZERO, 0.0);
+        } else if (signal.isFieldOriented()) {
 
-          Rotation2 correction = pose.rotation;
-          velocity = new ChassisVelocity(
-                  signal.getTranslation().rotateBy(correction),
-                  signal.getRotation()
-          );
+            Rotation2 correction = pose.rotation;
+            velocity = new ChassisVelocity(
+                    signal.getTranslation().rotateBy(correction),
+                    signal.getRotation()
+            );
 
-          correctionAngleEntry.setDouble(correction.toRadians());
+            correctionAngleEntry.setDouble(correction.toRadians());
 
-      } else {
-          velocity = new ChassisVelocity(signal.getTranslation(), signal.getRotation());
-      }
+        } else {
+            velocity = new ChassisVelocity(signal.getTranslation(), signal.getRotation());
+        }
 
-      Vector2[] moduleOutputs = kinematics.toModuleVelocities(velocity);
-      SwerveKinematics.normalizeModuleVelocities(moduleOutputs, 1.0);
+        Vector2[] moduleOutputs = kinematics.toModuleVelocities(velocity);
+        SwerveKinematics.normalizeModuleVelocities(moduleOutputs, 1.0);
 
-      for (int i = 0; i < modules.length; i++) {
+        for (int i = 0; i < modules.length; i++) {
           var module = modules[i];
           module.setTargetVelocity(moduleOutputs[i]);
           module.updateState(dt);
-      }
+        }
         poseXEntry.setDouble(pose.translation.x);
         poseYEntry.setDouble(pose.translation.y);
         poseAngleEntry.setDouble(pose.rotation.toDegrees());
 
         fieldOrientedEntry.setDouble( signal == null ? 0 : (signal.isFieldOriented() ? 1 : 0));        
         gyroAngleEntry.setDouble(navX.getAngle().toDegrees());
-
-
-
   }
 
   @Override
     public void periodic() {
-
         for (int i = 0; i < modules.length; i++) {
             var module = modules[i];
             moduleAngleEntries[i].setDouble(Math.toDegrees(module.readAngle()));
