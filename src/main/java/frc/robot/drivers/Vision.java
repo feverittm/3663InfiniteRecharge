@@ -21,7 +21,7 @@ public class Vision {
   public static final int LED_OFF = 1; //force off
   public static final int LED_BLINK = 2; //force blink
   public static final int LED_ON = 3; //force on
-  public static final int LED_DEFAULT_MODE = LED_PIPELINE;
+  public static final int LED_DEFAULT_MODE = LED_OFF;
 
   //camera mode constants
   public static final int CAMERA_VISION = 0; //Vision processor
