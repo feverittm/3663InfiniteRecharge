@@ -24,7 +24,7 @@ import frc.robot.drivers.Vision;
 
 public class SS_Shooter extends SubsystemBase {
 
-  //Known RPMs for different distances. Column one: feet, Column two: RPM. 0 feet is parked directly infront of the power port
+  //Known RPMs for different distances. Column one: feet, Column two: RPM. Updated: 2/29/2020
   private final int[][] KNOWN_RPM = new int[][] {
     {5, 3490},
     {8, 3350},
@@ -263,6 +263,7 @@ public class SS_Shooter extends SubsystemBase {
     targetRPM = RPM;
   }
 
+  //updated 2-29-2020
   private int calaculateRPMPolynomial(double feet) {
     //fourth order
     // double RPM = (0.0208 * Math.pow(feet, 4)) - (1.5672 * Math.pow(feet, 3)) + (42.513 * Math.pow(feet, 2)) - (420.63 * feet) + 4713.0;
