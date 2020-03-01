@@ -26,8 +26,8 @@ public class C_Drive extends CommandBase {
 
   @Override
   public void execute() {
-    drivebase.drive(new Vector2(deadband(forward.getAsDouble(), DEFAULT_DEADBAND), 
-      deadband(strafe.getAsDouble(), DEFAULT_DEADBAND)), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND),  true);
+    drivebase.drive(new Vector2(deadband(forward.getAsDouble(), DEFAULT_DEADBAND, true), 
+      deadband(strafe.getAsDouble(), DEFAULT_DEADBAND, true)), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND, true),  true);
   }
 
   @Override

@@ -26,4 +26,9 @@ public class C_LobPrep extends CommandBase {
   public boolean isFinished() {
     return feeder.isIdle();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    feeder.setFeedMode(FeedMode.STOPPED);
+  }
 }
