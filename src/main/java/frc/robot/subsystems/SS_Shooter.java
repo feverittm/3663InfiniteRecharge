@@ -36,7 +36,7 @@ public class SS_Shooter extends SubsystemBase {
   private final int DISTANCE_COLUMN = 0; //column index for distance values
   private final int RPM_COLUMN = 1; //column index for RPM values
   
-  private final int LOB_SHOT_SPEED = 2000; //TODO
+  private final int LOB_SHOT_SPEED = 5080;
 
   //the correction multiplier in the code that is fixed (the other one, correctionMultiplier, can be changed during a match)
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;

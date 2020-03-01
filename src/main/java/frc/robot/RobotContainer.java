@@ -110,7 +110,7 @@ public RobotContainer() {
         //testcontroller.getYButton().whenPressed(new C_RPMTuneTest(testcontroller, shooter, feeder, intake));
 
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
-        driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
+        driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
@@ -123,7 +123,7 @@ public RobotContainer() {
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
 
         //lob shot command bindings
-        driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
+        driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder), false);
         driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter));
     }
 }

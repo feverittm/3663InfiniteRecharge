@@ -211,11 +211,7 @@ public class SS_Feeder extends SubsystemBase {
       // If there is ball at the top of the feeder then stop the motor and exit complete this mode.
       if (feeder.ballInExit()) {
         feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
-        return true;
-      }
-
-      // If there is a ball in the intake end of the feeder then start the motor otherwise stop it.
-      if (feeder.ballInEntry()) {
+      }else if (feeder.ballInEntry()) {
         feeder.beltPID.setReference(FEED_RPM_INTAKE, ControlType.kVelocity);
       }
       else {
@@ -227,7 +223,7 @@ public class SS_Feeder extends SubsystemBase {
 
     @Override
     protected void end( SS_Feeder feeder ) {
-      feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+      beltMotor.set(FEED_RPM_STOPPED);
     }
   }
 
@@ -247,6 +243,8 @@ public class SS_Feeder extends SubsystemBase {
       feeder.beltEncoder.setPosition(0.0);
       if(!ballInExit()){
         feeder.beltPID.setReference(FEED_RPM_PREP_SHOOT, ControlType.kVelocity);
+      }else{
+        beltMotor.set(0);
       }
     }
 
@@ -260,14 +258,14 @@ public class SS_Feeder extends SubsystemBase {
       // If the exit sensor has not seen a ball yet but the belt has moved the full length of the feeder then there are no balls, bail out.
       if (feeder.beltEncoder.getPosition() > REV_PER_FULL_FEED)
       {
-          return true;
+        return true;
       }
 
       return false;
     }
     @Override
     protected void end( SS_Feeder feeder ) {
-      feeder.beltPID.setReference(FEED_RPM_STOPPED, ControlType.kVelocity);
+      beltMotor.set(FEED_RPM_STOPPED);
     }
   }
 
@@ -294,20 +292,22 @@ public class SS_Feeder extends SubsystemBase {
 
     @Override
     protected boolean run( SS_Feeder feeder ) {
-      boolean result = false;
-
-      if (gapSeen) {
-        if ( feeder.ballInExit()) {
-          result = true;
-        }
-      } else {
-        if (!feeder.ballInExit())
-        {
-          gapSeen = true;
-        }
+      //boolean result = false;
+      // if (gapSeen) {
+      //   if ( feeder.ballInExit()) {
+      //     result = true;
+      //   }
+      // } else {
+      //   if (!feeder.ballInExit())
+      //   {
+      //     gapSeen = true;
+      //   }
+      // }
+      //return result;
+      if(!ballInExit()){
+        return true;
       }
-
-      return result;
+      return false;
       // if (beltEncoder.getPosition() >= REV_FOR_ONE_BALL || !ballInExit()){
       //   return true;
       // }else{

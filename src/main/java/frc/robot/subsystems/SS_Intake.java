@@ -34,7 +34,8 @@ public class SS_Intake extends SubsystemBase {
     public enum IntakeDirection {
         STOP, // This turns off the intake motor, stopping it from spinning        
         IN, // This changes the direction of the motor to intake power cells
-        OUT // This changes the direction of the motor to spit out power cells
+        OUT, // This changes the direction of the motor to spit out power cells
+        BUMP
     }
 
     //=====INSTANCE VARIABLES=====//
@@ -57,8 +58,9 @@ public class SS_Intake extends SubsystemBase {
     private final int RETRACT_VELOCITY = 2000;
 
     //private int lastVelocity = 0;
-    private final int INTAKE_VELOCITY = 3000;
+    private final int INTAKE_VELOCITY = 3500;
     private final int OUTTAKE_VELOCITY = -3000;
+    private final int BUMP_VELOCITY = 1000;
     
     //=====CONSTRUCTOR=====//
     public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
@@ -115,10 +117,10 @@ public class SS_Intake extends SubsystemBase {
 
     //=====RETRACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
     public void retractIntake() {
-        isRetracting = true;
-        targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
+        // isRetracting = true;
+        // targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
         
-        setPickUpMotorSpeed(RETRACT_VELOCITY);
+        // setPickUpMotorSpeed(RETRACT_VELOCITY);
         setArmPosition(IntakePosition.POSITION_1);
     }
 
@@ -145,6 +147,9 @@ public class SS_Intake extends SubsystemBase {
 
             case OUT:
                 setPickUpMotorSpeed(OUTTAKE_VELOCITY);
+                break;
+            case BUMP:
+                setPickUpMotorSpeed(BUMP_VELOCITY);
                 break;
         }
     }
