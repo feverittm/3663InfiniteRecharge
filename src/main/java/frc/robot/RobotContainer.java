@@ -7,6 +7,7 @@ import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
+import org.frcteam2910.common.robot.input.DPadButton.Direction;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -21,6 +22,8 @@ import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
 import frc.robot.commands.C_StopShooter;
+import frc.robot.commands.C_SwitchFeederCamera;
+import frc.robot.commands.C_SwitchShooterCamera;
 import frc.robot.drivers.DriverCameras;
 import frc.robot.commands.C_Track;
 
@@ -124,5 +127,9 @@ public RobotContainer() {
         //lob shot command bindings
         driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
         driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter));
+
+        //camera switching
+        operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchShooterCamera(cameras));
+        operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchFeederCamera(cameras));
     }
 }
