@@ -9,7 +9,7 @@ import frc.robot.subsystems.SS_Drivebase;
 
 public class C_Drive extends CommandBase {
   private SS_Drivebase drivebase;
-  private final double DEFAULT_DEADBAND = .2;
+  private final double DEFAULT_DEADBAND = .001;
 
   private DoubleSupplier forward;
   private DoubleSupplier strafe;

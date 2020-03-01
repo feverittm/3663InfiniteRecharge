@@ -29,7 +29,7 @@ public class C_FeederDefault extends CommandBase {
   @Override
   public void execute() {
     if(feeder.ballInExit() && !hasRumbled){
-      new C_Rumble(rumbleJoystick, secondsToRumble, 0.5).schedule();
+      new C_LetsGetReadyToRUMBLE(rumbleJoystick, secondsToRumble, 0.5).schedule();
       hasRumbled = true;
     }
     if(!feeder.ballInExit()){

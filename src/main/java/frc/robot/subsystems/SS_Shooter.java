@@ -25,14 +25,16 @@ public class SS_Shooter extends SubsystemBase {
   };
   private final int DISTANCE_COLUMN = 0; //column index for distance values
   private final int RPM_COLUMN = 1; //column index for RPM values
+  
+  private final int LOB_SHOT_SPEED = 2000; //TODO
 
   //the correction multiplier in the code that is fixed (the other one, correctionMultiplier, can be changed during a match)
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
 
   //Wheel PID constants (These values are tuned correctly for the software robot)
-  private final double KF = 0.0002; // final
-  private final double KP = 0.0012; //0.0012;
-  private final double KI = 1e-08;
+  private final double KF = 0.000; //0.0002// final
+  private final double KP = 0.0005; //0.0012;
+  private final double KI = 0.000000415; //1e-019;
   private final double KD = 0.0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
@@ -162,6 +164,15 @@ public class SS_Shooter extends SubsystemBase {
    */
   public SS_Shooter setTargetDistance(double targetDistance) {
     targetRPM = calculateRPM(targetDistance);
+    updateFromVision = false;
+    return this;
+  }
+
+  /**
+   * Sets the speed of the shooter to the correct speed for a lob shot
+   */
+  public SS_Shooter setLobSpeed() {
+    targetRPM = LOB_SHOT_SPEED;
     updateFromVision = false;
     return this;
   }

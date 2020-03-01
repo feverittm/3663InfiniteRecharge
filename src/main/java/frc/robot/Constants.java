@@ -11,6 +11,7 @@ public class Constants {
 
     // Controllers
     public static final int DRIVE_CONTROLLER_ID = 0;
+    public static final int OPERATOR_CONTROLLER_ID = 1;
     public static final int TEST_CONTROLLER_ID = 2;
     
     // Drivebase subsystem CAN IDs
@@ -34,11 +35,12 @@ public class Constants {
     public static final int INTAKE_LONG_SOLENOID_REVERSE_ID = 2;
     public static final int INTAKE_SHORT_SOLENOID_FORWARD_ID = 1;
     public static final int INTAKE_SHORT_SOLENOID_REVERSE_ID = 3;
+    public static final int INTAKE_SENSOR = 3;
 
     // Ball feeder subsystem related constants
     public static final int FEED_MOTOR_CANID = 10;
-    public static final int ENTRY_SENSOR_CANID = 20;
-    public static final int EXIT_SENSOR_CANID = 21;
+    public static final int ENTRY_SENSOR_DIO_ID = 1;
+    public static final int EXIT_SENSOR_DIO_ID = 2;
     
     //Shooter subsystem related constants
     public static final int SHOOTER_MOTOR_CANID = 11;
