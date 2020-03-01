@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.frcteam2910.common.math.Rotation2;
+import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
@@ -13,10 +14,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_LobShot;
 import frc.robot.commandgroups.CG_ShootBalls;
+import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
@@ -124,5 +127,14 @@ public RobotContainer() {
         //lob shot command bindings
         driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
         driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter));
+    }
+    public SequentialCommandGroup getAutonomousCommand() {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase),
+            new C_AutoDrive(drivebase, Vector2.ZERO, 1.0, Math.toRadians(90), 1.0)
+            // new C_AutoDrive(drivebase, new Vector2(-80.0, 66.0), .7, 180, 1.0),
+            // new C_AutoDrive(drivebase, new Vector2(-100.0, 0.0), .5, 0.0, 1.0)
+        );
+        //return autonomousBuilder.buildAutoRoutine();
     }
 }

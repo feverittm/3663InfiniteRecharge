@@ -81,6 +81,8 @@ public class C_AutoDrive extends CommandBase {
     rotationSpeed = rotationController.calculate(currentAngle, dt);
     
     drivebase.drive(translationVector, rotationSpeed, true);
+
+    System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
   }
 
   @Override
