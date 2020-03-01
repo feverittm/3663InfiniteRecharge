@@ -264,7 +264,7 @@ public class SS_Shooter extends SubsystemBase {
   }
 
   //updated 2-29-2020
-  private int calaculateRPMPolynomial(double feet) {
+  private int calculateRPMPolynomial(double feet) {
     //fourth order
     // double RPM = (0.0208 * Math.pow(feet, 4)) - (1.5672 * Math.pow(feet, 3)) + (42.513 * Math.pow(feet, 2)) - (420.63 * feet) + 4713.0;
     //second order
