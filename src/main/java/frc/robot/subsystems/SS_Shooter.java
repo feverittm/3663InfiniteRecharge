@@ -263,6 +263,14 @@ public class SS_Shooter extends SubsystemBase {
     targetRPM = RPM;
   }
 
+  private int calaculateRPMPolynomial(double feet) {
+    //fourth order
+    // double RPM = (0.0208 * Math.pow(feet, 4)) - (1.5672 * Math.pow(feet, 3)) + (42.513 * Math.pow(feet, 2)) - (420.63 * feet) + 4713.0;
+    //second order
+    double RPM = (2.324 * Math.pow(feet, 2)) - (17.533 * feet) + 3426.8;
+    return (int)RPM;
+  }
+
   /**
    * Convert distance to correct RPM for shooting power cells
    * @param distance distance to convert to RPMs (in feet)
