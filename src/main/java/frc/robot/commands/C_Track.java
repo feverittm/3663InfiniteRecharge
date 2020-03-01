@@ -8,6 +8,8 @@
 package frc.robot.commands;
 
 import org.frcteam2910.common.math.Vector2;
+import org.frcteam2910.common.robot.drivers.Limelight;
+
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -50,6 +52,7 @@ public class C_Track extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    vision.setLEDMode(Vision.LED_ON);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -61,6 +64,7 @@ public class C_Track extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    vision.setLEDMode(Vision.LED_OFF);
   }
 
   // Returns true when the command should end.
