@@ -55,6 +55,7 @@ public class Vision {
     ts = visionTable.getEntry("ts");
     camtran = visionTable.getEntry("camtran");
     setMode(CAMERA_DEFAULT_MODE, LED_DEFAULT_MODE, DEFAULT_PIPELINE);
+    setLEDMode(Vision.LED_OFF);
   }
 
   public void updateTelemetry() {
