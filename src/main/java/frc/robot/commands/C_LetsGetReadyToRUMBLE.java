@@ -20,7 +20,7 @@ public class C_LetsGetReadyToRUMBLE extends CommandBase {
   private Timer timer = new Timer();
   private Timer intervalTimer = new Timer();
   private double seconds;
-  private double intervalTime = 0;
+  private double intervalTime = Integer.MAX_VALUE;
   private double rumbleIntensity;
 
   public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double rumbleIntensity) {
@@ -48,10 +48,17 @@ public class C_LetsGetReadyToRUMBLE extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (intervalTimer.get() > 0) {
+    if (intervalTimer.get() > intervalTime) {
+      joystick.setRumble(RumbleType.kLeftRumble, rumbleIntensity);
+      joystick.setRumble(RumbleType.kRightRumble, rumbleIntensity);     
+      if(intervalTimer.get() > intervalTime * 2){
+        intervalTimer.reset();
+        intervalTimer.start();
+      } 
+    }else{
+      joystick.setRumble(RumbleType.kLeftRumble, rumbleIntensity);
+      joystick.setRumble(RumbleType.kRightRumble, rumbleIntensity);
     }
-    joystick.setRumble(RumbleType.kLeftRumble, rumbleIntensity);
-    joystick.setRumble(RumbleType.kRightRumble, rumbleIntensity);
   }
 
   // Called once the command ends or is interrupted.
