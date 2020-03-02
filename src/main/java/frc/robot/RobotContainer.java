@@ -20,6 +20,7 @@ import frc.robot.commandgroups.CG_LobShot;
 import frc.robot.commandgroups.CG_ShootBalls;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
+import frc.robot.commands.C_DriveCorrection;
 import frc.robot.commands.C_FeederDefault;
 import frc.robot.commands.C_StopShooter;
 import frc.robot.commands.C_SwitchCamera;
@@ -68,7 +69,7 @@ public RobotContainer() {
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
 
-        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
+        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_DriveCorrection(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
