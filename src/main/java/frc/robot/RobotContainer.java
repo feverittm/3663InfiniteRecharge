@@ -12,12 +12,14 @@ import org.frcteam2910.common.robot.input.DPadButton.Direction;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_LobShot;
 import frc.robot.commandgroups.CG_ShootBalls;
+import frc.robot.commands.C_CheckPDPVoltage;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
@@ -41,12 +43,13 @@ public class RobotContainer {
     private final Controller operatorController = new XboxController(Constants.OPERATOR_CONTROLLER_ID);
     private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
     private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
+    private final Joystick operatorRumbleJoystick = new Joystick(Constants.OPERATOR_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
     // Driver Declarations
     Vision vision = new Vision();
     DriverCameras cameras = new DriverCameras(Constants.FEEDER_CAMERA_PORT, Constants.INTAKE_CAMERA_PORT);
 
-    
+    private final PowerDistributionPanel PDP = new PowerDistributionPanel();    
     // Subsystem Declarations
     protected SS_Feeder feeder;
     protected SS_Shooter shooter;
@@ -75,6 +78,7 @@ public RobotContainer() {
         );
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
         CommandScheduler.getInstance().setDefaultCommand(climber, new C_Climb(climber, operatorController));
+        new C_CheckPDPVoltage(PDP, operatorRumbleJoystick).schedule();
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();

@@ -17,16 +17,22 @@ public class C_LetsGetReadyToRUMBLE extends CommandBase {
    * Creates a new C_Rumble.
    */
   private Joystick joystick;
-  private Timer timer;
+  private Timer timer = new Timer();
   private double seconds;
+  private double intervals = 0;
   private double rumbleIntensity;
   public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double rumbleIntensity){
     this.joystick = joystick;
     this.seconds = seconds;
     this.rumbleIntensity = rumbleIntensity;
-    timer = new Timer();
   }
 
+  public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double intervals, double rumbleIntensity){
+    this.joystick = joystick;
+    this.seconds = seconds;
+    this.intervals = intervals;
+    this.rumbleIntensity = rumbleIntensity;
+  }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
