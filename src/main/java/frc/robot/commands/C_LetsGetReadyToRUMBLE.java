@@ -48,7 +48,7 @@ public class C_LetsGetReadyToRUMBLE extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (false) {
+    if (intervalTimer.get() > 0) {
     }
     joystick.setRumble(RumbleType.kLeftRumble, rumbleIntensity);
     joystick.setRumble(RumbleType.kRightRumble, rumbleIntensity);
