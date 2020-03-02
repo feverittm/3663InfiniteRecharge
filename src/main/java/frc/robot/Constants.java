@@ -31,7 +31,7 @@ public class Constants {
 
     // Other drivebase related constants
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 25;
-    public static final byte NAVX_UPDATE_RATE = 127;
+    public static final byte NAVX_UPDATE_RATE = 50;
 
     //Intake subsystem related constants
     public static final int INTAKE_MOTOR_CANID = 9;
