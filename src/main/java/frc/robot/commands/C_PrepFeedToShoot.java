@@ -6,6 +6,7 @@ import frc.robot.subsystems.SS_Feeder.FeedRate;
 
 public class C_PrepFeedToShoot extends CommandBase {
   private SS_Feeder feeder;
+
   public C_PrepFeedToShoot(SS_Feeder feeder) {
     this.feeder = feeder;
     addRequirements(feeder);
@@ -13,13 +14,14 @@ public class C_PrepFeedToShoot extends CommandBase {
 
   @Override
   public void initialize() {
+    if (feeder.ballInExit()) {
+      end(false);
+    }
   }
 
   @Override
   public void execute() {
-    if(!feeder.ballInExit()){
-      feeder.setRPM(FeedRate.SHOOT_PREP);
-    }
+    feeder.setRPM(FeedRate.SHOOT_PREP);
   }
 
   @Override

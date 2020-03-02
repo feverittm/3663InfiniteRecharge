@@ -7,6 +7,7 @@ import frc.robot.subsystems.SS_Feeder.FeedRate;
 public class C_FeederTest extends CommandBase {
   private SS_Feeder feeder;
   private double targetRPM;
+
   public C_FeederTest(SS_Feeder feeder, double targetRPM) {
     this.feeder = feeder;
     this.targetRPM = targetRPM;

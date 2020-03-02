@@ -19,9 +19,9 @@ public class SS_Feeder extends SubsystemBase {
 
   private FeedRate currentFeedRate = FeedRate.STOPPED;
   // Feeder PID constants
-  private final double KP = 0.0001;// 0.007
-  private final double KI = 0.000001;// 0.00000001
-  private final double KD = 0;// 00000001
+  private final double KP = 0.0001;// 0.0001
+  private final double KI = 0.000001;// 0.0000011
+  private final double KD = 0.0009;// 00000001
 
   private final double FEEDER_BELT_GEAR_RATIO_MULTIPLIER = 1;
 

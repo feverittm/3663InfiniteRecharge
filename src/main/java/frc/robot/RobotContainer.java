@@ -137,7 +137,7 @@ public class RobotContainer {
                 driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
                 driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
                 driveController.getAButton().whileHeld(new C_Shoot(feeder, shooter), false);
-                driveController.getBButton().whenPressed(new C_ShootAll(feeder), false);
+                driveController.getXButton().whenPressed(new C_ShootAll(feeder), false);
 
                 // lob shot command bindings
                 driveController.getRightBumperButton()
@@ -158,7 +158,7 @@ public class RobotContainer {
                 // testing
                 testcontroller.getAButton().whenPressed(new C_PrepFeedIntake(feeder));
                 testcontroller.getBButton().whenPressed(new C_PrepFeedToShoot(feeder));
-                testcontroller.getYButton().whileHeld(new C_FeederTest(feeder, 2000));
+                testcontroller.getYButton().whileHeld(new C_FeederTest(feeder, 5500));
         }
 
         public SequentialCommandGroup getAutonomousCommand() {
