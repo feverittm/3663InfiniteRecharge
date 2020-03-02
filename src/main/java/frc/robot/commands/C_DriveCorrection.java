@@ -11,7 +11,7 @@ import frc.robot.subsystems.SS_Drivebase;
 public class C_DriveCorrection extends CommandBase {
   
   private SS_Drivebase drivebase;
-  private final double DEFAULT_DEADBAND = .001;
+  private final double DEFAULT_DEADBAND = 0.007;
 
   private final double KP = 0.0006;
   private final double KI = 0.0;
