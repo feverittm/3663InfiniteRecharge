@@ -30,7 +30,9 @@ public final class CPRSwerveModule extends SwerveModule {
     private static final double ANGLE_VERSA_GEAR_RATIO = 21.0; // MOTOR REVOLUTIONS TO MODULE REVOLUTIONS
     private static final double ANGLE_TOTAL_GEAR_RATIO = 63.0;
 
-    private static final double DEFAULT_DRIVE_TICKS_PER_UNIT = 36.65; //TODO: find drive ticks per inch with a NEO drive motor
+    private static final double DRIVE_GEAR_RATIO = 8.75;
+
+    private static final double DEFAULT_WHEEL_REVOLUTIONS_PER_UNIT = .076;
 
     private final double offsetAngle;
 
@@ -40,6 +42,7 @@ public final class CPRSwerveModule extends SwerveModule {
     private final CANAnalog angleAbsoluteEncoder;
     private final CANEncoder angleMotorEncoder;
     private final PIDController anglePIDController;
+    private final CANEncoder driveMotorEncoder;
     private final CANPIDController drivePIDController;
 
     private final double ANGLE_P = .5;
@@ -51,9 +54,9 @@ public final class CPRSwerveModule extends SwerveModule {
     /**
      * The amount of drive encoder ticks that occur for one unit of travel.
      *
-     * @see #DEFAULT_DRIVE_TICKS_PER_UNIT
+     * @see #DEFAULT_WHEEL_REVOLUTIONS_PER_UNIT
      */
-    private volatile double driveTicksPerUnit = DEFAULT_DRIVE_TICKS_PER_UNIT;
+    private volatile double wheelRevolutionsPerUnit = DEFAULT_WHEEL_REVOLUTIONS_PER_UNIT;
 
     /**
      * @param modulePosition the module's offset from the center of the robot
@@ -93,6 +96,10 @@ public final class CPRSwerveModule extends SwerveModule {
         drivePIDController.setFF(.2);
 
         this.driveMotor.setIdleMode(IdleMode.kBrake);
+        
+        this.driveMotorEncoder = driveMotor.getEncoder();
+        this.driveMotorEncoder.setVelocityConversionFactor(1.0);
+        this.driveMotorEncoder.setPositionConversionFactor(1.0);
 
         // Setup current limiting
         this.driveMotor.setSmartCurrentLimit(Constants.DRIVE_MOTOR_CURRENT_LIMIT);
@@ -109,7 +116,7 @@ public final class CPRSwerveModule extends SwerveModule {
      * @param driveTicksPerUnit the amount of drive ticks that occur per unit of travel
      */
     public void setDriveTicksPerUnit(double driveTicksPerUnit) {
-        this.driveTicksPerUnit = driveTicksPerUnit;
+        this.wheelRevolutionsPerUnit = driveTicksPerUnit;
     }
 
     @Override
@@ -135,10 +142,17 @@ public final class CPRSwerveModule extends SwerveModule {
     public void resetIntegratedEncoder() {
         angleMotorEncoder.setPosition(readAngle());
     }
+    /**
+     * @return units per second of the drive motor
+     */
+    @Override
+    public double getCurrentVelocity() {
+        return driveMotorEncoder.getVelocity() / 60.0 / DRIVE_GEAR_RATIO / wheelRevolutionsPerUnit;
+    }
 
     @Override
     public double readDistance() {
-        return driveMotor.getEncoder().getPosition() / driveTicksPerUnit;
+        return driveMotor.getEncoder().getPosition() / wheelRevolutionsPerUnit;
     }
     /**
      * @param angle IN RADIANS
