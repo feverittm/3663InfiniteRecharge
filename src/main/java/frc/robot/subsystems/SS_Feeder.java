@@ -292,22 +292,24 @@ public class SS_Feeder extends SubsystemBase {
 
     @Override
     protected boolean run( SS_Feeder feeder ) {
-      //boolean result = false;
-      // if (gapSeen) {
-      //   if ( feeder.ballInExit()) {
-      //     result = true;
-      //   }
-      // } else {
-      //   if (!feeder.ballInExit())
-      //   {
-      //     gapSeen = true;
-      //   }
-      // }
-      //return result;
-      if(!ballInExit()){
-        return true;
+      boolean result = false;
+      if (gapSeen) {
+        if ( feeder.ballInExit()) {
+          result = true;
+        }
+      } else {
+        if (!feeder.ballInExit())
+        {
+          gapSeen = true;
+        }
       }
-      return false;
+      return result;
+
+      // if(!ballInExit()){
+      //   return true;
+      // }
+      // return false;
+
       // if (beltEncoder.getPosition() >= REV_FOR_ONE_BALL || !ballInExit()){
       //   return true;
       // }else{

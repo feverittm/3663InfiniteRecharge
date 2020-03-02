@@ -138,7 +138,7 @@ public class SS_Intake extends SubsystemBase {
     public void startPickUpMotor(IntakeDirection direction) {
         switch(direction) {
             case STOP:
-                setPickUpMotorSpeed(0);
+                pickupMotor.set(0);
                 break;
 
             case IN:

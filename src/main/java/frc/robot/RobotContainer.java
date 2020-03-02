@@ -68,7 +68,7 @@ public RobotContainer() {
         initCommands();
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
-        operatorController.getRightYAxis().setScale(.2);
+        //operatorController.getRightYAxis().setScale(.2);
 
         CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_DriveCorrection(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 

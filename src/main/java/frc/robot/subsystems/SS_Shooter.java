@@ -127,7 +127,7 @@ public class SS_Shooter extends SubsystemBase {
       if(updateFromVision) {
         double distance = vision.getDistance();
         if(distance > 0) {
-          targetRPM = calculateRPM(distance);
+          targetRPM = calculateRPMPolynomial(distance);
           setRPM(targetRPM);
         }
       } else {
@@ -160,7 +160,7 @@ public class SS_Shooter extends SubsystemBase {
    * Set the target distance for the wheel to spin to.
    */
   public SS_Shooter setTargetDistance(double targetDistance) {
-    targetRPM = calculateRPM(targetDistance);
+    targetRPM = calculateRPMPolynomial(targetDistance);
     updateFromVision = false;
     return this;
   }

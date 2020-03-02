@@ -48,7 +48,7 @@ public class C_Intake extends CommandBase {
     }
     if(isRetracting){
       intake.setArmPosition(IntakePosition.POSITION_0);
-      intake.startPickUpMotor(IntakeDirection.BUMP);
+      intake.startPickUpMotor(IntakeDirection.STOP);
       if(timer.get() > 0.4) {
         intake.setArmPosition(IntakePosition.POSITION_2);
         if(timer.get() > 0.8){
