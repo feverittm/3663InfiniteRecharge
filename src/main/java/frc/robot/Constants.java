@@ -13,6 +13,10 @@ public class Constants {
     public static final int DRIVE_CONTROLLER_ID = 0;
     public static final int OPERATOR_CONTROLLER_ID = 1;
     public static final int TEST_CONTROLLER_ID = 2;
+
+    // Cameras
+    public static final int FEEDER_CAMERA_PORT = 0;
+    public static final int INTAKE_CAMERA_PORT = 1;
     
     // Drivebase subsystem CAN IDs
     public static final int FRONT_LEFT_DRIVE_MOTOR_CANID = 1;
