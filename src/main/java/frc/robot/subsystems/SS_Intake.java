@@ -70,6 +70,7 @@ public class SS_Intake extends SubsystemBase {
 
         setArmPosition(IntakePosition.POSITION_0);
         pickupMotor.setIdleMode(IdleMode.kCoast);
+        pickupMotor.setSmartCurrentLimit(5);
 
         pid = pickupMotor.getPIDController();
         pid.setOutputRange(-1, 1);
