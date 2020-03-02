@@ -7,6 +7,7 @@ import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.robot.UpdateManager;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
+import org.frcteam2910.common.robot.input.DPadButton.Direction;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -21,10 +22,12 @@ import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
 import frc.robot.commands.C_FeederDefault;
 import frc.robot.commands.C_StopShooter;
+import frc.robot.commands.C_SwitchCamera;
 import frc.robot.drivers.DriverCameras;
 import frc.robot.commands.C_Track;
 
 import frc.robot.drivers.Vision;
+import frc.robot.drivers.DriverCameras.CameraFeed;
 import frc.robot.subsystems.SS_Climber;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
@@ -41,7 +44,7 @@ public class RobotContainer {
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
     // Driver Declarations
     Vision vision = new Vision();
-    DriverCameras cameras = new DriverCameras();
+    DriverCameras cameras = new DriverCameras(Constants.FEEDER_CAMERA_PORT, Constants.INTAKE_CAMERA_PORT);
 
     
     // Subsystem Declarations
@@ -77,10 +80,9 @@ public RobotContainer() {
         configureButtonBindings();
     }
 
-    private void initCommands(){
+    private void initCommands() {
     }
     private void initDrivers() {
-        vision = new Vision();
     }
 
     private void initSubsystems() {
@@ -124,5 +126,14 @@ public RobotContainer() {
         //lob shot command bindings
         driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
         driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter));
+
+        //camera switching
+        driveController.getRightBumperButton().whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER))
+            .whenReleased(new C_SwitchCamera(cameras, CameraFeed.FEEDER));
+        driveController.getLeftBumperButton().whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER))
+            .whenReleased(new C_SwitchCamera(cameras, CameraFeed.FEEDER));
+
+        operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
+        operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
     }
 }
