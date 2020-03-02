@@ -16,12 +16,12 @@ public class C_AutoDrive extends CommandBase {
   private Vector2 targetTranslation;
   private double targetRotation;
 
-  private double translationKp = .017;
+  private double translationKp = .013;
   private double translationKi = 0;
   private double translationKd = 0;
   private PidConstants translationConstants = new PidConstants(translationKp, translationKi, translationKd);
 
-  private double rotationKp = -.048;
+  private double rotationKp = .0293;
   private double rotationKi = 0;
   private double rotationKd = 0;
   private PidConstants rotationConstants = new PidConstants(rotationKp, rotationKi, rotationKd);
@@ -81,8 +81,6 @@ public class C_AutoDrive extends CommandBase {
     rotationSpeed = rotationController.calculate(currentAngle, dt);
     
     drivebase.drive(translationVector, rotationSpeed, true);
-
-    System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDd");
   }
 
   @Override
@@ -98,6 +96,6 @@ public class C_AutoDrive extends CommandBase {
         targetTranslation.y == 0.0)&&
         (Math.abs(targetTranslation.x - currentPose.translation.x) <= targetTranslation.x * translationPercentTolerance ||
         targetTranslation.x == 0.0))
-        ||(translationSpeed <= .001);
+        ||(translationSpeed <= .001 && rotationSpeed <= .0005);
   }
 }

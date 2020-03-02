@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.I2C;
 import frc.robot.drivers.*;
 import frc.robot.Constants;
 
@@ -23,9 +24,9 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
 
     //SWERVE MODULE ANGLE ENCODER OFFSETS (in radians, obviously)
     public static final double FRONT_LEFT_MODULE_OFFSET = Math.toRadians(40);
-    public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-102);
-    public static final double BACK_LEFT_MODULE_OFFSET = Math.toRadians(-30);
-    public static final double BACK_RIGHT_MODULE_OFFSET = Math.toRadians(-23.5);
+    public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-106);
+    public static final double BACK_LEFT_MODULE_OFFSET = Math.toRadians(-30.4);
+    public static final double BACK_RIGHT_MODULE_OFFSET = Math.toRadians(-32);
 
     private final Vector2 frontLeftModulePosition = new Vector2(-Constants.TRACKWIDTH / 2.0, Constants.WHEELBASE / 2.0);
     private final Vector2 frontRightModulePosition = new Vector2(-Constants.TRACKWIDTH / 2.0, -Constants.WHEELBASE / 2.0);
@@ -61,7 +62,8 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
 
     private final Object sensorLock = new Object();
     @GuardedBy("sensorLock")
-    private final NavX navX = new NavX(Port.kUSB, Constants.NAVX_UPDATE_RATE);
+    private final NavX navX = new NavX(I2C.Port.kOnboard, Constants.NAVX_UPDATE_RATE);
+    // private final NavX navX = new NavX(Port.kUSB, Constants.NAVX_UPDATE_RATE);
 
     private final Object kinematicsLock = new Object();
     @GuardedBy("kinematicsLock")
@@ -69,7 +71,7 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
 
     private final Object stateLock = new Object();
     @GuardedBy("stateLock")
-    private HolonomicDriveSignal driveSignal = null;
+    private HolonomicDriveSignal driveSignal = new HolonomicDriveSignal(Vector2.ZERO, 0.0, false);
 
     private NetworkTableEntry poseXEntry;
     private NetworkTableEntry poseYEntry;
