@@ -44,6 +44,7 @@ public class RobotContainer {
     private final Controller operatorController = new XboxController(Constants.OPERATOR_CONTROLLER_ID);
     private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
     private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
+    private final Joystick operatorRumbleJoystick = new Joystick(Constants.OPERATOR_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
     // Driver Declarations
     Vision vision = new Vision();
@@ -139,7 +140,7 @@ public RobotContainer() {
         operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
         operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
 
-        operatorController.getBackButton().whenPressed(new C_Climb(climber, operatorController));
+        operatorController.getBackButton().whenPressed(new C_Climb(climber, operatorController, operatorRumbleJoystick));
     }
     public SequentialCommandGroup getAutonomousCommand() {
         return new SequentialCommandGroup(

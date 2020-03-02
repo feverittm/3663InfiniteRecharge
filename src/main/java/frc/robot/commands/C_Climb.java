@@ -2,20 +2,26 @@
 package frc.robot.commands;
 
 import org.frcteam2910.common.robot.input.Controller;
+
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Climber;
+import frc.robot.commands.C_LetsGetReadyToRUMBLE;
 
 public class C_Climb extends CommandBase {
 
   private Controller operatorController;
+  private Joystick operatorRumbleJoystick;
   private SS_Climber climber;
 
   private final double MAX_HEIGHT = 125;
   private double winchStickY;
   private double climberStickY;
   private boolean manualOveride = false;
-  public C_Climb(SS_Climber climber, Controller operatorController) {
+  private boolean hasRumbled = false;
+  public C_Climb(SS_Climber climber, Controller operatorController, Joystick operatorRumbleJoystick) {
     this.operatorController = operatorController;
+    this.operatorRumbleJoystick = operatorRumbleJoystick;
     this.climber = climber;
     addRequirements(climber);
   }
@@ -37,6 +43,10 @@ public class C_Climb extends CommandBase {
       }
       if(climberStickY > 0){
         climber.setHookPosition(0);
+      }
+      if(climber.getHookPosition() > -MAX_HEIGHT && !hasRumbled){
+        new C_LetsGetReadyToRUMBLE(operatorRumbleJoystick, 5, 1).schedule();
+        hasRumbled = true;
       }
     }else if(manualOveride){
       climber.setHook(Math.pow(climberStickY, 2) * Math.signum(climberStickY));
