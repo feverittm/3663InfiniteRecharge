@@ -7,17 +7,19 @@ import frc.robot.subsystems.SS_Feeder.FeedRate;
 public class C_PrepFeedIntake extends CommandBase {
 
   private SS_Feeder feeder;
+
   public C_PrepFeedIntake(SS_Feeder feeder) {
     this.feeder = feeder;
   }
 
   @Override
   public void initialize() {
+    feeder.resetEncoder();
   }
 
   @Override
   public void execute() {
-    if(!feeder.ballInEntry()){
+    if (!feeder.ballInEntry()) {
       feeder.setRPM(FeedRate.INTAKE_PREP);
     }
   }
@@ -29,6 +31,6 @@ public class C_PrepFeedIntake extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.ballInEntry();
+    return feeder.ballInEntry() || Math.abs(feeder.getPosition()) >= feeder.getRevPerFullFeed();
   }
 }
