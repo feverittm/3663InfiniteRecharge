@@ -64,6 +64,7 @@ public RobotContainer() {
         initCommands();
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
+        operatorController.getRightYAxis().setScale(.2);
 
         CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
@@ -100,9 +101,9 @@ public RobotContainer() {
         shooter = new SS_Shooter(vision, Constants.SHOOTER_MOTOR_CANID, Constants.HOOD_SOLENOID_FORWARD_ID, Constants.HOOD_SOLENOID_REVERSE_ID);
 
         // Climber subsystem
-        CANSparkMax gondolaMotor = new CANSparkMax(Constants.CLIMBER_EXTEND_MOTOR_CANID, MotorType.kBrushless);
+        CANSparkMax gondolaMotor = new CANSparkMax(Constants.CLIMBER_DRIVE_MOTOR_CANID, MotorType.kBrushless);
         CANSparkMax winchMotor = new CANSparkMax(Constants.CLIMBER_WINCH_MOTOR_CANID, MotorType.kBrushless);
-        CANSparkMax hookMotor = new CANSparkMax(Constants.CLIMBER_DRIVE_MOTOR_CANID, MotorType.kBrushless);
+        CANSparkMax hookMotor = new CANSparkMax(Constants.CLIMBER_EXTEND_MOTOR_CANID, MotorType.kBrushless);
         climber = new SS_Climber(gondolaMotor, winchMotor, hookMotor);
     }
     

@@ -23,9 +23,9 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
 
     //SWERVE MODULE ANGLE ENCODER OFFSETS (in radians, obviously)
     public static final double FRONT_LEFT_MODULE_OFFSET = Math.toRadians(40);
-    public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-102);
-    public static final double BACK_LEFT_MODULE_OFFSET = Math.toRadians(-30);
-    public static final double BACK_RIGHT_MODULE_OFFSET = Math.toRadians(-23.5);
+    public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-106);
+    public static final double BACK_LEFT_MODULE_OFFSET = Math.toRadians(-30.4);
+    public static final double BACK_RIGHT_MODULE_OFFSET = Math.toRadians(-32);
 
     private final Vector2 frontLeftModulePosition = new Vector2(-Constants.TRACKWIDTH / 2.0, Constants.WHEELBASE / 2.0);
     private final Vector2 frontRightModulePosition = new Vector2(-Constants.TRACKWIDTH / 2.0, -Constants.WHEELBASE / 2.0);
