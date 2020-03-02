@@ -18,8 +18,9 @@ public class C_LetsGetReadyToRUMBLE extends CommandBase {
    */
   private Joystick joystick;
   private Timer timer = new Timer();
+  private Timer intervalTimer = new Timer();
   private double seconds;
-  private double intervals = 0;
+  private double intervalTime = 0;
   private double rumbleIntensity;
   public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double rumbleIntensity){
     this.joystick = joystick;
@@ -27,15 +28,16 @@ public class C_LetsGetReadyToRUMBLE extends CommandBase {
     this.rumbleIntensity = rumbleIntensity;
   }
 
-  public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double intervals, double rumbleIntensity){
+  public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double intervalTime, double rumbleIntensity){
     this.joystick = joystick;
     this.seconds = seconds;
-    this.intervals = intervals;
+    this.intervalTime = intervalTime;
     this.rumbleIntensity = rumbleIntensity;
   }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    intervalTimer.start();
     timer.reset();
     timer.start();
   }
