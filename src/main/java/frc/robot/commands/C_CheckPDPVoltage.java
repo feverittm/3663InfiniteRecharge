@@ -14,6 +14,7 @@ public class C_CheckPDPVoltage extends CommandBase {
   private Timer timer;
   private NetworkTableEntry pdpVoltage;
   private final double PDP_MIN_VOLTAGE_THRESHOLD = 11.5;
+  private boolean hasRumbled = false;
 
   public C_CheckPDPVoltage(PowerDistributionPanel PDP, Joystick operatorRumbleJoystick) {
     this.PDP = PDP;
@@ -36,7 +37,8 @@ public class C_CheckPDPVoltage extends CommandBase {
       timer.reset();
     }
 
-    if (timer.get() > 5) {
+    if (timer.get() > 5 && !hasRumbled) {
+      hasRumbled = true;
       new C_LetsGetReadyToRUMBLE(operatorRumbleJoystick, 10, 1, 1).schedule();
     }
 
