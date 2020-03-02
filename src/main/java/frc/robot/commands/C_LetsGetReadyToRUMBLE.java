@@ -29,11 +29,9 @@ public class C_LetsGetReadyToRUMBLE extends CommandBase {
     this.rumbleIntensity = rumbleIntensity;
   }
 
-  public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double intervalTime, double rumbleIntensity) {
-    this.joystick = joystick;
-    this.seconds = seconds;
+  public C_LetsGetReadyToRUMBLE(Joystick joystick, double seconds, double rumbleIntensity,double intervalTime) {
+    this(joystick, seconds, rumbleIntensity);
     this.intervalTime = intervalTime;
-    this.rumbleIntensity = rumbleIntensity;
   }
 
   // Called when the command is initially scheduled.
