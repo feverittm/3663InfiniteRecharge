@@ -9,6 +9,7 @@ public class C_Shoot extends CommandBase {
   private SS_Feeder feeder;
   private SS_Shooter shooter;
   private boolean hasShot = false;
+
   public C_Shoot(SS_Feeder feeder, SS_Shooter shooter) {
     this.feeder = feeder;
     this.shooter = shooter;
@@ -18,17 +19,17 @@ public class C_Shoot extends CommandBase {
   @Override
   public void initialize() {
     hasShot = false;
-    if(!shooter.atCorrectRPM()){
+    if (!shooter.atCorrectRPM()) {
       end(false);
     }
   }
 
   @Override
-  public void execute() { 
-    if(!feeder.ballInExit() && !hasShot){
+  public void execute() {
+    if (!feeder.ballInExit() && !hasShot) {
       hasShot = true;
     }
-    if(feeder.ballInExit() || hasShot){
+    if (feeder.ballInExit() || hasShot) {
       feeder.setRPM(FeedRate.SHOOT_ONE);
     }
   }

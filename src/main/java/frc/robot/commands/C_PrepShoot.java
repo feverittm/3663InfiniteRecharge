@@ -9,8 +9,7 @@ public class C_PrepShoot extends CommandBase {
   private SS_Shooter shooter;
   public C_PrepShoot(SS_Shooter shooter) {
     this.shooter = shooter;
-    addRequirements(shooter);
-  }
+    addRequirements(shooter);}
 
   @Override
   public void initialize() {
