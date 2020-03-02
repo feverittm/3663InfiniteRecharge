@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_LobShot;
-import frc.robot.commandgroups.CG_ShootBalls;
+import frc.robot.commandgroups.CG_PrepShoot;
 import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
@@ -37,6 +37,10 @@ import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
 import frc.robot.commands.C_Intake;
+import frc.robot.commands.C_PrepFeedIntake;
+import frc.robot.commands.C_PrepFeedToShoot;
+import frc.robot.commands.C_Shoot;
+import frc.robot.commands.C_ShootAll;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
@@ -113,19 +117,22 @@ public RobotContainer() {
     }
     
     private void configureButtonBindings() {
-        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
         driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
         DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
-        rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
-        //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
-            
+
+        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
+
+        rightTriggerButton.whenPressed(new C_PrepFeedIntake(feeder));
+        rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));            
         
-        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
+        driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
+        driveController.getAButton().whileHeld(new C_Shoot(feeder, shooter), false);
+        driveController.getXButton().whenPressed(new C_ShootAll(feeder));
 
         //lob shot command bindings
         driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
@@ -139,6 +146,11 @@ public RobotContainer() {
 
         operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
         operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
+
+        //testing
+        testcontroller.getAButton().whenPressed(new C_PrepFeedIntake(feeder));
+        testcontroller.getBButton().whenPressed(new C_PrepFeedToShoot(feeder));
+        testcontroller.getYButton().whileHeld(new C_FeederTest(feeder, 2000));
     }
     public SequentialCommandGroup getAutonomousCommand() {
         return new SequentialCommandGroup(

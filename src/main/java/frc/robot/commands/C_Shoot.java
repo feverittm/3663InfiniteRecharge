@@ -1,48 +1,45 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.commands;
 
-import org.frcteam2910.common.robot.input.Controller;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
-import frc.robot.subsystems.SS_Feeder.FeedMode;
+import frc.robot.subsystems.SS_Shooter;
+import frc.robot.subsystems.SS_Feeder.FeedRate;
 
 public class C_Shoot extends CommandBase {
-  /**
-   * Creates a new C_Shoot.
-   */
   private SS_Feeder feeder;
-  private Controller controller;
-  public C_Shoot(SS_Feeder feeder, Controller controller) {
+  private SS_Shooter shooter;
+  private boolean hasShot = false;
+  public C_Shoot(SS_Feeder feeder, SS_Shooter shooter) {
     this.feeder = feeder;
-    this.controller = controller;
-    addRequirements(feeder);
+    this.shooter = shooter;
+    addRequirements(feeder, shooter);
   }
 
   @Override
   public void initialize() {
-    if(controller.getAButton().get()){
-      feeder.setFeedMode(FeedMode.SHOOT);
+    hasShot = false;
+    if(!shooter.atCorrectRPM()){
+      end(false);
     }
   }
 
   @Override
   public void execute() { 
-
+    if(!feeder.ballInExit() && !hasShot){
+      hasShot = true;
+    }
+    if(feeder.ballInExit() || hasShot){
+      feeder.setRPM(FeedRate.SHOOT_ONE);
+    }
   }
 
   @Override
   public void end(boolean interrupted) {
-    feeder.setFeedMode(FeedMode.STOPPED);
+    feeder.setRPM(FeedRate.STOPPED);
   }
 
   @Override
   public boolean isFinished() {
-    return feeder.isIdle();
+    return feeder.ballInExit() && hasShot;
   }
 }
