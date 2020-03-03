@@ -78,10 +78,11 @@ public RobotContainer() {
         driveController.getRightXAxis().setInverted(true);
         operatorController.getRightYAxis().setScale(.5);
 
-        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_DriveCorrection(drivebase, 
+        CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
                     () -> driveController.getLeftXAxis().get(true), 
                     () -> driveController.getRightXAxis().get(true))
+                    
         );
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
         updateManager.startLoop(5.0e-3);
@@ -131,7 +132,7 @@ public RobotContainer() {
         //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
         
-        driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick),false);
+        driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
         driveController.getAButton().whileHeld(new C_Shoot(feeder, shooter), false);
         driveController.getXButton().whenPressed(new C_ShootAll(feeder), false);

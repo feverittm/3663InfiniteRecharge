@@ -34,7 +34,7 @@ public class SS_Feeder extends SubsystemBase {
 
   // The number of revolutions of the belt motor required to cycle a ball all the
   // way from the feeders entry to the exit.
-  public static final int REV_PER_FULL_FEED = 67;
+  public static final int REV_PER_FULL_FEED = 80;
 
   // Motor encoder and pid
   private CANSparkMax beltMotor;

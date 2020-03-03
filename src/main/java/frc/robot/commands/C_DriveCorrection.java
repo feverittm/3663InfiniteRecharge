@@ -16,7 +16,6 @@ public class C_DriveCorrection extends CommandBase {
   private final double KP = 0.0293; //0.0006; 
   private final double KI = 0.0;
   private final double KD = 0.0;
-  
   private PIDController rotationPID;
   
 
@@ -43,7 +42,6 @@ public class C_DriveCorrection extends CommandBase {
   @Override
   public void execute() {
     double rotate = deadband(rotation.getAsDouble(), DEFAULT_DEADBAND, true);
-
     if(rotate == 0) {
       rotate = rotationPID.calculate(drivebase.getPose().rotation.toRadians());
     } else {
