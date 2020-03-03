@@ -75,12 +75,12 @@ public class RobotContainer {
                 driveController.getRightXAxis().setInverted(true);
                 operatorController.getRightYAxis().setScale(.2);
 
-                // CommandScheduler.getInstance().setDefaultCommand(drivebase, new
-                // C_Drive(drivebase,
-                // () -> driveController.getLeftYAxis().get(true),
-                // () -> driveController.getLeftXAxis().get(true),
-                // () -> driveController.getRightXAxis().get(true))
-                // );
+                CommandScheduler.getInstance().setDefaultCommand(drivebase, new
+                C_Drive(drivebase,
+                () -> driveController.getLeftYAxis().get(true),
+                () -> driveController.getLeftXAxis().get(true),
+                () -> driveController.getRightXAxis().get(true))
+                );
                 CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
                 CommandScheduler.getInstance().setDefaultCommand(climber, new C_Climb(climber, operatorController));
                 updateManager.startLoop(5.0e-3);
