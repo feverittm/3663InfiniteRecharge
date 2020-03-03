@@ -46,7 +46,7 @@ public class SS_Shooter extends SubsystemBase {
   private final double KD = 0.0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
-  private final double CORRECT_RPM_THRESHOLD = 20;
+  private final double CORRECT_RPM_THRESHOLD = 30;
   private final double CONFIDENCE_TIME = 1; //time we want to be in the confidence band before shooting
 
   private Vision vision;

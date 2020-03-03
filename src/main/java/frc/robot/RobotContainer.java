@@ -21,8 +21,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_LobShot;
-import frc.robot.commandgroups.CG_ShootBalls;
-import frc.robot.commands.C_AutoAim;
+import frc.robot.commandgroups.CG_PrepShoot;
 import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
@@ -39,9 +38,11 @@ import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.subsystems.SS_Feeder.FeedMode;
 import frc.robot.commands.C_Intake;
-import frc.robot.commands.C_PrepShoot;
+import frc.robot.commands.C_PrepFeedIntake;
+import frc.robot.commands.C_PrepFeedToShoot;
+import frc.robot.commands.C_Shoot;
+import frc.robot.commands.C_ShootAll;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
@@ -49,6 +50,7 @@ public class RobotContainer {
     private final Controller operatorController = new XboxController(Constants.OPERATOR_CONTROLLER_ID);
     private final Controller testcontroller = new XboxController(Constants.TEST_CONTROLLER_ID);
     private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
+    private final Joystick operatorRumbleJoystick = new Joystick(Constants.OPERATOR_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
     // Driver Declarations
     Vision vision = new Vision();
@@ -75,7 +77,7 @@ public RobotContainer() {
         initCommands();
         driveController.getRightXAxis().setScale(.3);
         driveController.getRightXAxis().setInverted(true);
-        operatorController.getRightYAxis().setScale(.2);
+        operatorController.getRightYAxis().setScale(.5);
 
         CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
@@ -83,7 +85,6 @@ public RobotContainer() {
                     () -> driveController.getRightXAxis().get(true))
         );
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
-        CommandScheduler.getInstance().setDefaultCommand(climber, new C_Climb(climber, operatorController));
         updateManager.startLoop(5.0e-3);
 
         configureButtonBindings();
@@ -120,16 +121,20 @@ public RobotContainer() {
     private void configureButtonBindings() {
         driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
-        driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
+        driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
+        DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
+        rightTriggerButton.whenPressed(new C_PrepFeedIntake(feeder));
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
         //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
         
-        driveController.getLeftBumperButton().whileHeld(new CG_ShootBalls(feeder, shooter, driveController, rumbleJoystick),false);
+        driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
+        driveController.getAButton().whileHeld(new C_Shoot(feeder, shooter), false);
+        driveController.getXButton().whenPressed(new C_ShootAll(feeder), false);
 
         //lob shot command bindings
         driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
@@ -143,6 +148,8 @@ public RobotContainer() {
 
         operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
         operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
+
+        operatorController.getBackButton().whenPressed(new C_Climb(climber, operatorController, operatorRumbleJoystick));
     }
 
     /** 
@@ -153,12 +160,8 @@ public RobotContainer() {
     public SequentialCommandGroup getAutonomousCommand() {
         return new SequentialCommandGroup(
             new InstantCommand(() -> drivebase.resetGyroAngle(new Rotation2(0.0, -1.0, true)), drivebase),
-            new ParallelCommandGroup(
-                new C_PrepShoot(shooter),
-                new C_AutoAim(drivebase, vision)
-            ),
-            new StartEndCommand(() -> feeder.setFeedMode(FeedMode.SHOOT), () -> feeder.setFeedMode(FeedMode.STOPPED))
-                .withInterrupt(() -> feeder.isIdle()),
+            new CG_PrepShoot(feeder, shooter, rumbleJoystick),
+            new C_ShootAll(feeder),
             new C_AutoDrive(drivebase, new Vector2(-60.0, 0.0), 1.0, 0.0, 1.0)
         );
     }

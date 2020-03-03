@@ -17,13 +17,14 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.C_AutoAim;
 import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Intake;
+import frc.robot.commands.C_PrepFeedToShoot;
 import frc.robot.commands.C_PrepShoot;
+import frc.robot.commands.C_ShootAll;
 import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.subsystems.SS_Feeder.FeedMode;
 
 public class AutonomousBuilder {
 
@@ -101,10 +102,10 @@ public class AutonomousBuilder {
             new WaitCommand(shootDelayEntry.getDouble(0.0)),
             new ParallelCommandGroup(
                 new C_PrepShoot(shooter),
+                new C_PrepFeedToShoot(feeder),
                 new C_AutoAim(drivebase, vision)
             ),
-            new StartEndCommand(() -> feeder.setFeedMode(FeedMode.SHOOT), () -> feeder.setFeedMode(FeedMode.STOPPED))
-                .withInterrupt(() -> feeder.isIdle()),
+            new C_ShootAll(feeder),
             new WaitCommand(movementDelayEntry.getDouble(0.0))
         );
 
