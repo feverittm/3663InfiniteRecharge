@@ -26,16 +26,14 @@ public class C_Shoot extends CommandBase {
   }
 
   @Override
-  public void initialize() {
+  public void initialize() {}
+
+  @Override
+  public void execute() { 
     if(controller.getAButton().get() && !startedShot) {
       feeder.setFeedMode(FeedMode.SHOOT);
       startedShot = true;
     }
-  }
-
-  @Override
-  public void execute() { 
-
   }
 
   @Override
