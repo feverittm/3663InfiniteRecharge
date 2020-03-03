@@ -14,9 +14,6 @@ public class C_PrepFeedToShoot extends CommandBase {
 
   @Override
   public void initialize() {
-    if (feeder.ballInExit()) {
-      end(false);
-    }
   }
 
   @Override

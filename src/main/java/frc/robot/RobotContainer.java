@@ -38,8 +38,10 @@ import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
 import frc.robot.commands.C_Intake;
+import frc.robot.commands.C_LetsGetReadyToRUMBLE;
 import frc.robot.commands.C_PrepFeedIntake;
 import frc.robot.commands.C_PrepFeedToShoot;
+import frc.robot.commands.C_PrepShoot;
 import frc.robot.commands.C_Shoot;
 import frc.robot.commands.C_ShootAll;
 import frc.robot.utils.TriggerButton;
@@ -131,11 +133,11 @@ public RobotContainer() {
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
         //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
-        
+        //driveController.getLeftBumperButton().whenHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
         driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
         driveController.getAButton().whileHeld(new C_Shoot(feeder, shooter), false);
-        driveController.getXButton().whenPressed(new C_ShootAll(feeder), false);
+        driveController.getBButton().whenPressed(new C_ShootAll(feeder), false);
 
         //lob shot command bindings
         driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder), false);
