@@ -18,6 +18,7 @@ public class C_Shoot extends CommandBase {
    */
   private SS_Feeder feeder;
   private Controller controller;
+  private boolean startedShot = false;
   public C_Shoot(SS_Feeder feeder, Controller controller) {
     this.feeder = feeder;
     this.controller = controller;
@@ -25,15 +26,14 @@ public class C_Shoot extends CommandBase {
   }
 
   @Override
-  public void initialize() {
-    if(controller.getAButton().get()){
-      feeder.setFeedMode(FeedMode.SHOOT);
-    }
-  }
+  public void initialize() {}
 
   @Override
   public void execute() { 
-
+    if(controller.getAButton().get() && !startedShot) {
+      feeder.setFeedMode(FeedMode.SHOOT);
+      startedShot = true;
+    }
   }
 
   @Override
@@ -43,6 +43,6 @@ public class C_Shoot extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.isIdle();
+    return feeder.isIdle() && startedShot;
   }
 }
