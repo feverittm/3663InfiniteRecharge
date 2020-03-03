@@ -29,6 +29,6 @@ public class C_LobShoot extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.isIdle();
+    return feeder.isIdle() && pressed;
   }
 }
