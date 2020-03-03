@@ -32,7 +32,7 @@ public class C_Climb extends CommandBase {
 
   @Override
   public void execute() {
-    winchStickY = operatorController.getLeftYAxis().get();
+    winchStickY = -operatorController.getLeftYAxis().get();
     climberStickY = operatorController.getRightYAxis().get();
 
     if(!manualOveride){
