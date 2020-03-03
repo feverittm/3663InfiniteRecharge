@@ -4,7 +4,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
-import frc.robot.subsystems.SS_Feeder.FeedMode;
+import frc.robot.subsystems.SS_Feeder.FeedRate;
 
 public class C_FeederDefault extends CommandBase {
 
@@ -12,38 +12,40 @@ public class C_FeederDefault extends CommandBase {
   private Joystick rumbleJoystick;
   private boolean hasRumbled = false;
 
-  private final double secondsToRumble = 1.5;
+  private final double SECONDS_TO_RUMBLE = 1.5;
   public C_FeederDefault(SS_Feeder feeder, Joystick rumbleJoystick) {
     this.feeder = feeder;
     this.rumbleJoystick = rumbleJoystick;
     addRequirements(feeder);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    feeder.setFeedMode(FeedMode.INTAKE);    
-  }
+  public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(!feeder.ballInExit() && feeder.ballInEntry()){
+      feeder.setRPM(FeedRate.INTAKE);
+    }else{
+      feeder.setRPM(FeedRate.STOPPED);
+    }
+    checkRumble();
+  }
+
+  public void checkRumble(){
     if(feeder.ballInExit() && !hasRumbled){
-      new C_LetsGetReadyToRUMBLE(rumbleJoystick, secondsToRumble, 0.5).schedule();
+      new C_LetsGetReadyToRUMBLE(rumbleJoystick, SECONDS_TO_RUMBLE, 0.5).schedule();
       hasRumbled = true;
     }
     if(!feeder.ballInExit()){
       hasRumbled = false;
     }
   }
-
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    feeder.setFeedMode(FeedMode.STOPPED);
+    feeder.setRPM(FeedRate.STOPPED);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

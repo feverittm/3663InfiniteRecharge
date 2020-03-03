@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.subsystems.SS_Feeder.FeedMode;
+import frc.robot.subsystems.SS_Feeder.FeedRate;
 
 public class C_LobPrep extends CommandBase {
 
@@ -18,12 +18,17 @@ public class C_LobPrep extends CommandBase {
 
   @Override
   public void initialize() {
-    feeder.setFeedMode(FeedMode.PRESHOOT);
     shooter.setHoodFar(false).setLobSpeed().setSpinning(true);
   }
 
   @Override
+  public void execute() {
+    if(!feeder.ballInExit()){
+      feeder.setRPM(FeedRate.SHOOT_PREP);
+    }
+  }
+  @Override
   public boolean isFinished() {
-    return feeder.isIdle();
+    return feeder.ballInExit();
   }
 }
