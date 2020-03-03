@@ -34,6 +34,6 @@ public class C_LobPrep extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    feeder.setFeedMode(FeedMode.STOPPED);
+    feeder.setRPM(FeedRate.STOPPED);
   }
 }

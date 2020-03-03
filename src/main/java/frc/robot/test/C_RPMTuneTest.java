@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.test;
 
 import org.frcteam2910.common.robot.input.Controller;
@@ -14,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.subsystems.SS_Feeder.FeedMode;
+import frc.robot.subsystems.SS_Feeder.FeedRate;
 import frc.robot.subsystems.SS_Intake.IntakePosition;
 
 public class C_RPMTuneTest extends CommandBase {
@@ -42,8 +35,8 @@ public class C_RPMTuneTest extends CommandBase {
 
   @Override
   public void execute() {
-    if(feeder.isIdle()) {
-      feeder.setFeedMode(FeedMode.SHOOT);
+    if(feeder.getRPM() == 0) {
+      feeder.setRPM(FeedRate.SHOOT_ALL);
     }
     if(controller.getDPadButton(Direction.RIGHT).get()) {
       currentRPM += 10;
