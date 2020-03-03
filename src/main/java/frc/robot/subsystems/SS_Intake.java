@@ -128,7 +128,7 @@ public class SS_Intake extends SubsystemBase {
         isRetracting = true;
         targetRotations = (int) pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
 
-        setPickUpMotorSpeed(RETRACT_VELOCITY);
+        setPickUpMotorSpeed(0);
         setArmPosition(IntakePosition.POSITION_1);
     }
 
