@@ -119,7 +119,7 @@ public RobotContainer() {
     private void configureButtonBindings() {
         driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter));
         driveController.getBackButton().whenPressed(new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase));
-        driveController.getRightBumperButton().whenHeld(new C_Track(vision, drivebase,
+        driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
@@ -130,6 +130,8 @@ public RobotContainer() {
         
         driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick),false);
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
+        driveController.getAButton().whileHeld(new C_Shoot(feeder, shooter), false);
+        driveController.getXButton().whenPressed(new C_ShootAll(feeder), false);
 
         //lob shot command bindings
         driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
