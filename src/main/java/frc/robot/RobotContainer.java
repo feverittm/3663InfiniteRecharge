@@ -124,6 +124,7 @@ public RobotContainer() {
             () -> driveController.getLeftXAxis().get(true)), true);
 
         DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
+        rightTriggerButton.whenPressed(new C_PrepFeedIntake(feeder));
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
         //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
