@@ -15,11 +15,14 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_LobShot;
 import frc.robot.commandgroups.CG_ShootBalls;
+import frc.robot.commands.C_AutoAim;
 import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
@@ -36,7 +39,9 @@ import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Shooter;
+import frc.robot.subsystems.SS_Feeder.FeedMode;
 import frc.robot.commands.C_Intake;
+import frc.robot.commands.C_PrepShoot;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
@@ -119,8 +124,7 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
-        DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
-        rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
+        rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
         //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
         
@@ -140,14 +144,50 @@ public RobotContainer() {
         operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
         operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
     }
+
+    /** 
+     * @return a preset autonomous command
+     * 
+     * @see AutonomousBuilder.buildAutoRoutine() 
+     */
     public SequentialCommandGroup getAutonomousCommand() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase),
-            // new C_AutoDrive(drivebase, Vector2.ZERO, 1.0, Math.toRadians(180), 1.0)
-            // new C_AutoDrive(drivebase, new Vector2(-80.0, 66.0), .7, 180, 1.0),
-            // new C_AutoDrive(drivebase, new Vector2(-100.0, 0.0), .5, 0.0, 1.0)
-            new C_AutoDrive(drivebase, new Vector2(50, 0), 1.0, 0.0, 1.0)
+            new InstantCommand(() -> drivebase.resetGyroAngle(new Rotation2(0.0, -1.0, true)), drivebase),
+            new ParallelCommandGroup(
+                new C_PrepShoot(shooter),
+                new C_AutoAim(drivebase, vision)
+            ),
+            new StartEndCommand(() -> feeder.setFeedMode(FeedMode.SHOOT), () -> feeder.setFeedMode(FeedMode.STOPPED))
+                .withInterrupt(() -> feeder.isIdle()),
+            new C_AutoDrive(drivebase, new Vector2(-60.0, 0.0), 1.0, 0.0, 1.0)
         );
-        //return autonomousBuilder.buildAutoRoutine();
+    }
+
+    public SS_Drivebase getDrivebase() {
+        return drivebase;
+    }
+
+    public SS_Feeder getFeeder() {
+        return feeder;
+    }
+    
+    public SS_Climber getClimber() {
+        return climber;
+    }
+
+    public SS_Intake getIntake() {
+        return intake;
+    }
+
+    public SS_Shooter getShooter() {
+        return shooter;
+    }
+
+    public Vision getVision() {
+        return vision;
+    }
+
+    public Controller getDriveController() {
+        return driveController;
     }
 }

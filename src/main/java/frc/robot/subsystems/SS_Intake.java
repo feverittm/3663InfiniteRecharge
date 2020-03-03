@@ -1,12 +1,14 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -41,6 +43,7 @@ public class SS_Intake extends SubsystemBase {
     private DoubleSolenoid shortSolenoid;
     private DoubleSolenoid longSolenoid;
     private CANSparkMax pickupMotor;
+    private DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
 
     private CANPIDController pid;
 
@@ -75,6 +78,10 @@ public class SS_Intake extends SubsystemBase {
         pid.setP(KP);
         pid.setI(KI);
         pid.setD(KD);
+    }
+
+    public DigitalInput getIntakeSensor() {
+        return intakeSensor;
     }
 
     //=====CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES=====//
