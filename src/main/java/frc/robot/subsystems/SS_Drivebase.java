@@ -69,15 +69,9 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
     @GuardedBy("kinematicsLock")
     private RigidTransform2 pose = RigidTransform2.ZERO;
 
-<<<<<<< HEAD
-  private final Object sensorLock = new Object();
-  @GuardedBy("sensorLock")
-  private final NavX navX = new NavX(I2C.Port.kOnboard, Constants.NAVX_UPDATE_RATE);
-=======
     private final Object stateLock = new Object();
     @GuardedBy("stateLock")
     private HolonomicDriveSignal driveSignal = new HolonomicDriveSignal(Vector2.ZERO, 0.0, false);
->>>>>>> master
 
     private NetworkTableEntry poseXEntry;
     private NetworkTableEntry poseYEntry;
