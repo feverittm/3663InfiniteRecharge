@@ -26,8 +26,7 @@ public class C_Drive extends CommandBase {
 
   @Override
   public void execute() {
-    drivebase.drive(new Vector2(deadband(forward.getAsDouble(), DEFAULT_DEADBAND, true), 
-      deadband(strafe.getAsDouble(), DEFAULT_DEADBAND, true)), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND, true),  true);
+    drivebase.drive(new Vector2(forward.getAsDouble(),strafe.getAsDouble()), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND),  true);
   }
 
   @Override
@@ -50,12 +49,5 @@ public class C_Drive extends CommandBase {
       return 0;
     } 
     return input;
-  }
-
-  private double deadband(double input, double range, boolean squared) {
-    if(Math.abs(input) < Math.abs(range)) {
-      return 0;
-    }
-    return Math.pow(input, 2) * Math.signum(input);
   }
 }
