@@ -58,7 +58,7 @@ public class C_Climb extends CommandBase {
       climber.setHook(Math.pow(climberStickY, 2) * Math.signum(climberStickY));
     }
 
-    if (operatorController.getYButton().get()) {
+    if (operatorController.getStartButton().get()) {
       climber.resetHookEncoder();
     }
     if(operatorController.getRightTriggerAxis().get() > 0.5){

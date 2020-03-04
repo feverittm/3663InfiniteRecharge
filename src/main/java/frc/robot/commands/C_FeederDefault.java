@@ -12,7 +12,7 @@ public class C_FeederDefault extends CommandBase {
   private Joystick rumbleJoystick;
   private boolean hasRumbled = false;
 
-  private final double SECONDS_TO_RUMBLE = 1.5;
+  private final double SECONDS_TO_RUMBLE = 1;
   public C_FeederDefault(SS_Feeder feeder, Joystick rumbleJoystick) {
     this.feeder = feeder;
     this.rumbleJoystick = rumbleJoystick;

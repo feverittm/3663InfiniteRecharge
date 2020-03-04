@@ -233,7 +233,7 @@ public class SS_Shooter extends SubsystemBase {
 
   public boolean atCorrectRPM(){
 
-    return (Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_PERCET_THRESHOLD * targetRPM);
+    return Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_PERCET_THRESHOLD * targetRPM;
   }
   /**
    * Returns the non-fixed correction multiplier

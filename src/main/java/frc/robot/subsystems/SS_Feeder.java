@@ -30,7 +30,7 @@ public class SS_Feeder extends SubsystemBase {
   private final int FEED_RPM_INTAKE = 2000; // 2000
   private final int FEED_RPM_PREP_SHOOT = 4000; //4000
   private final int FEED_RPM_SHOOT_ONE = 3500; // 3500
-  private final int FEED_RPM_SHOOT_ALL = 6000; //6000
+  private final int FEED_RPM_SHOOT_ALL = 5000; //6000
 
   // private final int FEED_RPM_STOPPED = 0;
   // private final int FEED_RPM_INTAKE_PREP = -0.4;//-2250
@@ -92,7 +92,7 @@ public class SS_Feeder extends SubsystemBase {
     entryValid = shooterTab.add("Entry Valid", false).withPosition(5, 2).withSize(1, 1).getEntry();
     exitValid = shooterTab.add("Exit Valid", false).withPosition(5, 3).withSize(1, 1).getEntry();
     feederEncoderPos = shooterTab.add("FeederEncode", 0).withPosition(5, 4).withSize(1, 1).getEntry();
-    feedMode = shooterTab.add("Feed Mode", FeedRate.STOPPED.toString()).withPosition(4, 4).withSize(1, 1).getEntry();
+    feedMode = shooterTab.add("Feed Mode", FeedRate.STOPPED.toString()).withPosition(4, 3).withSize(1, 1).getEntry();
   }
 
   private void updateTelemetry() {
@@ -131,7 +131,7 @@ public class SS_Feeder extends SubsystemBase {
       break;
     }
     beltPID.setReference(targetRPM, ControlType.kVelocity);
-    beltMotor.set(targetRPM);
+    //beltMotor.set(targetRPM);
   }
 
   public void resetEncoder() {

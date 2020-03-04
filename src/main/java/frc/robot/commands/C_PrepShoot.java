@@ -16,8 +16,7 @@ public class C_PrepShoot extends CommandBase {
   @Override
   public void initialize() {
     shooter.updateFromVision(true).setSpinning(true).setHoodFar(true);
-    //shooter.testSetTargetRPM(1000);
-    //shooter.setSpinning(true);
+    // shooter.setSpinning(true).setHoodFar(false).testSetTargetRPM(1000);
   }
 
   @Override
