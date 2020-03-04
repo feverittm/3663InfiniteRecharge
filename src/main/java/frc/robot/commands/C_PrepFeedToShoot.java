@@ -14,14 +14,13 @@ public class C_PrepFeedToShoot extends CommandBase {
 
   @Override
   public void initialize() {
-    if (feeder.ballInExit()) {
-      end(false);
-    }
   }
 
   @Override
   public void execute() {
-    feeder.setRPM(FeedRate.SHOOT_PREP);
+    if(!feeder.ballInExit()){
+      feeder.setRPM(FeedRate.SHOOT_PREP);
+    }
   }
 
   @Override

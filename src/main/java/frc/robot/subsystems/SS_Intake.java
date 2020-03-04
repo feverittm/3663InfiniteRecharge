@@ -42,7 +42,8 @@ public class SS_Intake extends SubsystemBase {
     public enum IntakeDirection {
         STOP, // This turns off the intake motor, stopping it from spinning
         IN, // This changes the direction of the motor to intake power cells
-        OUT // This changes the direction of the motor to spit out power cells
+        OUT, // This changes the direction of the motor to spit out power cells
+        BUMP
     }
 
     // =====INSTANCE VARIABLES=====//
@@ -64,12 +65,13 @@ public class SS_Intake extends SubsystemBase {
 
     private final int RETRACT_VELOCITY = 2000;
 
-    // private int lastVelocity = 0;
-    private final int INTAKE_VELOCITY = 3000;
+    //private int lastVelocity = 0;
+    private final int INTAKE_VELOCITY = 3500;
     private final int OUTTAKE_VELOCITY = -3000;
-
-    // =====CONSTRUCTOR=====//
-    public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) {
+    private final int BUMP_VELOCITY = 1000;
+    
+    //=====CONSTRUCTOR=====//
+    public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
         this.shortSolenoid = shortSolenoid;
         this.longSolenoid = longSolenoid;
         this.pickupMotor = pickupMotor;
@@ -125,10 +127,10 @@ public class SS_Intake extends SubsystemBase {
 
     // =====RETRACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
     public void retractIntake() {
-        isRetracting = true;
-        targetRotations = (int) pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
-
-        setPickUpMotorSpeed(0);
+        // isRetracting = true;
+        // targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
+        
+        // setPickUpMotorSpeed(RETRACT_VELOCITY);
         setArmPosition(IntakePosition.POSITION_1);
     }
 
@@ -145,18 +147,21 @@ public class SS_Intake extends SubsystemBase {
     // =====STARTS THE INTAKE MOTOR BY SETTTING THE DIRECTION OF THE INTAKE MOTOR
     // USING setPickUpMotorSpeed()=====//
     public void startPickUpMotor(IntakeDirection direction) {
-        switch (direction) {
-        case STOP:
-            setPickUpMotorSpeed(0);
-            break;
+        switch(direction) {
+            case STOP:
+                pickupMotor.set(0);
+                break;
 
-        case IN:
-            setPickUpMotorSpeed(INTAKE_VELOCITY);
-            break;
+            case IN:
+                setPickUpMotorSpeed(INTAKE_VELOCITY);
+                break;
 
-        case OUT:
-            setPickUpMotorSpeed(OUTTAKE_VELOCITY);
-            break;
+            case OUT:
+                setPickUpMotorSpeed(OUTTAKE_VELOCITY);
+                break;
+            case BUMP:
+                setPickUpMotorSpeed(BUMP_VELOCITY);
+                break;
         }
     }
 }

@@ -31,4 +31,9 @@ public class C_LobPrep extends CommandBase {
   public boolean isFinished() {
     return feeder.ballInExit();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    feeder.setRPM(FeedRate.STOPPED);
+  }
 }
