@@ -47,9 +47,9 @@ public class C_Climb extends CommandBase {
       }else{
         climber.setHook(0);
       }
-      if(climberStickY > 0){
-        climber.setHookPosition(0);
-      }
+      // if(climberStickY > 0){
+      //   climber.setHookPosition(0);
+      // }
       if(climber.getHookPosition() < -MAX_HEIGHT && !hasRumbled){
         new C_LetsGetReadyToRUMBLE(operatorRumbleJoystick, 1.5, 1).schedule();
         hasRumbled = true;

@@ -48,7 +48,7 @@ public class SS_Shooter extends SubsystemBase {
   private final double KD = 0.0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
-  private final double CORRECT_RPM_THRESHOLD = 30;
+  private final double CORRECT_PERCET_THRESHOLD = 0.03;
   private final double CONFIDENCE_TIME = 1; //time we want to be in the confidence band before shooting
 
   private Vision vision;
@@ -233,7 +233,7 @@ public class SS_Shooter extends SubsystemBase {
 
   public boolean atCorrectRPM(){
 
-    return (Math.abs(encoder.getVelocity()) - targetRPM <= CORRECT_RPM_THRESHOLD);
+    return (Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_PERCET_THRESHOLD * targetRPM);
   }
   /**
    * Returns the non-fixed correction multiplier

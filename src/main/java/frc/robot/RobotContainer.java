@@ -133,15 +133,15 @@ public RobotContainer() {
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
         //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
             
-        //driveController.getLeftBumperButton().whenHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
-        driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
-        driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter));
+        //driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
+        driveController.getLeftBumperButton().whenHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
+        driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter), false);
         driveController.getAButton().whileHeld(new C_Shoot(feeder, shooter), false);
         driveController.getBButton().whenPressed(new C_ShootAll(feeder), false);
 
         //lob shot command bindings
-        driveController.getRightBumperButton().whileHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder), false);
-        driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter));
+        driveController.getRightBumperButton().whenHeld(new CG_LobShot(driveController, rumbleJoystick, shooter, feeder));
+        driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter), false);
 
         //camera switching
         driveController.getRightBumperButton().whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER))
