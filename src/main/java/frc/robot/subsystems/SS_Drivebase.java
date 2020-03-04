@@ -62,7 +62,7 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
 
     private final Object sensorLock = new Object();
     @GuardedBy("sensorLock")
-    private final NavX navX = new NavX(I2C.Port.kOnboard, Constants.NAVX_UPDATE_RATE);
+    private final NavX navX = new NavX(Port.kMXP, Constants.NAVX_UPDATE_RATE);
     // private final NavX navX = new NavX(Port.kUSB, Constants.NAVX_UPDATE_RATE);
 
     private final Object kinematicsLock = new Object();
@@ -92,7 +92,7 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
     public SS_Drivebase() {
         synchronized (sensorLock) {
         navX.setInverted(true);      
-        }
+        }        
 
         ShuffleboardTab drivebaseTab = Shuffleboard.getTab("Drivebase");
         poseXEntry = drivebaseTab.add("Pose X", 0.0)
