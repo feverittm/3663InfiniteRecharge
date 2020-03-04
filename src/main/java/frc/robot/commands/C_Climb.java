@@ -6,6 +6,8 @@ import org.frcteam2910.common.robot.input.Controller;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Climber;
+import frc.robot.subsystems.SS_Intake;
+import frc.robot.subsystems.SS_Intake.IntakePosition;
 import frc.robot.commands.C_LetsGetReadyToRUMBLE;
 
 public class C_Climb extends CommandBase {
@@ -13,21 +15,25 @@ public class C_Climb extends CommandBase {
   private Controller operatorController;
   private Joystick operatorRumbleJoystick;
   private SS_Climber climber;
+  private SS_Intake intake;
 
   private final double MAX_HEIGHT = 125;
   private double winchStickY;
   private double climberStickY;
   private boolean manualOveride = false;
   private boolean hasRumbled = false;
-  public C_Climb(SS_Climber climber, Controller operatorController, Joystick operatorRumbleJoystick) {
+  public C_Climb(SS_Climber climber, SS_Intake intake, Controller operatorController, Joystick operatorRumbleJoystick) {
     this.operatorController = operatorController;
     this.operatorRumbleJoystick = operatorRumbleJoystick;
     this.climber = climber;
-    addRequirements(climber);
+    this.intake = intake;
+    addRequirements(climber, intake);
   }
 
   @Override
   public void initialize() {
+    intake.setArmPosition(IntakePosition.POSITION_1);
+    climber.resetHookEncoder();
   }
 
   @Override
@@ -55,8 +61,10 @@ public class C_Climb extends CommandBase {
     if (operatorController.getYButton().get()) {
       climber.resetHookEncoder();
     }
-    if(operatorController.getStartButton().get()){
+    if(operatorController.getRightTriggerAxis().get() > 0.5){
       manualOveride = true;
+    }else{
+      manualOveride = false;
     }
     
     climber.setWinch(Math.pow(winchStickY, 2) * Math.signum(winchStickY));

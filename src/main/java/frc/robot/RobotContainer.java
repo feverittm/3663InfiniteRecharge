@@ -152,15 +152,17 @@ public RobotContainer() {
         operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
         operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
 
-        operatorController.getBackButton().whenPressed(new C_Climb(climber, operatorController, operatorRumbleJoystick));
+        operatorController.getBackButton().whenPressed(new C_Climb(climber, intake, operatorController, operatorRumbleJoystick));
     }
     public SequentialCommandGroup getAutonomousCommand() {
         return new SequentialCommandGroup(
             new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.ZERO), drivebase),
+            new CG_PrepShoot(feeder, shooter, rumbleJoystick),
+            new C_ShootAll(feeder)
             // new C_AutoDrive(drivebase, Vector2.ZERO, 1.0, Math.toRadians(180), 1.0)
             // new C_AutoDrive(drivebase, new Vector2(-80.0, 66.0), .7, 180, 1.0),
             // new C_AutoDrive(drivebase, new Vector2(-100.0, 0.0), .5, 0.0, 1.0)
-            new C_AutoDrive(drivebase, new Vector2(50, 0), 1.0, 0.0, 1.0)
+            //new C_AutoDrive(drivebase, new Vector2(50, 0), 1.0, 0.0, 1.0)
         );
         //return autonomousBuilder.buildAutoRoutine();
     }
