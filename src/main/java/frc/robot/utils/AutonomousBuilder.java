@@ -5,6 +5,7 @@ import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
+import frc.robot.commandgroups.CG_PrepShoot;
 import frc.robot.commands.C_AutoAim;
 import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Intake;
@@ -39,6 +41,7 @@ public class AutonomousBuilder {
     private SS_Intake intake;
     private Vision vision;
     private XboxController driveController;
+    private Joystick rumbleJoystick;
     
     public AutonomousBuilder(RobotContainer container) {
         this.container = container;
@@ -48,6 +51,7 @@ public class AutonomousBuilder {
         intake = container.getIntake();
         vision = container.getVision();
         driveController = (XboxController) container.getDriveController();
+        rumbleJoystick = container.getRumbleJoystick();
         
         initStartingPositionSelector();
         initMovementSelector();
@@ -101,8 +105,7 @@ public class AutonomousBuilder {
         autoRoutine.addCommands(
             new WaitCommand(shootDelayEntry.getDouble(0.0)),
             new ParallelCommandGroup(
-                new C_PrepShoot(shooter),
-                new C_PrepFeedToShoot(feeder),
+                new CG_PrepShoot(feeder, shooter, rumbleJoystick),
                 new C_AutoAim(drivebase, vision)
             ),
             new C_ShootAll(feeder),

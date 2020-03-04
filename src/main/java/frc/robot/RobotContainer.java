@@ -125,7 +125,6 @@ public RobotContainer() {
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
 
-        DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
         rightTriggerButton.whenPressed(new C_PrepFeedIntake(feeder));
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController));
         //driveController.getXButton().whenHeld(new C_Intake(intake, driveController));
@@ -192,5 +191,8 @@ public RobotContainer() {
 
     public Controller getDriveController() {
         return driveController;
+    }
+    public Joystick getRumbleJoystick() {
+        return rumbleJoystick;
     }
 }
