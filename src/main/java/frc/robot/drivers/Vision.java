@@ -21,7 +21,7 @@ public class Vision {
   public static final int LED_OFF = 1; //force off
   public static final int LED_BLINK = 2; //force blink
   public static final int LED_ON = 3; //force on
-  public static final int LED_DEFAULT_MODE = LED_OFF;
+  public static final int LED_DEFAULT_MODE = LED_PIPELINE;
 
   //camera mode constants
   public static final int CAMERA_VISION = 0; //Vision processor
@@ -126,7 +126,6 @@ public class Vision {
     double distance = 0;
     double angleOftarget = getYOffset();
     distance = (TARGET_HEIGHT - CAMERA_HEIGHT) / Math.tan(Math.toRadians(CAMERA_ANGLE + angleOftarget));
-    SmartDashboard.putNumber("calculated distance", distance / 12);
     return distance / 12; //change distance to feet
   }
 
