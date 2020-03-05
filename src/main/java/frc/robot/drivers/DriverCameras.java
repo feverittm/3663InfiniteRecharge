@@ -17,12 +17,13 @@ public class DriverCameras {
 
     private ShuffleboardTab cameraTab;
 
-    public DriverCameras(int feederCameraPort, int intakeCameraPort) {
+    public DriverCameras(int feederCameraPort, int shooterCameraPort) {
         //initialize cameras
-        feederCamera = CameraServer.getInstance().startAutomaticCapture("Feeder camera", feederCameraPort);
-        shooterCamera = CameraServer.getInstance().startAutomaticCapture("Shooter camera", intakeCameraPort);
+        feederCamera = initCamera("Feeder Camera", feederCameraPort);
+        shooterCamera = initCamera("Shooter Camera", shooterCameraPort);
+
         server = CameraServer.getInstance().getServer();
-        server.setSource(feederCamera); //init  to the front camera by default;
+        server.setSource(feederCamera); //init to the feeder camera by default;
 
         //add the video feed widget
         cameraTab = Shuffleboard.getTab("Camera");
@@ -30,6 +31,13 @@ public class DriverCameras {
             .withWidget(BuiltInWidgets.kCameraStream)
             .withPosition(3, 0)
             .withSize(5, 5);
+    }
+
+    private UsbCamera initCamera(String name, int port) {
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture(name, port);
+        camera.setResolution(128, 96); // 96p: 128 X 96, 120p: 160 X 120, 240p: 320 X 240
+        camera.setFPS(30);
+        return camera;
     }
 
     public enum CameraFeed {
