@@ -4,15 +4,18 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class SS_Climber extends SubsystemBase {
     // for SparkMax motor controllers
+    private CANSparkMax retractMotor;
     CANSparkMax gondolaMotor;
     CANSparkMax winchMotor;
     CANSparkMax hookMotor;
@@ -28,12 +31,14 @@ public class SS_Climber extends SubsystemBase {
         this.gondolaMotor = gondolaMotor;
         this.winchMotor = winchMotor;
         this.hookMotor = hookMotor;
+        retractMotor = new CANSparkMax(Constants.CLIMBER_RETRACT_MOTOR_CANID, MotorType.kBrushed);
 
         hookPID = hookMotor.getPIDController();
         hookPID.setP(P);
         hookPID.setI(I);
         hookPID.setD(D);
         hookMotor.setIdleMode(IdleMode.kBrake);
+        retractMotor.setIdleMode(IdleMode.kBrake);
         winchMotor.setIdleMode(IdleMode.kBrake);
         intiTelemetry();
     }
@@ -47,7 +52,9 @@ public class SS_Climber extends SubsystemBase {
     public void periodic() {
         hookPos.setNumber(getHookPosition());
     }
-
+    public void setRetractMotorSpeed(double speed){
+        retractMotor.set(speed);
+    }
     public void resetHookEncoder() {
         hookMotor.getEncoder().setPosition(0.0);
     }

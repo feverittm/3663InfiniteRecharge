@@ -58,7 +58,7 @@ public class C_Track extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-        drivebase.drive(new Vector2(forward.getAsDouble(), strafe.getAsDouble()), rotationPID.calculate(vision.getXOffset() + rotationOffset()), false);
+        drivebase.drive(new Vector2(forward.getAsDouble(), strafe.getAsDouble()), rotationPID.calculate(vision.getXOffset() + rotationOffset()), true);
   }
 
   // Called once the command ends or is interrupted.

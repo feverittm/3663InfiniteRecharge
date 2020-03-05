@@ -150,10 +150,6 @@ public class SS_Feeder extends SubsystemBase {
     return beltEncoder.getVelocity();
   }
 
-  public double getRevPerFullFeed() {
-    return REV_PER_FULL_FEED;
-  }
-
   /**
    * Tell call if there is a ball at the entry end of the feeder subsystem.
    * 

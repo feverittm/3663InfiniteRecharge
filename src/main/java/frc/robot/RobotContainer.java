@@ -44,6 +44,7 @@ import frc.robot.commands.C_PrepFeedToShoot;
 import frc.robot.commands.C_PrepShoot;
 import frc.robot.commands.C_Shoot;
 import frc.robot.commands.C_ShootAll;
+import frc.robot.utils.OrButton;
 import frc.robot.utils.TriggerButton;
 
 public class RobotContainer {    
@@ -53,6 +54,8 @@ public class RobotContainer {
     private final Joystick rumbleJoystick = new Joystick(Constants.DRIVE_CONTROLLER_ID);
     private final Joystick operatorRumbleJoystick = new Joystick(Constants.OPERATOR_CONTROLLER_ID);
     private final TriggerButton rightTriggerButton = new TriggerButton(driveController.getRightTriggerAxis());
+    private final OrButton orLeftBumperButton = new OrButton(driveController.getLeftBumperButton(), operatorController.getLeftBumperButton());
+    private final OrButton orRightBumperButton = new OrButton(driveController.getRightBumperButton(), operatorController.getRightBumperButton());
     // Driver Declarations
     Vision vision = new Vision();
     DriverCameras cameras = new DriverCameras(Constants.FEEDER_CAMERA_PORT, Constants.INTAKE_CAMERA_PORT);
@@ -83,7 +86,8 @@ public RobotContainer() {
         CommandScheduler.getInstance().setDefaultCommand(drivebase, new C_Drive(drivebase, 
                     () -> driveController.getLeftYAxis().get(true), 
                     () -> driveController.getLeftXAxis().get(true), 
-                    () -> driveController.getRightXAxis().get(true))
+                    () -> driveController.getRightXAxis().get(true),
+                    () -> operatorController.getBackButton().get())
                     
         );
         CommandScheduler.getInstance().setDefaultCommand(feeder, new C_FeederDefault(feeder, rumbleJoystick));
@@ -132,12 +136,11 @@ public RobotContainer() {
         rightTriggerButton.whenPressed(new C_PrepFeedIntake(feeder));
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController, intakeSensor));
             
-        //driveController.getLeftBumperButton().whileHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
-        driveController.getLeftBumperButton().whenHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
+        orLeftBumperButton.whenHeld(new CG_PrepShoot(feeder, shooter, rumbleJoystick));
         driveController.getLeftBumperButton().whenReleased(new C_StopShooter(shooter), false);
 
         //lob shot command bindings
-        driveController.getRightBumperButton().whenHeld(new CG_LobShot(rumbleJoystick, shooter, feeder));
+        orRightBumperButton.whenHeld(new CG_LobShot(rumbleJoystick, shooter, feeder));
         driveController.getRightBumperButton().whenReleased(new C_StopShooter(shooter), false);
 
         //Shoot Command bindings
@@ -153,7 +156,7 @@ public RobotContainer() {
         operatorController.getDPadButton(Direction.UP).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
         operatorController.getDPadButton(Direction.DOWN).whenPressed(new C_SwitchCamera(cameras, CameraFeed.SHOOTER));
 
-        operatorController.getBackButton().whenPressed(new C_Climb(climber, intake, operatorController, operatorRumbleJoystick));
+        operatorController.getBackButton().whenPressed(new C_Climb(climber, intake, driveController, operatorController, operatorRumbleJoystick));
     }
     public SequentialCommandGroup getAutonomousCommand() {
         return new SequentialCommandGroup(
