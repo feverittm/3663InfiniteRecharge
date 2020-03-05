@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import org.frcteam2910.common.math.Vector2;
@@ -14,19 +15,29 @@ public class C_Drive extends CommandBase {
   private DoubleSupplier forward;
   private DoubleSupplier strafe;
   private DoubleSupplier rotation;
+  private BooleanSupplier slowMode;
+  private boolean inSlowMode = false;
 
-  public C_Drive(SS_Drivebase drivebase, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotation) {
+  public C_Drive(SS_Drivebase drivebase, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotation, BooleanSupplier slowMode) {
     this.drivebase = drivebase;
     this.forward = forward;
     this.strafe = strafe;
     this.rotation = rotation;
+    this.slowMode = slowMode;
     
     addRequirements(drivebase);
   }
 
   @Override
   public void execute() {
-    drivebase.drive(new Vector2(forward.getAsDouble(),strafe.getAsDouble()), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND),  true);
+    if(slowMode.getAsBoolean()) {
+      inSlowMode = true;
+    }
+    if(inSlowMode) {
+      drivebase.drive(new Vector2(forward.getAsDouble() * .3,strafe.getAsDouble() * .3), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND) * .3,  true);
+    } else {
+      drivebase.drive(new Vector2(forward.getAsDouble(), strafe.getAsDouble()), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND),  true);
+    }
   }
 
   @Override

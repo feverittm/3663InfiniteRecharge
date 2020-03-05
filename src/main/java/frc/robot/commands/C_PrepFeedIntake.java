@@ -31,6 +31,6 @@ public class C_PrepFeedIntake extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.ballInEntry() || Math.abs(feeder.getPosition()) >= feeder.getRevPerFullFeed();
+    return feeder.ballInEntry() || Math.abs(feeder.getPosition()) >= SS_Feeder.REV_PER_FULL_FEED;
   }
 }

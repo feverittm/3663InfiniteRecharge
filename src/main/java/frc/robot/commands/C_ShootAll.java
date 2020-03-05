@@ -27,6 +27,6 @@ public class C_ShootAll extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.getPosition() >= feeder.getRevPerFullFeed();
+    return feeder.getPosition() >= SS_Feeder.REV_PER_FULL_FEED;
   }
 }

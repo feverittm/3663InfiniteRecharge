@@ -13,6 +13,7 @@ import frc.robot.commands.C_LetsGetReadyToRUMBLE;
 public class C_Climb extends CommandBase {
 
   private Controller operatorController;
+  private Controller driveController;
   private Joystick operatorRumbleJoystick;
   private SS_Climber climber;
   private SS_Intake intake;
@@ -22,8 +23,9 @@ public class C_Climb extends CommandBase {
   private double climberStickY;
   private boolean manualOveride = false;
   private boolean hasRumbled = false;
-  public C_Climb(SS_Climber climber, SS_Intake intake, Controller operatorController, Joystick operatorRumbleJoystick) {
+  public C_Climb(SS_Climber climber, SS_Intake intake, Controller driveController, Controller operatorController, Joystick operatorRumbleJoystick) {
     this.operatorController = operatorController;
+    this.driveController = driveController;
     this.operatorRumbleJoystick = operatorRumbleJoystick;
     this.climber = climber;
     this.intake = intake;
@@ -34,6 +36,7 @@ public class C_Climb extends CommandBase {
   public void initialize() {
     intake.setArmPosition(IntakePosition.POSITION_1);
     climber.resetHookEncoder();
+    
   }
 
   @Override
@@ -47,9 +50,9 @@ public class C_Climb extends CommandBase {
       }else{
         climber.setHook(0);
       }
-      if(climberStickY > 0){
-        climber.setHookPosition(0);
-      }
+      // if(climberStickY > 0){
+      //   climber.setHookPosition(0);
+      // }
       if(climber.getHookPosition() < -MAX_HEIGHT && !hasRumbled){
         new C_LetsGetReadyToRUMBLE(operatorRumbleJoystick, 1.5, 1).schedule();
         hasRumbled = true;
@@ -58,7 +61,7 @@ public class C_Climb extends CommandBase {
       climber.setHook(Math.pow(climberStickY, 2) * Math.signum(climberStickY));
     }
 
-    if (operatorController.getYButton().get()) {
+    if (operatorController.getStartButton().get()) {
       climber.resetHookEncoder();
     }
     if(operatorController.getRightTriggerAxis().get() > 0.5){
@@ -68,6 +71,10 @@ public class C_Climb extends CommandBase {
     }
     
     climber.setWinch(Math.pow(winchStickY, 2) * Math.signum(winchStickY));
+
+    if(operatorController.getAButton().get()){
+      climber.setRetractMotorSpeed(0.1);
+    }
   }
 
   @Override

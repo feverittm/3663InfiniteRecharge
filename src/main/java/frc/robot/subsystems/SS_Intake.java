@@ -7,8 +7,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class SS_Intake extends SubsystemBase {
     /**
@@ -69,6 +72,8 @@ public class SS_Intake extends SubsystemBase {
     private final int INTAKE_VELOCITY = 3500;
     private final int OUTTAKE_VELOCITY = -3000;
     private final int BUMP_VELOCITY = 1000;
+
+    private NetworkTableEntry intakeEntry;
     
     //=====CONSTRUCTOR=====//
     public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
@@ -82,10 +87,16 @@ public class SS_Intake extends SubsystemBase {
 
         pid = pickupMotor.getPIDController();
         pid.setOutputRange(-1, 1);
+        pid.setIMaxAccum(0.8, 0);
 
         pid.setP(KP);
         pid.setI(KI);
         pid.setD(KD);
+        ShuffleboardTab intakeTab = Shuffleboard.getTab("Camera");
+        intakeEntry = intakeTab.add("IAccum", 0)
+            .withPosition(6, 3)
+            .withSize(1, 1)
+            .getEntry();
     }
 
     // =====CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR
@@ -96,6 +107,7 @@ public class SS_Intake extends SubsystemBase {
             isRetracting = false;
             setPickUpMotorSpeed(0);
         }
+        intakeEntry.setNumber(pid.getIAccum());
     }
 
     // =====SETS THE INTAKE ARM POSITION=====//
