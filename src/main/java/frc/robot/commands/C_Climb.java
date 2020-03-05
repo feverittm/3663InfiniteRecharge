@@ -18,7 +18,7 @@ public class C_Climb extends CommandBase {
   private SS_Climber climber;
   private SS_Intake intake;
 
-  private final double MAX_HEIGHT = 125;
+  private final double MAX_HEIGHT = 120;
   private double winchStickY;
   private double climberStickY;
   private boolean manualOveride = false;
@@ -73,7 +73,9 @@ public class C_Climb extends CommandBase {
     climber.setWinch(Math.pow(winchStickY, 2) * Math.signum(winchStickY));
 
     if(operatorController.getAButton().get()){
-      climber.setRetractMotorSpeed(0.1);
+      climber.setRetractMotorSpeed(0.2);
+    }else{
+      climber.setRetractMotorSpeed(0);
     }
   }
 
