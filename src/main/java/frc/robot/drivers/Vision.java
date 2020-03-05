@@ -9,9 +9,16 @@
 
 package frc.robot.drivers;
 
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableValue;
+import edu.wpi.first.networktables.TableEntryListener;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Vision {
@@ -29,15 +36,21 @@ public class Vision {
   public static final int CAMERA_DEFAULT_MODE = CAMERA_VISION;
 
   //piplines (can be a numbers from 0-9)
-  public static final int FINE_PIPELINE = 3;
-  public static final int RED_PIPELINE = 2;
-  public static final int BLUE_PIPELINE = 1;
-  public static final int DEFAULT_PIPELINE = 0;
+  public static final int FINE_PIPELINE = 3; //pipline for higher resolution
+  public static final int RED_PIPELINE = 2; //pipeline for the red alliance side
+  public static final int BLUE_PIPELINE = 1; //pipline for the blue alliance side
+  public static final int PRACTICE_PIPELINE = 0; //pipeline for the practice field
+  public static final int DEFAULT_PIPELINE = BLUE_PIPELINE;
 
   //Distance constants
   public static final double CAMERA_ANGLE = 32.5;
   public static final double CAMERA_HEIGHT = 21.25; //in inches
   public static final double TARGET_HEIGHT = 89.75; //center of vision target //98.25; center of target//in inches
+
+  private ShuffleboardTab visionTab;
+
+  //PipelineSelector
+  private SendableChooser pipelineChooser;
 
   //vision network table
   private NetworkTable visionTable;
@@ -49,6 +62,8 @@ public class Vision {
   private NetworkTableEntry camtran; //Results of a 3D position solution, 6 numbers: Translation (x,y,y) Rotation(pitch,yaw,roll)
   
   public Vision() {
+    visionTab = Shuffleboard.getTab("Vision");
+
     visionTable = NetworkTableInstance.getDefault().getTable("limelight-testing");
     tx = visionTable.getEntry("tx");
     ty = visionTable.getEntry("ty");
@@ -57,6 +72,27 @@ public class Vision {
     ts = visionTable.getEntry("ts");
     camtran = visionTable.getEntry("camtran");
     setMode(CAMERA_DEFAULT_MODE, LED_DEFAULT_MODE, DEFAULT_PIPELINE);
+
+    initPipelineSelector();
+  }
+  
+  private void initPipelineSelector() {
+    pipelineChooser = new SendableChooser<Integer>();
+    pipelineChooser.setDefaultOption("Blue Alliance", BLUE_PIPELINE);
+    pipelineChooser.addOption("Red Alliance", RED_PIPELINE);
+    pipelineChooser.addOption("Practice", PRACTICE_PIPELINE);
+
+    //add the camera selector widget
+    String selectorName = "Pipline";
+    visionTab.add(selectorName, pipelineChooser)
+        .withWidget(BuiltInWidgets.kComboBoxChooser)
+        .withPosition(8, 0)
+        .withSize(2, 1);
+
+    //Add table entry listener for the pipline switcher
+    PiplineSelectorListener listener = new PiplineSelectorListener(this);
+    NetworkTableInstance.getDefault().getTable("Shuffleboard").getSubTable("Vision").getSubTable(selectorName)
+      .addEntryListener("selected", listener, EntryListenerFlags.kUpdate);
   }
 
   public void updateTelemetry() {
@@ -158,5 +194,18 @@ public class Vision {
     PITCH,
     ROLL,
     YAW
+  }
+
+  private class PiplineSelectorListener implements TableEntryListener {
+    Vision vision;
+
+    private PiplineSelectorListener(Vision vision) {
+        this.vision = vision;
+    }
+
+    @Override
+    public void valueChanged(NetworkTable table, String key, NetworkTableEntry entry, NetworkTableValue value, int flags) {
+        vision.setPipeline((int)value.getDouble());
+    }
   }
 }
