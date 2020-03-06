@@ -29,8 +29,10 @@ public class Vision {
   public static final int CAMERA_DEFAULT_MODE = CAMERA_VISION;
 
   //piplines (can be a numbers from 0-9)
-  public static final int FINE_PIPELINE = 1;
-  public static final int DEFAULT_PIPELINE = 0;
+  public static final int FINE_PIPELINE = 2; //not in use at the moment
+  public static final int BLUE_PIPELINE = 0; //blue alliance
+  public static final int RED_PIPELINE = 1; //red alliance
+  public static final int DEFAULT_PIPELINE = BLUE_PIPELINE;
 
   //Distance constants
   public static final double CAMERA_ANGLE = 32.5;
