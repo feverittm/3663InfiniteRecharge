@@ -33,7 +33,7 @@ public class DriverCameras {
         cameraTab = Shuffleboard.getTab("Camera");
         cameraWidget = cameraTab.add("Camera Feed", server.getSource())
             .withWidget(BuiltInWidgets.kCameraStream)
-            .withProperties(Map.of("Rotation", "QUARTER_CW"))
+            .withProperties(Map.of("Rotation", "QUARTER_CW")) //the default camera (feeder) needs to be rotated 90 degrees
             .withPosition(3, 0)
             .withSize(5, 5);
     }
@@ -58,11 +58,11 @@ public class DriverCameras {
         switch(targetCamera) {
             case FEEDER:
                 server.setSource(feederCamera);
-                cameraWidget.withProperties(Map.of("Rotation", "QUARTER_CW"));
+                cameraWidget.withProperties(Map.of("Rotation", "QUARTER_CW")); //rotate the widget to the correct rotation (clockwise 90)
                 break;
             case SHOOTER:
                 server.setSource(shooterCamera);
-                cameraWidget.withProperties(Map.of("Rotation", "NONE"));
+                cameraWidget.withProperties(Map.of("Rotation", "NONE")); //rotate the widget to the correct rotation (none)
                 break;
         }
     }
