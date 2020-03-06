@@ -36,7 +36,6 @@ public class C_Climb extends CommandBase {
   public void initialize() {
     intake.setArmPosition(IntakePosition.POSITION_1);
     climber.resetHookEncoder();
-    
   }
 
   @Override
@@ -61,7 +60,7 @@ public class C_Climb extends CommandBase {
       climber.setHook(Math.pow(climberStickY, 2) * Math.signum(climberStickY));
     }
 
-    if (operatorController.getStartButton().get()) {
+    if (operatorController.getYButton().get()) {
       climber.resetHookEncoder();
     }
     if(operatorController.getRightTriggerAxis().get() > 0.5){
@@ -70,13 +69,13 @@ public class C_Climb extends CommandBase {
       manualOveride = false;
     }
     
-    climber.setWinch(Math.pow(winchStickY, 2) * Math.signum(winchStickY));
-
-    if(operatorController.getAButton().get()){
-      climber.setRetractMotorSpeed(0.2);
+    if(operatorController.getBButton().get()){
+      climber.setRetractMotorSpeed(0.5);
     }else{
       climber.setRetractMotorSpeed(0);
     }
+
+    climber.setWinch(Math.pow(winchStickY, 2) * Math.signum(winchStickY));
   }
 
   @Override
