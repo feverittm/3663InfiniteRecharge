@@ -24,8 +24,8 @@ public class Robot extends TimedRobot {
     if(autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    autonomousCommand = container.getAutonomousCommand();
-    // autonomousCommand = autonomousBuilder.buildAutoRoutine();
+    // autonomousCommand = container.getAutonomousCommand();
+    autonomousCommand = autonomousBuilder.buildAutoRoutine();
     CommandScheduler.getInstance().schedule(false, autonomousCommand);
   }
 }

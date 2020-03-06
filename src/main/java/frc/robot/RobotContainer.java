@@ -18,10 +18,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.test.*;
 import frc.robot.commandgroups.CG_LobShot;
 import frc.robot.commandgroups.CG_PrepShoot;
+import frc.robot.commands.C_AutoAim;
 import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Climb;
 import frc.robot.commands.C_Drive;
@@ -158,10 +160,16 @@ public RobotContainer() {
      */
     public SequentialCommandGroup getAutonomousCommand() {
         return new SequentialCommandGroup(
-            new InstantCommand(() -> drivebase.resetGyroAngle(new Rotation2(0.0, -1.0, true)), drivebase),
-            new CG_PrepShoot(feeder, shooter, rumbleJoystick),
+            new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.fromDegrees(180)), drivebase),
+            new InstantCommand(() -> vision.setLEDMode(Vision.LED_ON)),
+            new ParallelCommandGroup(
+                new CG_PrepShoot(feeder, shooter, rumbleJoystick),
+                new C_AutoAim(drivebase, vision)
+            ),
+            new WaitCommand(1.5),
             new C_ShootAll(feeder),
-            new C_AutoDrive(drivebase, new Vector2(-60.0, 0.0), 1.0, 0.0, 1.0)
+            new InstantCommand(() -> vision.setLEDMode(Vision.LED_OFF)),
+            new C_AutoDrive(drivebase, new Vector2(-36.0, 0.0), 1.0, Math.toRadians(180), 1.0)
         );
     }
 

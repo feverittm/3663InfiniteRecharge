@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import org.frcteam2910.common.math.Rotation2;
 import org.frcteam2910.common.math.Vector2;
 import org.frcteam2910.common.robot.input.Controller;
 import org.frcteam2910.common.robot.input.XboxController;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -103,32 +105,35 @@ public class AutonomousBuilder {
         SequentialCommandGroup autoRoutine = new SequentialCommandGroup();
 
         autoRoutine.addCommands(
-            new WaitCommand(shootDelayEntry.getDouble(0.0)),
+            new InstantCommand(() -> drivebase.resetGyroAngle(Rotation2.fromDegrees(180)), drivebase),
+            new InstantCommand(() -> vision.setLEDMode(Vision.LED_ON)),
             new ParallelCommandGroup(
                 new CG_PrepShoot(feeder, shooter, rumbleJoystick),
                 new C_AutoAim(drivebase, vision)
             ),
+            new WaitCommand(shootDelayEntry.getDouble(0.0)),
             new C_ShootAll(feeder),
+            new InstantCommand(() -> vision.setLEDMode(Vision.LED_OFF)),
             new WaitCommand(movementDelayEntry.getDouble(0.0))
         );
 
         if(movementSelector.getSelected().equals(MovementStrategy.BACKWARD)){
-            autoRoutine.addCommands(new C_AutoDrive(drivebase, new Vector2(-24.0, 0.0), .5, 0.0, 1.0));
+            autoRoutine.addCommands(new C_AutoDrive(drivebase, new Vector2(-24.0, 0.0), .5, Math.toRadians(180), 1.0));
         } else if (movementSelector.getSelected().equals(MovementStrategy.FORWARD)) {
-            autoRoutine.addCommands(new C_AutoDrive(drivebase, new Vector2(24.0, 0.0), .5, 0.0, 1.0));
+            autoRoutine.addCommands(new C_AutoDrive(drivebase, new Vector2(24.0, 0.0), .5, Math.toRadians(180), 1.0));
         } else if(movementSelector.getSelected().equals(MovementStrategy.TRENCH)) {
             if(startingPositionSelector.getSelected().equals(StartingPosition.RIGHT)){
                 autoRoutine.addCommands(
                         new ParallelCommandGroup(
-                            new C_AutoDrive(drivebase, new Vector2(-190, 0.0), .5, 0.0, 1.0),
+                            new C_AutoDrive(drivebase, new Vector2(-190, 0.0), .5, Math.toRadians(180), 1.0),
                             new C_Intake(intake, driveController)
                         )
                 );
             } else if (startingPositionSelector.getSelected().equals(StartingPosition.MIDDLE)) {
                 autoRoutine.addCommands(
-                        new C_AutoDrive(drivebase, new Vector2(-80.0, 66.0), .7, 0.0, 1.0),
+                        new C_AutoDrive(drivebase, new Vector2(-80.0, 66.0), .7, Math.toRadians(180), 1.0),
                         new ParallelCommandGroup(
-                            new C_AutoDrive(drivebase, new Vector2(-100.0, 0.0), .5, 0.0, 1.0),
+                            new C_AutoDrive(drivebase, new Vector2(-100.0, 0.0), .5, Math.toRadians(180), 1.0),
                             new C_Intake(intake, driveController)
                         )
                 );
@@ -136,7 +141,7 @@ public class AutonomousBuilder {
                 autoRoutine.addCommands(
                     //TODO: add drive to trench command
                     new ParallelCommandGroup(
-                        new C_AutoDrive(drivebase, new Vector2(-100.0,0.0), .5, 0.0, 1.0),
+                        new C_AutoDrive(drivebase, new Vector2(-100.0,0.0), .5, Math.toRadians(180), 1.0),
                         new C_Intake(intake, driveController)
                     )
                 );
