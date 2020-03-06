@@ -4,40 +4,38 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class SS_Climber extends SubsystemBase {
     // for SparkMax motor controllers
-    private CANSparkMax retractMotor;
     CANSparkMax gondolaMotor;
     CANSparkMax winchMotor;
-    CANSparkMax hookMotor;
+    CANSparkMax extendMotor;
+    CANSparkMax retractMotor;
 
-    CANPIDController hookPID;
+    CANPIDController extendPID;
     private final double P = 0.01;
     private final double I = 0;
     private final double D = 0;
 
     private NetworkTableEntry hookPos;
 
-    public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax hookMotor) {
+    public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, CANSparkMax retractMotor) {
         this.gondolaMotor = gondolaMotor;
         this.winchMotor = winchMotor;
-        this.hookMotor = hookMotor;
-        retractMotor = new CANSparkMax(Constants.CLIMBER_RETRACT_MOTOR_CANID, MotorType.kBrushed);
+        this.extendMotor = extendMotor;
+        this.retractMotor = retractMotor;
 
-        hookPID = hookMotor.getPIDController();
-        hookPID.setP(P);
-        hookPID.setI(I);
-        hookPID.setD(D);
-        hookMotor.setIdleMode(IdleMode.kBrake);
+        extendPID = extendMotor.getPIDController();
+        extendPID.setP(P);
+        extendPID.setI(I);
+        extendPID.setD(D);
+        extendMotor.setIdleMode(IdleMode.kBrake);
         retractMotor.setIdleMode(IdleMode.kBrake);
         winchMotor.setIdleMode(IdleMode.kBrake);
         intiTelemetry();
@@ -56,15 +54,15 @@ public class SS_Climber extends SubsystemBase {
         retractMotor.set(speed);
     }
     public void resetHookEncoder() {
-        hookMotor.getEncoder().setPosition(0.0);
+        extendMotor.getEncoder().setPosition(0.0);
     }
 
     public double getHookPosition() {
-        return hookMotor.getEncoder().getPosition();
+        return extendMotor.getEncoder().getPosition();
     }
 
     public void setHookPosition(double position) {
-        hookPID.setReference(position, ControlType.kPosition);
+        extendPID.setReference(position, ControlType.kPosition);
     }
 
     public void gondolaRoll(double rollSpeed) {
@@ -81,7 +79,7 @@ public class SS_Climber extends SubsystemBase {
 
     public void setHook(double rollSpeed) {
         // for SparkMax motor controllers
-        hookMotor.set(rollSpeed);
+        extendMotor.set(rollSpeed);
         SmartDashboard.putNumber("SS_Roller rollSpeed", rollSpeed);
     }
 
