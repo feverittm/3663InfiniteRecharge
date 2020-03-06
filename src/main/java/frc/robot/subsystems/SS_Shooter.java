@@ -42,13 +42,13 @@ public class SS_Shooter extends SubsystemBase {
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
 
   //Wheel PID constants (These values are tuned correctly for the software robot)
-  private final double KF = 0.000; //0.0002// final
-  private final double KP = 0.0005; //0.0012;
-  private final double KI = 0.000000415; //1e-019;
+  private final double KF = 0.00019; //0.0002// final
+  private final double KP = 0.001;//0.0004; //0.0012;
+  private final double KI = 0.0;//0.00000035; //1e-019;
   private final double KD = 0.0;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
-  private final double CORRECT_PERCET_THRESHOLD = 0.015;
+  private final double CORRECT_RPM_PERCENTAGE = .01;
   private final double CONFIDENCE_TIME = 1; //time we want to be in the confidence band before shooting
 
   private Vision vision;
@@ -232,8 +232,7 @@ public class SS_Shooter extends SubsystemBase {
   }
 
   public boolean atCorrectRPM(){
-
-    return Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_PERCET_THRESHOLD * targetRPM;
+    return Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_RPM_PERCENTAGE * targetRPM;
   }
   /**
    * Returns the non-fixed correction multiplier
