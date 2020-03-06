@@ -15,8 +15,8 @@ public class C_RPMTuneTest extends CommandBase {
   Controller controller;
   SS_Feeder feeder;
   SS_Shooter shooter;
+  int currentRPM = 3500;
   SS_Intake intake;
-  int currentRPM = 1000;
   boolean pressed;
 
   public C_RPMTuneTest(Controller controller, SS_Shooter shooter, SS_Feeder feeder, SS_Intake intake) {

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.drivers.*;
 import frc.robot.drivers.NavX.Axis;
 import frc.robot.Constants;
