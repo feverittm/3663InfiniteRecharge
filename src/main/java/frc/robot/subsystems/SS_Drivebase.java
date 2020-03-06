@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.drivers.*;
+import frc.robot.drivers.NavX.Axis;
 import frc.robot.Constants;
 
 import org.frcteam2910.common.math.*;
@@ -64,7 +65,7 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
     private final Object sensorLock = new Object();
     @GuardedBy("sensorLock")
     private final NavX navX = new NavX(Port.kMXP, Constants.NAVX_UPDATE_RATE);
-    // private final NavX navX = new NavX(I2C.Port.kOnboard, Constants.NAVX_UPDATE_RATE);
+    //private final NavX navX = new NavX(I2C.Port.kOnboard, Constants.NAVX_UPDATE_RATE);
     // private final NavX navX = new NavX(Port.kUSB, Constants.NAVX_UPDATE_RATE);
 
     private final Object kinematicsLock = new Object();
@@ -94,7 +95,7 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
     public SS_Drivebase() {
         synchronized (sensorLock) {
         navX.setInverted(true);      
-        }
+        }        
 
         ShuffleboardTab drivebaseTab = Shuffleboard.getTab("Drivebase");
         poseXEntry = drivebaseTab.add("Pose X", 0.0)
@@ -223,6 +224,7 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
         Rotation2 angle;
         synchronized (sensorLock) {
             angle = navX.getAngle();
+            // angle = Rotation2.fromDegrees(navX.getAxis(Axis.ROLL));
         }
 
         RigidTransform2 pose = odometry.update(angle, dt, moduleVelocities);
@@ -266,6 +268,7 @@ public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatab
 
         fieldOrientedEntry.setDouble( signal == null ? 0 : (signal.isFieldOriented() ? 1 : 0));        
         gyroAngleEntry.setDouble(navX.getAngle().toDegrees());
+        // gyroAngleEntry.setDouble(navX.getAxis(Axis.ROLL));
     }
 
     @Override

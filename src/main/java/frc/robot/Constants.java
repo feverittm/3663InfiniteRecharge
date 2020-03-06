@@ -55,5 +55,6 @@ public class Constants {
     public static final int CLIMBER_EXTEND_MOTOR_CANID = 12;
     public static final int CLIMBER_WINCH_MOTOR_CANID = 13;
     public static final int CLIMBER_DRIVE_MOTOR_CANID = 14;
+    public static final int CLIMBER_RETRACT_MOTOR_CANID = 15;
 }
 

@@ -24,17 +24,19 @@ import frc.robot.drivers.Vision;
 
 public class SS_Shooter extends SubsystemBase {
 
-  //Known RPMs for different distances. Column one: feet, Column two: RPM. 0 feet is parked directly infront of the power port
+  //Known RPMs for different distances. Column one: feet, Column two: RPM. Updated: 2/29/2020
   private final int[][] KNOWN_RPM = new int[][] {
-    {0, 2000},
+    {5, 3490},
+    {8, 3350},
     {10, 3400},
-    {15, 3700},
-    {20, 4150}
+    {15, 3730},
+    {20, 4090},
+    {25, 4390}
   };
   private final int DISTANCE_COLUMN = 0; //column index for distance values
   private final int RPM_COLUMN = 1; //column index for RPM values
   
-  private final int LOB_SHOT_SPEED = 2000; //TODO
+  private final int LOB_SHOT_SPEED = 5080;
 
   //the correction multiplier in the code that is fixed (the other one, correctionMultiplier, can be changed during a match)
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
@@ -111,8 +113,6 @@ public class SS_Shooter extends SubsystemBase {
       .withPosition(1, 1)
       .withSize(1, 1)
       .getEntry();
-
-    vision.updateTelemetry();
   }
 
   @Override
@@ -144,6 +144,8 @@ public class SS_Shooter extends SubsystemBase {
     currentRPMEntry.setNumber(encoder.getVelocity());
     shootingConfidenceEntry.setNumber(getShotConfidence());
     wheelSpinningEntry.setBoolean(wheelSpinning);
+
+    vision.updateTelemetry();
   }
 
   /**
@@ -230,8 +232,7 @@ public class SS_Shooter extends SubsystemBase {
   }
 
   public boolean atCorrectRPM(){
-
-    return (Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_RPM_PERCENTAGE * targetRPM);
+    return Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_RPM_PERCENTAGE * targetRPM;
   }
   /**
    * Returns the non-fixed correction multiplier
@@ -259,6 +260,15 @@ public class SS_Shooter extends SubsystemBase {
    */
   public void testSetTargetRPM(int RPM) {
     targetRPM = RPM;
+  }
+
+  //updated 2-29-2020
+  private int calculateRPMPolynomial(double feet) {
+    //fourth order
+    // double RPM = (0.0208 * Math.pow(feet, 4)) - (1.5672 * Math.pow(feet, 3)) + (42.513 * Math.pow(feet, 2)) - (420.63 * feet) + 4713.0;
+    //second order
+    double RPM = (2.324 * Math.pow(feet, 2)) - (17.533 * feet) + 3426.8;
+    return (int)RPM;
   }
 
   /**

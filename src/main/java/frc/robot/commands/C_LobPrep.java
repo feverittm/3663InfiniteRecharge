@@ -1,19 +1,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Shooter;
-import frc.robot.subsystems.SS_Feeder.FeedRate;
 
 public class C_LobPrep extends CommandBase {
 
   SS_Shooter shooter;
-  SS_Feeder feeder;
 
-  public C_LobPrep(SS_Shooter shooter, SS_Feeder feeder) {
-    addRequirements(shooter, feeder);
+  public C_LobPrep(SS_Shooter shooter) {
     this.shooter = shooter;
-    this.feeder = feeder;
+    addRequirements(shooter);
   }
 
   @Override
@@ -23,12 +19,13 @@ public class C_LobPrep extends CommandBase {
 
   @Override
   public void execute() {
-    if(!feeder.ballInExit()){
-      feeder.setRPM(FeedRate.SHOOT_PREP);
-    }
   }
   @Override
   public boolean isFinished() {
-    return feeder.ballInExit();
+    return shooter.atCorrectRPM();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
   }
 }

@@ -26,11 +26,18 @@ public class SS_Feeder extends SubsystemBase {
   private final double FEEDER_BELT_GEAR_RATIO_MULTIPLIER = 1;
 
   private final int FEED_RPM_STOPPED = 0;
-  private final int FEED_RPM_INTAKE_PREP = -2250;
-  private final int FEED_RPM_INTAKE = 2250; // how fast the feeder should be running when indexing the balls
-  private final int FEED_RPM_PREP_SHOOT = 3500;
-  private final int FEED_RPM_SHOOT_ONE = 3500; // how fast the feeder should be running when we are shooting
-  private final int FEED_RPM_SHOOT_ALL = 6000;
+  private final int FEED_RPM_INTAKE_PREP = -2250;//-2250
+  private final int FEED_RPM_INTAKE = 2000; // 2000
+  private final int FEED_RPM_PREP_SHOOT = 4000; //4000
+  private final int FEED_RPM_SHOOT_ONE = 3500; // 3500
+  private final int FEED_RPM_SHOOT_ALL = 5000; //6000
+
+  // private final int FEED_RPM_STOPPED = 0;
+  // private final int FEED_RPM_INTAKE_PREP = -0.4;//-2250
+  // private final int FEED_RPM_INTAKE = 0.4; // 2000
+  // private final int FEED_RPM_PREP_SHOOT = 0.7; //4000
+  // private final int FEED_RPM_SHOOT_ONE = 0.6; // 3500
+  // private final int FEED_RPM_SHOOT_ALL = 0.9; //6000
 
   // The number of revolutions of the belt motor required to cycle a ball all the
   // way from the feeders entry to the exit.
@@ -50,6 +57,7 @@ public class SS_Feeder extends SubsystemBase {
   private NetworkTableEntry exitValid;
   private NetworkTableEntry entryValid;
   private NetworkTableEntry feederEncoderPos;
+  private NetworkTableEntry feedMode;
 
   public SS_Feeder(CANSparkMax beltMotor, DigitalInput entrySensor, DigitalInput exitSensor) {
     this.beltMotor = beltMotor;
@@ -84,6 +92,7 @@ public class SS_Feeder extends SubsystemBase {
     entryValid = shooterTab.add("Entry Valid", false).withPosition(5, 2).withSize(1, 1).getEntry();
     exitValid = shooterTab.add("Exit Valid", false).withPosition(5, 3).withSize(1, 1).getEntry();
     feederEncoderPos = shooterTab.add("FeederEncode", 0).withPosition(5, 4).withSize(1, 1).getEntry();
+    feedMode = shooterTab.add("Feed Mode", FeedRate.STOPPED.toString()).withPosition(4, 3).withSize(1, 1).getEntry();
   }
 
   private void updateTelemetry() {
@@ -91,6 +100,7 @@ public class SS_Feeder extends SubsystemBase {
     feederEncoderPos.setNumber(beltEncoder.getPosition());
     exitValid.setBoolean(ballInExit());
     entryValid.setBoolean(ballInEntry());
+    feedMode.setString(currentFeedRate.toString());
   }
 
   public void setRPM(double RPM) {
@@ -121,6 +131,7 @@ public class SS_Feeder extends SubsystemBase {
       break;
     }
     beltPID.setReference(targetRPM, ControlType.kVelocity);
+    //beltMotor.set(targetRPM);
   }
 
   public void resetEncoder() {
@@ -137,10 +148,6 @@ public class SS_Feeder extends SubsystemBase {
 
   public double getRPM() {
     return beltEncoder.getVelocity();
-  }
-
-  public double getRevPerFullFeed() {
-    return REV_PER_FULL_FEED;
   }
 
   /**

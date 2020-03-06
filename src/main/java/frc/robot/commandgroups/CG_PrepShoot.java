@@ -14,7 +14,7 @@ public class CG_PrepShoot extends SequentialCommandGroup {
   public CG_PrepShoot(SS_Feeder feeder, SS_Shooter shooter, Joystick rumbleJoystick) {
     addCommands(
       new ParallelCommandGroup(new C_PrepShoot(shooter), new C_PrepFeedToShoot(feeder))
-      ,new C_LetsGetReadyToRUMBLE(rumbleJoystick, 0.05, 0.7)
+      ,new C_LetsGetReadyToRUMBLE(rumbleJoystick, 0.01, 0.7)
     );
   }
 }
