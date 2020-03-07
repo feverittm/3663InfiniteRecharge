@@ -12,19 +12,16 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class SS_Intake extends SubsystemBase {
     /**
      * Intake arm extend positions
      * 
-     * @param POSITION_0 checks to see if both the long and short solenoids are
-     *                   retracted
-     * @param POSITION_1 checks to see if ONLY the long solenoid is retracted
-     * @param POSITION_2 checks to see if ONLY the short solenoid is retracted
-     * @param POSITION_3 checks to see if both the long and short solenoids are
-     *                   extended
+     * @param POSITION_0 both the long and short solenoids are retracted
+     * @param POSITION_1 ONLY the long solenoid is retracted
+     * @param POSITION_2 ONLY the short solenoid is retracted
+     * @param POSITION_3 both the long and short solenoids are extended
      */
     public enum IntakePosition {
         POSITION_0, // This position retracts both the long and short solenoids for putting the
@@ -51,13 +48,12 @@ public class SS_Intake extends SubsystemBase {
         BUMP
     }
 
-    // =====INSTANCE VARIABLES=====//
     private DoubleSolenoid shortSolenoid;
     private DoubleSolenoid longSolenoid;
     private CANSparkMax pickupMotor;
     private DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
 
-    private CANPIDController pid;
+    private CANPIDController velocityController;
 
     private IntakePosition currentPosition;
 
@@ -75,26 +71,26 @@ public class SS_Intake extends SubsystemBase {
     private final int INTAKE_VELOCITY = 3500;
     private final int OUTTAKE_VELOCITY = -3000;
     private final int BUMP_VELOCITY = 1000;
+    private final int MOTOR_CURRENT_LIMIT = 25;
 
     private NetworkTableEntry intakeEntry;
     
-    //=====CONSTRUCTOR=====//
     public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
         this.shortSolenoid = shortSolenoid;
         this.longSolenoid = longSolenoid;
         this.pickupMotor = pickupMotor;
 
-        setArmPosition(IntakePosition.POSITION_0);
+        setPosition(IntakePosition.POSITION_0);
         pickupMotor.setIdleMode(IdleMode.kCoast);
-        pickupMotor.setSmartCurrentLimit(23);
+        pickupMotor.setSmartCurrentLimit(MOTOR_CURRENT_LIMIT);
 
-        pid = pickupMotor.getPIDController();
-        pid.setOutputRange(-1, 1);
-        pid.setIMaxAccum(0.8, 0);
+        velocityController = pickupMotor.getPIDController();
+        velocityController.setOutputRange(-1, 1);
+        velocityController.setIMaxAccum(0.8, 0);
 
-        pid.setP(KP);
-        pid.setI(KI);
-        pid.setD(KD);
+        velocityController.setP(KP);
+        velocityController.setI(KI);
+        velocityController.setD(KD);
         ShuffleboardTab intakeTab = Shuffleboard.getTab("Camera");
         intakeEntry = intakeTab.add("IAccum", 0)
             .withPosition(6, 3)
@@ -106,19 +102,17 @@ public class SS_Intake extends SubsystemBase {
         return intakeSensor;
     }
 
-    //=====CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES=====//
+    //CHECKS TO SEE IF THE INTAKE ARM IS RETRACTING AND IF THE INTAKE MOTOR HAS SPUN THE CORRECT AMOUNT OF TIMES
     @Override
     public void periodic() {
         if (isRetracting && pickupMotor.getEncoder().getPosition() >= targetRotations) {
             isRetracting = false;
-            setPickUpMotorSpeed(0);
+            setMotor(0);
         }
-        intakeEntry.setNumber(pid.getIAccum());
+        intakeEntry.setNumber(velocityController.getIAccum());
     }
 
-    // =====SETS THE INTAKE ARM POSITION=====//
-    public void setArmPosition(IntakePosition position) {
-        // Depending on the button pressed, this command sets the intake arm position.
+    public void setPosition(IntakePosition position) {
         currentPosition = position;
         switch (position) {
         case POSITION_0:
@@ -143,42 +137,36 @@ public class SS_Intake extends SubsystemBase {
         }
     }
 
-    // =====RETRACTS THE INTAKE ARM WHILE SPINNING THE INTAKE MOTOR FOR A BIT=====//
-    public void retractIntake() {
-        // isRetracting = true;
-        // targetRotations = (int)pickupMotor.getEncoder().getPosition() + INTAKE_ROTATIONS;
-        
-        // setPickUpMotorSpeed(RETRACT_VELOCITY);
-        setArmPosition(IntakePosition.POSITION_1);
+    public void retract() {
+        setPosition(IntakePosition.POSITION_1);
     }
 
-    // =====RETURNS THE POSITION OF THE INTAKE ARM=====//
-    public IntakePosition getIntakePosition() {
+    public IntakePosition getPosition() {
         return currentPosition;
     }
 
-    // =====SETS THE SPEED OF THE PICKUP MOTOR IN RPMS=====//
-    private void setPickUpMotorSpeed(int pickUpSpeed) {
-        pid.setReference(pickUpSpeed, ControlType.kVelocity);
+    private void setMotor(double rpms) {
+        velocityController.setReference(rpms, ControlType.kVelocity);
     }
 
-    // =====STARTS THE INTAKE MOTOR BY SETTTING THE DIRECTION OF THE INTAKE MOTOR
-    // USING setPickUpMotorSpeed()=====//
-    public void startPickUpMotor(IntakeDirection direction) {
+    /**
+     * @param direction the direction to spin the intake motor
+     */
+    public void setMotor(IntakeDirection direction) {
         switch(direction) {
             case STOP:
                 pickupMotor.set(0);
                 break;
 
             case IN:
-                setPickUpMotorSpeed(INTAKE_VELOCITY);
+                setMotor(INTAKE_VELOCITY);
                 break;
 
             case OUT:
-                setPickUpMotorSpeed(OUTTAKE_VELOCITY);
+                setMotor(OUTTAKE_VELOCITY);
                 break;
             case BUMP:
-                setPickUpMotorSpeed(BUMP_VELOCITY);
+                setMotor(BUMP_VELOCITY);
                 break;
         }
     }

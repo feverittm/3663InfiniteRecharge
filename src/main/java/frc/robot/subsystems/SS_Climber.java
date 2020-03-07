@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -17,6 +18,7 @@ public class SS_Climber extends SubsystemBase {
     CANSparkMax winchMotor;
     CANSparkMax extendMotor;
     CANSparkMax retractMotor;
+    // TalonSRX retractMotor;
 
     CANPIDController extendPID;
     private final double P = 0.01;
@@ -26,6 +28,7 @@ public class SS_Climber extends SubsystemBase {
     private NetworkTableEntry hookPos;
 
     public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, CANSparkMax retractMotor) {
+    //public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, TalonSRX retractMotor) {
         this.gondolaMotor = gondolaMotor;
         this.winchMotor = winchMotor;
         this.extendMotor = extendMotor;
@@ -37,6 +40,7 @@ public class SS_Climber extends SubsystemBase {
         extendPID.setD(D);
         extendMotor.setIdleMode(IdleMode.kBrake);
         retractMotor.setIdleMode(IdleMode.kBrake);
+        //retractMotor.setNeutralMode(NeutralMode.Brake);
         winchMotor.setIdleMode(IdleMode.kBrake);
         intiTelemetry();
     }
@@ -52,6 +56,7 @@ public class SS_Climber extends SubsystemBase {
     }
     public void setRetractMotorSpeed(double speed){
         retractMotor.set(speed);
+        // retractMotor.set(ControlMode.PercentOutput, speed);
     }
     public void resetHookEncoder() {
         extendMotor.getEncoder().setPosition(0.0);

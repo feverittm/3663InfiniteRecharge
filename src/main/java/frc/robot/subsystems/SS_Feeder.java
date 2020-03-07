@@ -32,16 +32,9 @@ public class SS_Feeder extends SubsystemBase {
   private final int FEED_RPM_SHOOT_ONE = 3500; // 3500
   private final int FEED_RPM_SHOOT_ALL = 5000; //6000
 
-  // private final int FEED_RPM_STOPPED = 0;
-  // private final int FEED_RPM_INTAKE_PREP = -0.4;//-2250
-  // private final int FEED_RPM_INTAKE = 0.4; // 2000
-  // private final int FEED_RPM_PREP_SHOOT = 0.7; //4000
-  // private final int FEED_RPM_SHOOT_ONE = 0.6; // 3500
-  // private final int FEED_RPM_SHOOT_ALL = 0.9; //6000
-
   // The number of revolutions of the belt motor required to cycle a ball all the
   // way from the feeders entry to the exit.
-  public static final int REV_PER_FULL_FEED = 80;
+  public static final double REV_PER_FULL_FEED = 100.0;
 
   // Motor encoder and pid
   private CANSparkMax beltMotor;

@@ -14,6 +14,7 @@ public class C_PrepFeedToShoot extends CommandBase {
 
   @Override
   public void initialize() {
+    feeder.resetEncoder();
   }
 
   @Override
@@ -30,6 +31,6 @@ public class C_PrepFeedToShoot extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.ballInExit();
+    return feeder.ballInExit() || Math.abs(feeder.getPosition()) >= SS_Feeder.REV_PER_FULL_FEED;
   }
 }

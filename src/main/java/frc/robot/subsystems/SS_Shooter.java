@@ -42,10 +42,10 @@ public class SS_Shooter extends SubsystemBase {
   private final double WHEEL_GEAR_RATIO_MULTIPLIER = 1;
 
   //Wheel PID constants (These values are tuned correctly for the software robot)
-  private final double KF = 0.00019; //0.0002// final
+  private final double KF = 0.00018; //0.0002// final
   private final double KP = 0.001;//0.0004; //0.0012;
   private final double KI = 0.0;//0.00000035; //1e-019;
-  private final double KD = 0.0;
+  private final double KD = 0.0001;
 
   private final double CONFIDENCE_THRESHOLD = 97; //the threshold or the percent wanted to shoot at
   private final double CORRECT_RPM_PERCENTAGE = .01;
@@ -53,9 +53,9 @@ public class SS_Shooter extends SubsystemBase {
 
   private Vision vision;
 
-  private CANSparkMax wheel;
-  private CANEncoder encoder;
-  private CANPIDController PID;
+  private CANSparkMax flywheelMotor;
+  private CANEncoder flywheelEncoder;
+  private CANPIDController flywheelPid;
   private DoubleSolenoid hood;
 
   private Timer confidenceTimer;
@@ -74,18 +74,18 @@ public class SS_Shooter extends SubsystemBase {
 
   public SS_Shooter(Vision vision, int wheelCANID, int hoodForwardCANID, int hoodReverseCANID) {
     this.vision = vision;
-    wheel = new CANSparkMax(wheelCANID, MotorType.kBrushless);
-    wheel.setInverted(true);
-    encoder = wheel.getEncoder();
-    encoder.setVelocityConversionFactor(WHEEL_GEAR_RATIO_MULTIPLIER);
-    PID = wheel.getPIDController();
-    PID.setOutputRange(0, 1);
+    flywheelMotor = new CANSparkMax(wheelCANID, MotorType.kBrushless);
+    flywheelMotor.setInverted(true);
+    flywheelEncoder = flywheelMotor.getEncoder();
+    flywheelEncoder.setVelocityConversionFactor(WHEEL_GEAR_RATIO_MULTIPLIER);
+    flywheelPid = flywheelMotor.getPIDController();
+    flywheelPid.setOutputRange(0, 1);
 
     //set Wheel PID constants
-    PID.setFF(KF);
-    PID.setP(KP);
-    PID.setI(KI);
-    PID.setD(KD);
+    flywheelPid.setFF(KF);
+    flywheelPid.setP(KP);
+    flywheelPid.setI(KI);
+    flywheelPid.setD(KD);
     hood = new DoubleSolenoid(hoodForwardCANID, hoodReverseCANID);
 
     initTelemetry();
@@ -141,7 +141,7 @@ public class SS_Shooter extends SubsystemBase {
   //push telemetry to Shuffleboard
   private void updateTelemetry() {
     targetRPMEntry.setNumber(targetRPM);
-    currentRPMEntry.setNumber(encoder.getVelocity());
+    currentRPMEntry.setNumber(flywheelEncoder.getVelocity());
     shootingConfidenceEntry.setNumber(getShotConfidence());
     wheelSpinningEntry.setBoolean(wheelSpinning);
 
@@ -184,10 +184,10 @@ public class SS_Shooter extends SubsystemBase {
 
   /**
    * set the position of the hood
-   * @param far if true, set hood to position for far shooting, otherwise set it to the near position
+   * @param extended if true, set hood to position for far shooting, otherwise set it to the near position
    */
-  public SS_Shooter setHoodFar(boolean far) {
-    if(far) {
+  public SS_Shooter extendHood(boolean extended) {
+    if(extended) {
       hood.set(Value.kForward);
     } else {
       hood.set(Value.kReverse);
@@ -215,7 +215,7 @@ public class SS_Shooter extends SubsystemBase {
     }
 
     //get percentage of current speed to target speed
-    double confidence = (encoder.getVelocity() / targetRPM) * 100;
+    double confidence = (flywheelEncoder.getVelocity() / targetRPM) * 100;
     //fix percentage values over 100
     if(confidence > 100) {
       confidence = 100 - (confidence - 100);
@@ -232,7 +232,7 @@ public class SS_Shooter extends SubsystemBase {
   }
 
   public boolean atCorrectRPM(){
-    return Math.abs(encoder.getVelocity() - targetRPM) <= CORRECT_RPM_PERCENTAGE * targetRPM;
+    return Math.abs(flywheelEncoder.getVelocity() - targetRPM) <= CORRECT_RPM_PERCENTAGE * targetRPM;
   }
   /**
    * Returns the non-fixed correction multiplier
@@ -251,7 +251,7 @@ public class SS_Shooter extends SubsystemBase {
    * @param RPM target RPM for the wheel
    */
   private void setRPM(int RPM) {
-    PID.setReference(RPM * correctionMultiplier, ControlType.kVelocity);
+    flywheelPid.setReference(RPM * correctionMultiplier, ControlType.kVelocity);
   }
 
   /**

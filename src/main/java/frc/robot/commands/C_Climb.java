@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Climber;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Intake.IntakePosition;
+import frc.robot.utils.TriggerButton;
 import frc.robot.commands.C_LetsGetReadyToRUMBLE;
 
 public class C_Climb extends CommandBase {
@@ -17,6 +18,7 @@ public class C_Climb extends CommandBase {
   private Joystick operatorRumbleJoystick;
   private SS_Climber climber;
   private SS_Intake intake;
+  private TriggerButton operatorLeftTrigger;
 
   private final double MAX_HEIGHT = 120;
   private double winchStickY;
@@ -29,12 +31,13 @@ public class C_Climb extends CommandBase {
     this.operatorRumbleJoystick = operatorRumbleJoystick;
     this.climber = climber;
     this.intake = intake;
+    operatorLeftTrigger = new TriggerButton(operatorController.getLeftTriggerAxis());
     addRequirements(climber, intake);
   }
 
   @Override
   public void initialize() {
-    intake.setArmPosition(IntakePosition.POSITION_1);
+    intake.setPosition(IntakePosition.POSITION_1);
     climber.resetHookEncoder();
   }
 
@@ -57,7 +60,11 @@ public class C_Climb extends CommandBase {
         hasRumbled = true;
       }
     }else if(manualOveride){
-      climber.setHook(Math.pow(climberStickY, 2) * Math.signum(climberStickY));
+      if(operatorLeftTrigger.get()) {
+        climber.setHook(Math.pow(climberStickY, 2) * Math.signum(climberStickY) / 4);
+      } else {
+        climber.setHook(Math.pow(climberStickY, 2) * Math.signum(climberStickY));
+      }
     }
 
     if (operatorController.getYButton().get()) {
@@ -68,10 +75,17 @@ public class C_Climb extends CommandBase {
     }else{
       manualOveride = false;
     }
+
+    double retractSpeed = .5;
+    if(operatorLeftTrigger.get()) {
+      retractSpeed /= 4;
+    }
     
     if(operatorController.getBButton().get()){
-      climber.setRetractMotorSpeed(0.5);
-    }else{
+      climber.setRetractMotorSpeed(retractSpeed);
+    }else if (operatorController.getAButton().get()) {
+      climber.setRetractMotorSpeed(-retractSpeed);
+    } else {
       climber.setRetractMotorSpeed(0);
     }
 

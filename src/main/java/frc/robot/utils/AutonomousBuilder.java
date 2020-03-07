@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -23,7 +24,9 @@ import frc.robot.commands.C_AutoDrive;
 import frc.robot.commands.C_Intake;
 import frc.robot.commands.C_PrepFeedToShoot;
 import frc.robot.commands.C_PrepShoot;
+import frc.robot.commands.C_Shoot;
 import frc.robot.commands.C_ShootAll;
+import frc.robot.commands.C_StopShooter;
 import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 import frc.robot.subsystems.SS_Feeder;
@@ -112,8 +115,11 @@ public class AutonomousBuilder {
                 new C_AutoAim(drivebase, vision)
             ),
             new WaitCommand(shootDelayEntry.getDouble(0.0)),
-            new C_ShootAll(feeder),
+            new C_Shoot(feeder, shooter),
+            new C_Shoot(feeder, shooter),
+            new C_Shoot(feeder, shooter),
             new InstantCommand(() -> vision.setLEDMode(Vision.LED_OFF)),
+            new C_StopShooter(shooter),
             new WaitCommand(movementDelayEntry.getDouble(0.0))
         );
 

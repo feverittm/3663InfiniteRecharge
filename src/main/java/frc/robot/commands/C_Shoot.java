@@ -18,6 +18,7 @@ public class C_Shoot extends CommandBase {
 
   @Override
   public void initialize() {
+    feeder.resetEncoder();
     hasShot = false;
   }
 
@@ -42,6 +43,6 @@ public class C_Shoot extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.ballInExit() && hasShot;
+    return (feeder.ballInExit() && hasShot) || Math.abs(feeder.getPosition()) >= SS_Feeder.REV_PER_FULL_FEED / 4;
   }
 }

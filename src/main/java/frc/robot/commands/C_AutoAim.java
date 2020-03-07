@@ -50,6 +50,7 @@ public class C_AutoAim extends CommandBase {
     if(!interrupted) {
       drivebase.drive(Vector2.ZERO, 0.0, false);
     }
+    vision.setLEDMode(Vision.LED_OFF);
   }
 
   @Override

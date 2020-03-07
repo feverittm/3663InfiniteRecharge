@@ -26,16 +26,16 @@ public class C_Intake extends CommandBase {
 
   @Override
   public void initialize() {
-    intake.setArmPosition(IntakePosition.POSITION_2);
+    intake.setPosition(IntakePosition.POSITION_2);
   }
 
   @Override
   public void execute() {
     if(leftTriggerButton.get()){
-      intake.startPickUpMotor(IntakeDirection.OUT);
+      intake.setMotor(IntakeDirection.OUT);
     }
     else {
-      intake.startPickUpMotor(IntakeDirection.IN);
+      intake.setMotor(IntakeDirection.IN);
     }
 
     if(controller.getXButton().get() && !isRetracting/*!intakeSensor.get() && !isRetracting*/) {
@@ -44,10 +44,10 @@ public class C_Intake extends CommandBase {
       isRetracting = true;
     }
     if(isRetracting){
-      intake.setArmPosition(IntakePosition.POSITION_0);
-      intake.startPickUpMotor(IntakeDirection.STOP);
+      intake.setPosition(IntakePosition.POSITION_0);
+      intake.setMotor(IntakeDirection.STOP);
       if(timer.get() > 0.4) {
-        intake.setArmPosition(IntakePosition.POSITION_2);
+        intake.setPosition(IntakePosition.POSITION_2);
         if(timer.get() > 0.8){
           timer.stop();
           isRetracting = false;
@@ -58,8 +58,8 @@ public class C_Intake extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    intake.retractIntake();
-    intake.startPickUpMotor(IntakeDirection.STOP);
+    intake.retract();
+    intake.setMotor(IntakeDirection.STOP);
   }
 
   @Override

@@ -14,7 +14,7 @@ public class C_LobPrep extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setHoodFar(false).setLobSpeed().setSpinning(true);
+    shooter.extendHood(false).setLobSpeed().setSpinning(true);
   }
 
   @Override

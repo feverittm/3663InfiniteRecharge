@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -126,6 +127,7 @@ public RobotContainer() {
         CANSparkMax winchMotor = new CANSparkMax(Constants.CLIMBER_WINCH_MOTOR_CANID, MotorType.kBrushless);
         CANSparkMax extendMotor = new CANSparkMax(Constants.CLIMBER_EXTEND_MOTOR_CANID, MotorType.kBrushless);
         CANSparkMax retractMotor = new CANSparkMax(Constants.CLIMBER_RETRACT_MOTOR_CANID, MotorType.kBrushed);
+        // TalonSRX retractMotor = new TalonSRX(Constants.CLIMBER_RETRACT_MOTOR_CANID);
         climber = new SS_Climber(gondolaMotor, winchMotor, extendMotor, retractMotor);
     }
     
@@ -136,6 +138,8 @@ public RobotContainer() {
         driveController.getLeftBumperButton().whenHeld(new C_Track(vision, drivebase,
             () -> driveController.getLeftYAxis().get(true),
             () -> driveController.getLeftXAxis().get(true)), true);
+
+        driveController.getYButton().whenPressed(new C_RPMTuneTest(driveController, shooter, feeder, intake));
 
         rightTriggerButton.whenPressed(new C_PrepFeedIntake(feeder));
         rightTriggerButton.whileHeld(new C_Intake(intake, driveController));

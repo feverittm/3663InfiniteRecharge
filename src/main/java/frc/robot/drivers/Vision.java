@@ -29,8 +29,10 @@ public class Vision {
   public static final int CAMERA_DEFAULT_MODE = CAMERA_VISION;
 
   //piplines (can be a numbers from 0-9)
-  public static final int FINE_PIPELINE = 1;
-  public static final int DEFAULT_PIPELINE = 0;
+  public static final int FINE_PIPELINE = 2; //not in use
+  public static final int BLUE_PIPELINE = 0;
+  public static final int RED_PIPELINE = 1;
+  public static final int DEFAULT_PIPELINE = RED_PIPELINE;
 
   //Distance constants
   public static final double CAMERA_ANGLE = 32.5;
@@ -74,7 +76,7 @@ public class Vision {
     SmartDashboard.putNumber("Distance", getDistance());
   }
 
-  public void setMode(int cameraMode, int ledMode, int pipeline) { 
+  private void setMode(int cameraMode, int ledMode, int pipeline) { 
     if(cameraMode > -1 && cameraMode < 2) {
       visionTable.getEntry("camMode").setNumber(cameraMode);
     }
@@ -130,7 +132,7 @@ public class Vision {
   }
 
   /**  
-   * returns rotation of vision target for a specific axis
+   * @return rotation of vision target for a specific axis
   */
   public double get3DRotation(Axis axis) {
     //it only continues if it is in the fine adjustment pipeline which has the higher resolution
