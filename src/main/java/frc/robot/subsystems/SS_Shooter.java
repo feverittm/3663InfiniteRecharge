@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.subsystems;
 
 import com.revrobotics.CANPIDController;
@@ -125,12 +118,14 @@ public class SS_Shooter extends SubsystemBase {
   private void updateShooter() {
     if(wheelSpinning) {
       if(updateFromVision) {
+        vision.setLEDMode(Vision.LED_ON);
         double distance = vision.getDistance();
         if(distance > 0) {
           targetRPM = calculateRPM(distance);
           setRPM(targetRPM);
         }
       } else {
+        vision.setLEDMode(Vision.LED_OFF);
         setRPM(targetRPM);
       }
     } else {

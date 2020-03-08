@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -17,8 +19,8 @@ public class SS_Climber extends SubsystemBase {
     CANSparkMax gondolaMotor;
     CANSparkMax winchMotor;
     CANSparkMax extendMotor;
-    CANSparkMax retractMotor;
-    // TalonSRX retractMotor;
+    // CANSparkMax retractMotor;
+    TalonSRX retractMotor;
 
     CANPIDController extendPID;
     private final double P = 0.01;
@@ -27,8 +29,8 @@ public class SS_Climber extends SubsystemBase {
 
     private NetworkTableEntry hookPos;
 
-    public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, CANSparkMax retractMotor) {
-    //public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, TalonSRX retractMotor) {
+    // public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, CANSparkMax retractMotor) {
+    public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, TalonSRX retractMotor) {
         this.gondolaMotor = gondolaMotor;
         this.winchMotor = winchMotor;
         this.extendMotor = extendMotor;
@@ -39,8 +41,9 @@ public class SS_Climber extends SubsystemBase {
         extendPID.setI(I);
         extendPID.setD(D);
         extendMotor.setIdleMode(IdleMode.kBrake);
-        retractMotor.setIdleMode(IdleMode.kBrake);
-        //retractMotor.setNeutralMode(NeutralMode.Brake);
+        // retractMotor.setIdleMode(IdleMode.kBrake);
+        retractMotor.setNeutralMode(NeutralMode.Brake);
+        retractMotor.setInverted(true);
         winchMotor.setIdleMode(IdleMode.kBrake);
         intiTelemetry();
     }
@@ -55,8 +58,8 @@ public class SS_Climber extends SubsystemBase {
         hookPos.setNumber(getHookPosition());
     }
     public void setRetractMotorSpeed(double speed){
-        retractMotor.set(speed);
-        // retractMotor.set(ControlMode.PercentOutput, speed);
+        // retractMotor.set(speed);
+        retractMotor.set(ControlMode.PercentOutput, speed);
     }
     public void resetHookEncoder() {
         extendMotor.getEncoder().setPosition(0.0);
