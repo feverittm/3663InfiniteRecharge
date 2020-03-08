@@ -1,42 +1,36 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
 import org.frcteam2910.common.math.Vector2;
+import org.frcteam2910.common.robot.input.XboxController;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SS_Drivebase;
 
 public class C_Drive extends CommandBase {
-  private SS_Drivebase drivebase;
+  private SS_Drivebase drivebase = SS_Drivebase.getInstance();
+  private XboxController driveController = (XboxController) RobotContainer.getDriveController();
+  private XboxController operatorController = (XboxController) RobotContainer.getOperatorController();
   private final double DEFAULT_DEADBAND = .001;
 
-  private DoubleSupplier forward;
-  private DoubleSupplier strafe;
-  private DoubleSupplier rotation;
-  private BooleanSupplier slowMode;
   private boolean inSlowMode = false;
 
-  public C_Drive(SS_Drivebase drivebase, DoubleSupplier forward, DoubleSupplier strafe, DoubleSupplier rotation, BooleanSupplier slowMode) {
-    this.drivebase = drivebase;
-    this.forward = forward;
-    this.strafe = strafe;
-    this.rotation = rotation;
-    this.slowMode = slowMode;
-    
+  public C_Drive() {    
     addRequirements(drivebase);
   }
 
   @Override
   public void execute() {
-    if(slowMode.getAsBoolean()) {
+    double forward = driveController.getLeftYAxis().get(true);
+    double strafe = driveController.getLeftXAxis().get(true);
+    double rotation = -driveController.getRightXAxis().get(true) * .3;
+    if(operatorController.getBackButton().get()) {
       inSlowMode = true;
     }
     if(inSlowMode) {
-      drivebase.drive(new Vector2(forward.getAsDouble() * .3,strafe.getAsDouble() * .3), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND) * .3,  true);
+      drivebase.drive(new Vector2(forward * .3,strafe * .3), deadband(rotation, DEFAULT_DEADBAND) * .3,  true);
     } else {
-      drivebase.drive(new Vector2(forward.getAsDouble(), strafe.getAsDouble()), deadband(rotation.getAsDouble(), DEFAULT_DEADBAND),  true);
+      drivebase.drive(new Vector2(forward, strafe), deadband(rotation, DEFAULT_DEADBAND),  true);
     }
   }
 

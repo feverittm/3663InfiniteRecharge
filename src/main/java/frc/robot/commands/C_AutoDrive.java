@@ -12,7 +12,7 @@ import frc.robot.subsystems.SS_Drivebase;
 
 public class C_AutoDrive extends CommandBase {
 
-  private SS_Drivebase drivebase;
+  private SS_Drivebase drivebase = SS_Drivebase.getInstance();
   private Vector2 targetTranslation;
   private double targetRotation;
 
@@ -46,9 +46,7 @@ public class C_AutoDrive extends CommandBase {
    * @param rotation angle to turn to in radians
    * @param rotationPercentOutput the maximum percent output for rotation
    */
-  public C_AutoDrive(SS_Drivebase drivebase, Vector2 targetTranslation, double translationPercentOutput,
-      double targetRotation, double rotationPercentOutput) {
-    this.drivebase = drivebase;
+  public C_AutoDrive(Vector2 targetTranslation, double translationPercentOutput, double targetRotation, double rotationPercentOutput) {
     this.targetTranslation = targetTranslation;
     this.targetRotation = targetRotation;
     addRequirements(drivebase);

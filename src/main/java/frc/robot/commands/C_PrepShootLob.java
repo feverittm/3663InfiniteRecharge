@@ -3,12 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Shooter;
 
-public class C_LobPrep extends CommandBase {
+public class C_PrepShootLob extends CommandBase {
 
-  SS_Shooter shooter;
+  private SS_Shooter shooter = SS_Shooter.getInstance();
 
-  public C_LobPrep(SS_Shooter shooter) {
-    this.shooter = shooter;
+  public C_PrepShootLob() {
     addRequirements(shooter);
   }
 
@@ -18,14 +17,7 @@ public class C_LobPrep extends CommandBase {
   }
 
   @Override
-  public void execute() {
-  }
-  @Override
   public boolean isFinished() {
     return shooter.atCorrectRPM();
-  }
-
-  @Override
-  public void end(boolean interrupted) {
   }
 }

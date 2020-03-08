@@ -12,10 +12,21 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.drivers.Vision;
 
 
 public class SS_Shooter extends SubsystemBase {
+
+  private static SS_Shooter instance;
+
+  public static SS_Shooter getInstance() {
+    if(instance == null) {
+      instance = new SS_Shooter();
+    }
+    return instance;
+  }
 
   //Known RPMs for different distances. Column one: feet, Column two: RPM. Updated: 2/29/2020
   private final int[][] KNOWN_RPM = new int[][] {
@@ -44,12 +55,12 @@ public class SS_Shooter extends SubsystemBase {
   private final double CORRECT_RPM_PERCENTAGE = .01;
   private final double CONFIDENCE_TIME = 1; //time we want to be in the confidence band before shooting
 
-  private Vision vision;
+  private Vision vision = RobotContainer.getVision();
 
-  private CANSparkMax flywheelMotor;
+  private CANSparkMax flywheelMotor = new CANSparkMax(Constants.SHOOTER_MOTOR_CANID, MotorType.kBrushless);
   private CANEncoder flywheelEncoder;
   private CANPIDController flywheelPid;
-  private DoubleSolenoid hood;
+  private DoubleSolenoid hood = new DoubleSolenoid(Constants.HOOD_SOLENOID_FORWARD_ID, Constants.HOOD_SOLENOID_REVERSE_ID);
 
   private Timer confidenceTimer;
 
@@ -65,9 +76,7 @@ public class SS_Shooter extends SubsystemBase {
   private NetworkTableEntry wheelSpinningEntry;
   private NetworkTableEntry shootingConfidenceEntry;
 
-  public SS_Shooter(Vision vision, int wheelCANID, int hoodForwardCANID, int hoodReverseCANID) {
-    this.vision = vision;
-    flywheelMotor = new CANSparkMax(wheelCANID, MotorType.kBrushless);
+  public SS_Shooter() {
     flywheelMotor.setInverted(true);
     flywheelEncoder = flywheelMotor.getEncoder();
     flywheelEncoder.setVelocityConversionFactor(WHEEL_GEAR_RATIO_MULTIPLIER);
@@ -79,7 +88,6 @@ public class SS_Shooter extends SubsystemBase {
     flywheelPid.setP(KP);
     flywheelPid.setI(KI);
     flywheelPid.setD(KD);
-    hood = new DoubleSolenoid(hoodForwardCANID, hoodReverseCANID);
 
     initTelemetry();
 

@@ -4,23 +4,20 @@ import org.frcteam2910.common.robot.input.Controller;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Intake.IntakeDirection;
 import frc.robot.subsystems.SS_Intake.IntakePosition;
 import frc.robot.utils.TriggerButton;
 
 public class C_Intake extends CommandBase {
-  private SS_Intake intake;
-  private TriggerButton leftTriggerButton;
+  private SS_Intake intake = SS_Intake.getInstance();
+  private Controller driveController = RobotContainer.getDriveController();
+  private TriggerButton driveLeftTriggerButton = RobotContainer.getDriveLeftTriggerButton();
   private boolean isRetracting = false;
-  private Timer timer;
-  private Controller controller;
+  private Timer timer = new Timer();
 
-  public C_Intake(SS_Intake intake, Controller controller) {
-    this.intake = intake;
-    this.controller = controller;
-    leftTriggerButton = new TriggerButton(controller.getLeftTriggerAxis());
-    timer = new Timer();
+  public C_Intake() {
     addRequirements(intake);
   }
 
@@ -31,14 +28,14 @@ public class C_Intake extends CommandBase {
 
   @Override
   public void execute() {
-    if(leftTriggerButton.get()){
+    if(driveLeftTriggerButton.get()){
       intake.setMotor(IntakeDirection.OUT);
     }
     else {
       intake.setMotor(IntakeDirection.IN);
     }
 
-    if(controller.getXButton().get() && !isRetracting/*!intakeSensor.get() && !isRetracting*/) {
+    if(driveController.getXButton().get() && !isRetracting/*!intakeSensor.get() && !isRetracting*/) {
       timer.reset();
       timer.start();
       isRetracting = true;

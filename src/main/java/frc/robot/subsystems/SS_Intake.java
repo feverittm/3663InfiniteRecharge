@@ -7,6 +7,7 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -15,6 +16,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public class SS_Intake extends SubsystemBase {
+
+    private static SS_Intake instance;
+
+    public static SS_Intake getInstance() {
+        if (instance == null) {
+            instance = new SS_Intake();
+        }
+        return instance;
+    }
     /**
      * Intake arm extend positions
      * 
@@ -48,9 +58,9 @@ public class SS_Intake extends SubsystemBase {
         BUMP
     }
 
-    private DoubleSolenoid shortSolenoid;
-    private DoubleSolenoid longSolenoid;
-    private CANSparkMax pickupMotor;
+    private DoubleSolenoid shortSolenoid = new DoubleSolenoid(Constants.INTAKE_SHORT_SOLENOID_FORWARD_ID, Constants.INTAKE_SHORT_SOLENOID_REVERSE_ID);
+    private DoubleSolenoid longSolenoid = new DoubleSolenoid(Constants.INTAKE_LONG_SOLENOID_FORWARD_ID, Constants.INTAKE_LONG_SOLENOID_REVERSE_ID);
+    private CANSparkMax pickupMotor = new CANSparkMax(Constants.INTAKE_MOTOR_CANID, MotorType.kBrushless);
     private DigitalInput intakeSensor = new DigitalInput(Constants.INTAKE_SENSOR);
 
     private CANPIDController velocityController;
@@ -75,11 +85,7 @@ public class SS_Intake extends SubsystemBase {
 
     private NetworkTableEntry intakeEntry;
     
-    public SS_Intake(DoubleSolenoid shortSolenoid, DoubleSolenoid longSolenoid, CANSparkMax pickupMotor) { 
-        this.shortSolenoid = shortSolenoid;
-        this.longSolenoid = longSolenoid;
-        this.pickupMotor = pickupMotor;
-
+    public SS_Intake() {
         setPosition(IntakePosition.POSITION_0);
         pickupMotor.setIdleMode(IdleMode.kCoast);
         pickupMotor.setSmartCurrentLimit(MOTOR_CURRENT_LIMIT);

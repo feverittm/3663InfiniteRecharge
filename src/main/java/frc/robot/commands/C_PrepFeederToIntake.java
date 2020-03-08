@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Feeder.FeedRate;
 
-public class C_PrepFeedIntake extends CommandBase {
+public class C_PrepFeederToIntake extends CommandBase {
 
-  private SS_Feeder feeder;
+  private SS_Feeder feeder = SS_Feeder.getInstance();
 
-  public C_PrepFeedIntake(SS_Feeder feeder) {
-    this.feeder = feeder;
+  public C_PrepFeederToIntake() {
+    addRequirements(feeder);
   }
 
   @Override

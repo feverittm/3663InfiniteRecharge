@@ -6,13 +6,11 @@ import frc.robot.subsystems.SS_Shooter;
 import frc.robot.subsystems.SS_Feeder.FeedRate;
 
 public class C_Shoot extends CommandBase {
-  private SS_Feeder feeder;
-  private SS_Shooter shooter;
+  private SS_Feeder feeder = SS_Feeder.getInstance();
+  private SS_Shooter shooter = SS_Shooter.getInstance();
   private boolean hasShot = false;
 
-  public C_Shoot(SS_Feeder feeder, SS_Shooter shooter) {
-    this.feeder = feeder;
-    this.shooter = shooter;
+  public C_Shoot() {
     addRequirements(feeder);
   }
 

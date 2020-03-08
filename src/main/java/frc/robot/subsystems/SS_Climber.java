@@ -7,48 +7,54 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class SS_Climber extends SubsystemBase {
-    // for SparkMax motor controllers
-    CANSparkMax gondolaMotor;
-    CANSparkMax winchMotor;
-    CANSparkMax extendMotor;
-    // CANSparkMax retractMotor;
-    TalonSRX retractMotor;
 
-    CANPIDController extendPID;
+    private static SS_Climber instance;
+
+    public static SS_Climber getInstance() {
+        if(instance == null) {
+            instance = new SS_Climber();
+        }
+        return instance;
+    }
+    private CANSparkMax gondolaMotor = new CANSparkMax(Constants.CLIMBER_GONDOLA_MOTOR_CANID, MotorType.kBrushless);
+    private CANSparkMax winchMotor = new CANSparkMax(Constants.CLIMBER_WINCH_MOTOR_CANID, MotorType.kBrushless);
+    private CANSparkMax extendMotor = new CANSparkMax(Constants.CLIMBER_EXTEND_MOTOR_CANID, MotorType.kBrushless);
+    private TalonSRX retractMotor = new TalonSRX(Constants.CLIMBER_RETRACT_MOTOR_CANID);
+
+    private CANPIDController extendPID;
     private final double P = 0.01;
     private final double I = 0;
     private final double D = 0;
 
     private NetworkTableEntry hookPos;
 
-    // public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, CANSparkMax retractMotor) {
-    public SS_Climber(CANSparkMax gondolaMotor, CANSparkMax winchMotor, CANSparkMax extendMotor, TalonSRX retractMotor) {
-        this.gondolaMotor = gondolaMotor;
-        this.winchMotor = winchMotor;
-        this.extendMotor = extendMotor;
-        this.retractMotor = retractMotor;
-
+    public SS_Climber() {
         extendPID = extendMotor.getPIDController();
         extendPID.setP(P);
         extendPID.setI(I);
         extendPID.setD(D);
+
         extendMotor.setIdleMode(IdleMode.kBrake);
-        // retractMotor.setIdleMode(IdleMode.kBrake);
+
         retractMotor.setNeutralMode(NeutralMode.Brake);
         retractMotor.setInverted(true);
+
         winchMotor.setIdleMode(IdleMode.kBrake);
-        intiTelemetry();
+
+        initTelemetry();
     }
 
-    private void intiTelemetry() {
+    private void initTelemetry() {
         ShuffleboardTab climberTab = Shuffleboard.getTab("Shooter");
         hookPos = climberTab.add("Hook Position", 0).withPosition(3, 3).withSize(1, 1).getEntry();
     }
@@ -58,7 +64,6 @@ public class SS_Climber extends SubsystemBase {
         hookPos.setNumber(getHookPosition());
     }
     public void setRetractMotorSpeed(double speed){
-        // retractMotor.set(speed);
         retractMotor.set(ControlMode.PercentOutput, speed);
     }
     public void resetHookEncoder() {
@@ -73,22 +78,16 @@ public class SS_Climber extends SubsystemBase {
         extendPID.setReference(position, ControlType.kPosition);
     }
 
-    public void gondolaRoll(double rollSpeed) {
-        // for SparkMax motor controllers
-        gondolaMotor.set(rollSpeed);
-        SmartDashboard.putNumber("SS_Roller rollSpeed", rollSpeed);
+    public void setGondolaMotorSpeed(double speed) {
+        gondolaMotor.set(speed);
     }
 
-    public void setWinch(double rollSpeed) {
-        // for SparkMax motor controllers
-        winchMotor.set(rollSpeed);
-        SmartDashboard.putNumber("SS_Roller rollSpeed", rollSpeed);
+    public void setWinchMotorSpeed(double speed) {
+        winchMotor.set(speed);
     }
 
-    public void setHook(double rollSpeed) {
-        // for SparkMax motor controllers
-        extendMotor.set(rollSpeed);
-        SmartDashboard.putNumber("SS_Roller rollSpeed", rollSpeed);
+    public void setHookMotorSpeed(double speed) {
+        extendMotor.set(speed);
     }
 
 }

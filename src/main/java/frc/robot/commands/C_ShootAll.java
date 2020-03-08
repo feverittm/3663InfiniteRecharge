@@ -5,9 +5,9 @@ import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Feeder.FeedRate;
 
 public class C_ShootAll extends CommandBase {
-  private SS_Feeder feeder;
-  public C_ShootAll(SS_Feeder feeder) {
-    this.feeder = feeder;
+  private SS_Feeder feeder = SS_Feeder.getInstance();
+  public C_ShootAll() {
+    addRequirements(feeder);
   }
 
   @Override
