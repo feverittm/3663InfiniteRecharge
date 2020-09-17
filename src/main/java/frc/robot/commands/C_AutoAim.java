@@ -6,12 +6,13 @@ import org.frcteam2910.common.math.Vector2;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.drivers.Vision;
 import frc.robot.subsystems.SS_Drivebase;
 
 public class C_AutoAim extends CommandBase {
-  private SS_Drivebase drivebase;
-  private Vision vision;
+  private SS_Drivebase drivebase = SS_Drivebase.getInstance();
+  private Vision vision = RobotContainer.getVision();
 
   private double kP = .0293; //TODO tune this
   private double kI = 0;
@@ -22,9 +23,7 @@ public class C_AutoAim extends CommandBase {
   private double radianTolerance = Math.toRadians(.5);
   private double lastTimeStamp;
 
-  public C_AutoAim(SS_Drivebase drivebase, Vision vision) {
-    this.drivebase = drivebase;
-    this.vision = vision;
+  public C_AutoAim() {
     addRequirements(drivebase);
     controller.setOutputRange(-1.0, 1.0);
     controller.setSetpoint(0.0);
@@ -50,6 +49,7 @@ public class C_AutoAim extends CommandBase {
     if(!interrupted) {
       drivebase.drive(Vector2.ZERO, 0.0, false);
     }
+    vision.setLEDMode(Vision.LED_OFF);
   }
 
   @Override

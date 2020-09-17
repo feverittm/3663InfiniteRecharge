@@ -4,22 +4,23 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Feeder;
 import frc.robot.subsystems.SS_Feeder.FeedRate;
 
-public class C_PrepFeedToShoot extends CommandBase {
-  private SS_Feeder feeder;
+public class C_PrepFeederToIntake extends CommandBase {
 
-  public C_PrepFeedToShoot(SS_Feeder feeder) {
-    this.feeder = feeder;
+  private SS_Feeder feeder = SS_Feeder.getInstance();
+
+  public C_PrepFeederToIntake() {
     addRequirements(feeder);
   }
 
   @Override
   public void initialize() {
+    feeder.resetEncoder();
   }
 
   @Override
   public void execute() {
-    if(!feeder.ballInExit()){
-      feeder.setRPM(FeedRate.SHOOT_PREP);
+    if (!feeder.ballInEntry()) {
+      feeder.setRPM(FeedRate.INTAKE_PREP);
     }
   }
 
@@ -30,6 +31,6 @@ public class C_PrepFeedToShoot extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return feeder.ballInExit();
+    return feeder.ballInEntry() || Math.abs(feeder.getPosition()) >= SS_Feeder.REV_PER_FULL_FEED;
   }
 }

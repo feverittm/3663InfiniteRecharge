@@ -1,12 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
-//Code from limelight example: http://docs.limelightvision.io/en/latest/getting_started.html#basic-programming
-
 package frc.robot.drivers;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -14,6 +5,9 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * @see http://docs.limelightvision.io/en/latest/getting_started.html#basic-programming 
+ */
 public class Vision {
 
   //led mode constants
@@ -29,8 +23,10 @@ public class Vision {
   public static final int CAMERA_DEFAULT_MODE = CAMERA_VISION;
 
   //piplines (can be a numbers from 0-9)
-  public static final int FINE_PIPELINE = 1;
-  public static final int DEFAULT_PIPELINE = 0;
+  public static final int FINE_PIPELINE = 2; //not in use
+  public static final int BLUE_PIPELINE = 0;
+  public static final int RED_PIPELINE = 1;
+  public static final int DEFAULT_PIPELINE = BLUE_PIPELINE;
 
   //Distance constants
   public static final double CAMERA_ANGLE = 32.5;
@@ -74,7 +70,7 @@ public class Vision {
     SmartDashboard.putNumber("Distance", getDistance());
   }
 
-  public void setMode(int cameraMode, int ledMode, int pipeline) { 
+  private void setMode(int cameraMode, int ledMode, int pipeline) { 
     if(cameraMode > -1 && cameraMode < 2) {
       visionTable.getEntry("camMode").setNumber(cameraMode);
     }
@@ -130,7 +126,7 @@ public class Vision {
   }
 
   /**  
-   * returns rotation of vision target for a specific axis
+   * @return rotation of vision target for a specific axis
   */
   public double get3DRotation(Axis axis) {
     //it only continues if it is in the fine adjustment pipeline which has the higher resolution

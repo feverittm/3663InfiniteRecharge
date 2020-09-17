@@ -8,7 +8,7 @@ import frc.robot.utils.AutonomousBuilder;
 
 public class Robot extends TimedRobot {
   private final RobotContainer container = new RobotContainer();
-  private final AutonomousBuilder autonomousBuilder = new AutonomousBuilder(container);
+  private final AutonomousBuilder autonomousBuilder = new AutonomousBuilder();
   private CommandBase autonomousCommand;
   @Override
   public void robotInit() {

@@ -24,6 +24,15 @@ import org.frcteam2910.common.robot.UpdateManager;
 
 public class SS_Drivebase extends SubsystemBase implements UpdateManager.Updatable{
 
+    private static SS_Drivebase instance;
+
+    public static SS_Drivebase getInstance() {
+        if (instance == null) {
+            instance = new SS_Drivebase();
+        }
+        return instance;
+    }
+
     //SWERVE MODULE ANGLE ENCODER OFFSETS (in radians, obviously)
     public static final double FRONT_LEFT_MODULE_OFFSET = Math.toRadians(40);
     public static final double FRONT_RIGHT_MODULE_OFFSET = Math.toRadians(-106);

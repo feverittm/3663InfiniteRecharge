@@ -29,8 +29,8 @@ public class C_RPMTuneTest extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setSpinning(true).updateFromVision(false).setHoodFar(false);
-    intake.setArmPosition(IntakePosition.POSITION_2);
+    shooter.setSpinning(true).updateFromVision(false).extendHood(false);
+    intake.setPosition(IntakePosition.POSITION_2);
   }
 
   @Override

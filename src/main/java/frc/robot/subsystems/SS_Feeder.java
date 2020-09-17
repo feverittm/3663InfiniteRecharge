@@ -5,14 +5,26 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class SS_Feeder extends SubsystemBase {
+
+  private static SS_Feeder instance;
+
+  public static SS_Feeder getInstance() {
+    if (instance == null) {
+      instance = new SS_Feeder();
+    }
+    return instance;
+  }
+
   public enum FeedRate {
     STOPPED, INTAKE_PREP, INTAKE, SHOOT_PREP, SHOOT_ONE, SHOOT_ALL
   }
@@ -32,35 +44,26 @@ public class SS_Feeder extends SubsystemBase {
   private final int FEED_RPM_SHOOT_ONE = 3500; // 3500
   private final int FEED_RPM_SHOOT_ALL = 5000; //6000
 
-  // private final int FEED_RPM_STOPPED = 0;
-  // private final int FEED_RPM_INTAKE_PREP = -0.4;//-2250
-  // private final int FEED_RPM_INTAKE = 0.4; // 2000
-  // private final int FEED_RPM_PREP_SHOOT = 0.7; //4000
-  // private final int FEED_RPM_SHOOT_ONE = 0.6; // 3500
-  // private final int FEED_RPM_SHOOT_ALL = 0.9; //6000
-
   // The number of revolutions of the belt motor required to cycle a ball all the
   // way from the feeders entry to the exit.
-  public static final int REV_PER_FULL_FEED = 80;
+  public static final double REV_PER_FULL_FEED = 100.0;
 
   // Motor encoder and pid
-  private CANSparkMax beltMotor;
+  private CANSparkMax beltMotor = new CANSparkMax(Constants.FEED_MOTOR_CANID, MotorType.kBrushless);
   private CANEncoder beltEncoder;
   private CANPIDController beltPID;
 
-  // DIO Sensors
-  private DigitalInput entrySensor;
-  private DigitalInput exitSensor;
+    private DigitalInput entrySensor = new DigitalInput(Constants.ENTRY_SENSOR_DIO_ID);
+  private DigitalInput exitSensor = new DigitalInput(Constants.EXIT_SENSOR_DIO_ID);
 
-  // network table entries for telemetry
+   // network table entries for telemetry
   private NetworkTableEntry feederRPMEntry;
   private NetworkTableEntry exitValid;
   private NetworkTableEntry entryValid;
   private NetworkTableEntry feederEncoderPos;
   private NetworkTableEntry feedMode;
 
-  public SS_Feeder(CANSparkMax beltMotor, DigitalInput entrySensor, DigitalInput exitSensor) {
-    this.beltMotor = beltMotor;
+  public SS_Feeder() {
     beltMotor.setIdleMode(IdleMode.kBrake);
     beltMotor.setInverted(true);
 
@@ -75,8 +78,6 @@ public class SS_Feeder extends SubsystemBase {
     beltPID.setD(KD);
 
     // Sensors for feeder
-    this.entrySensor = entrySensor;
-    this.exitSensor = exitSensor;
     initTelemetry();
   }
 

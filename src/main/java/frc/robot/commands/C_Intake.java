@@ -4,50 +4,47 @@ import org.frcteam2910.common.robot.input.Controller;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SS_Intake;
 import frc.robot.subsystems.SS_Intake.IntakeDirection;
 import frc.robot.subsystems.SS_Intake.IntakePosition;
 import frc.robot.utils.TriggerButton;
 
 public class C_Intake extends CommandBase {
-  private SS_Intake intake;
-  private TriggerButton leftTriggerButton;
+  private SS_Intake intake = SS_Intake.getInstance();
+  private Controller driveController = RobotContainer.getDriveController();
+  private TriggerButton driveLeftTriggerButton = RobotContainer.getDriveLeftTriggerButton();
   private boolean isRetracting = false;
-  private Timer timer;
-  private Controller controller;
+  private Timer timer = new Timer();
 
-  public C_Intake(SS_Intake intake, Controller controller) {
-    this.intake = intake;
-    this.controller = controller;
-    leftTriggerButton = new TriggerButton(controller.getLeftTriggerAxis());
-    timer = new Timer();
+  public C_Intake() {
     addRequirements(intake);
   }
 
   @Override
   public void initialize() {
-    intake.setArmPosition(IntakePosition.POSITION_2);
+    intake.setPosition(IntakePosition.POSITION_2);
   }
 
   @Override
   public void execute() {
-    if(leftTriggerButton.get()){
-      intake.startPickUpMotor(IntakeDirection.OUT);
+    if(driveLeftTriggerButton.get()){
+      intake.setMotor(IntakeDirection.OUT);
     }
     else {
-      intake.startPickUpMotor(IntakeDirection.IN);
+      intake.setMotor(IntakeDirection.IN);
     }
 
-    if(controller.getXButton().get() && !isRetracting/*!intakeSensor.get() && !isRetracting*/) {
+    if(driveController.getXButton().get() && !isRetracting/*!intakeSensor.get() && !isRetracting*/) {
       timer.reset();
       timer.start();
       isRetracting = true;
     }
     if(isRetracting){
-      intake.setArmPosition(IntakePosition.POSITION_0);
-      intake.startPickUpMotor(IntakeDirection.STOP);
+      intake.setPosition(IntakePosition.POSITION_0);
+      intake.setMotor(IntakeDirection.STOP);
       if(timer.get() > 0.4) {
-        intake.setArmPosition(IntakePosition.POSITION_2);
+        intake.setPosition(IntakePosition.POSITION_2);
         if(timer.get() > 0.8){
           timer.stop();
           isRetracting = false;
@@ -58,8 +55,8 @@ public class C_Intake extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    intake.retractIntake();
-    intake.startPickUpMotor(IntakeDirection.STOP);
+    intake.retract();
+    intake.setMotor(IntakeDirection.STOP);
   }
 
   @Override

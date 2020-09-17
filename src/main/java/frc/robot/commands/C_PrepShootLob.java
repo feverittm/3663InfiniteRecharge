@@ -3,17 +3,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SS_Shooter;
 
-public class C_PrepShoot extends CommandBase {
+public class C_PrepShootLob extends CommandBase {
 
   private SS_Shooter shooter = SS_Shooter.getInstance();
 
-  public C_PrepShoot() {
+  public C_PrepShootLob() {
     addRequirements(shooter);
   }
 
   @Override
   public void initialize() {
-    shooter.updateFromVision(true).setSpinning(true).extendHood(true);
+    shooter.extendHood(false).setLobSpeed().setSpinning(true);
   }
 
   @Override
